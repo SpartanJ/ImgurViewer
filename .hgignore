@@ -1,0 +1,12 @@
+syntax: regexp
+^.gradle$
+^ace/build$
+/local.properties
+/.idea/workspace.xml
+.DS_Store
+syntax: glob
+build/intermediates/dex-cache/cache.xml
+local.properties
+.idea
+build
+*.iml
