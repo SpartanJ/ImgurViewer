@@ -110,7 +110,10 @@ public class ImageViewer extends Activity
 				public void onSubmit( String id, Object callerContext ) {}
 
 				@Override
-				public void onFinalImageSet( String id, ImageInfo imageInfo, Animatable animatable ){}
+				public void onFinalImageSet( String id, ImageInfo imageInfo, Animatable animatable )
+				{
+					mProgressBar.setVisibility( View.INVISIBLE );
+				}
 
 				@Override
 				public void onIntermediateImageSet( String id, ImageInfo imageInfo ){}
