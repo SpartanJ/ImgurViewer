@@ -32,7 +32,7 @@ import com.imgurviewer.R;
 
 public class MainActivity extends Activity
 {
-	public static final int IMGUR_COLOR = 0x85bf25;
+	public static final int IMGUR_COLOR = 0xFF85bf25;
 	public static final String TAG = MainActivity.class.getCanonicalName();
 	private static final int UI_ANIMATION_DELAY = 300;
 
