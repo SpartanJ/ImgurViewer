@@ -26,4 +26,5 @@ dependencies {
 	compile 'com.facebook.fresco:fresco:0.7.0+'
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.google.code.gson:gson:2.3.+'
+    compile 'ch.acra:acra:4.6.2'
 }
