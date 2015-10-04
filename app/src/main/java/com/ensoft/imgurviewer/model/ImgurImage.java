@@ -1,5 +1,7 @@
 package com.ensoft.imgurviewer.model;
 
+import android.net.Uri;
+
 import com.google.gson.annotations.SerializedName;
 
 public class ImgurImage
@@ -78,5 +80,10 @@ public class ImgurImage
 	public String getLink()
 	{
 		return link;
+	}
+
+	public Uri getLinkUri()
+	{
+		return Uri.parse( getLink() );
 	}
 }

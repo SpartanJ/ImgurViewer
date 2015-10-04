@@ -14,19 +14,52 @@ import org.acra.annotation.*;
 )
 public class App extends Application
 {
+	protected static App sInstance;
+	protected int mActivityCount = 0;
+
+	public static App getInstance()
+	{
+		return sInstance;
+	}
+
 	@Override
 	public void onCreate()
 	{
 		super.onCreate();
 
-		ImagePipelineConfig config = ImagePipelineConfig.newBuilder( getBaseContext() )
-			.setDownsampleEnabled( true )
-			.build();
+		sInstance = this;
 
 		RequestQueueService.init( this );
 
-		Fresco.initialize( this, config );
-
 		ACRA.init( this );
+	}
+
+	protected void onDestroy()
+	{
+		Fresco.shutDown();
+	}
+
+	public void addActivity()
+	{
+		if ( 0 == mActivityCount )
+		{
+			ImagePipelineConfig config = ImagePipelineConfig.newBuilder( this )
+				.setDownsampleEnabled( true )
+				.build();
+
+			Fresco.initialize( this, config );
+		}
+
+		mActivityCount++;
+	}
+
+	public void destroyActivity()
+	{
+		mActivityCount--;
+
+		if ( 0 == mActivityCount )
+		{
+			onDestroy();
+		}
 	}
 }
