@@ -9,4 +9,7 @@
         <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
 
+	<declare-styleable name="ImageViewForcedHeight">
+		<attr name="heightRatio" format="float" />
+	</declare-styleable>
 </resources>

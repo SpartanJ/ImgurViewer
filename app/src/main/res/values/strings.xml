@@ -1,6 +1,5 @@
 <resources>
 	<string name="app_name">ImgurViewer</string>
-
-	<string name="dummy_button">Dummy Button</string>
-	<string name="dummy_content">DUMMY\nCONTENT</string>
+	<string name="imgur_client_id">912617e18339d56</string>
+	<string name="imgur_client_secret">fbb9a3a40f8a7db79f46012a560f7d962be2a4e1</string>
 </resources>

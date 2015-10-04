@@ -2,6 +2,7 @@ package com.ensoft.imgurviewer.view.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.PointF;
 import android.graphics.drawable.Animatable;
 import android.media.MediaPlayer;
@@ -16,10 +17,10 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.ensoft.imgurviewer.service.FrescoService;
+import com.ensoft.imgurviewer.service.ImgurAlbumService;
 import com.ensoft.imgurviewer.service.ImgurService;
 import com.ensoft.imgurviewer.service.interfaces.ImgurPathResolverListener;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
@@ -30,7 +31,7 @@ import com.fresco.ZoomableDraweeView;
 import com.helpers.MetricsHelper;
 import com.imgurviewer.R;
 
-public class ImageViewer extends Activity
+public class ImageViewer extends AppActivity
 {
 	public static final String TAG = ImageViewer.class.getCanonicalName();
 	public static final String PARAM_RESOURCE_PATH = "resourcePath";
@@ -126,31 +127,42 @@ public class ImageViewer extends Activity
 	protected void loadResource( Uri uri )
 	{
 		final ImgurService imgurService = new ImgurService();
+		final ImgurAlbumService imgurAlbumService = new ImgurAlbumService();
 
 		if ( imgurService.isImgurPath( uri ) )
 		{
-			imgurService.getPathUri( uri, new ImgurPathResolverListener()
+			if ( imgurAlbumService.isImgurAlbum( uri ) )
 			{
-				@Override
-				public void onPathResolved( Uri url, Uri thumbnail )
+				Intent intent = new Intent( ImageViewer.this, AlbumViewer.class );
+				intent.putExtra( AlbumViewer.ALBUM_DATA, uri.toString() );
+				startActivity( intent );
+				finish();
+			}
+			else
+			{
+				imgurService.getPathUri( uri, new ImgurPathResolverListener()
 				{
-					if ( imgurService.isVideo( url ) )
+					@Override
+					public void onPathResolved( Uri url, Uri thumbnail )
 					{
-						loadVideo( url );
+						if ( imgurService.isVideo( url ) )
+						{
+							loadVideo( url );
+						}
+						else
+						{
+							loadImage( url );
+						}
 					}
-					else
-					{
-						loadImage( url );
-					}
-				}
 
-				@Override
-				public void onPathError( String error )
-				{
-					Log.v( TAG, error );
-					Toast.makeText( ImageViewer.this, error, Toast.LENGTH_SHORT ).show();
-				}
-			} );
+					@Override
+					public void onPathError( String error )
+					{
+						Log.v( TAG, error );
+						Toast.makeText( ImageViewer.this, error, Toast.LENGTH_SHORT ).show();
+					}
+				} );
+			}
 		}
 		else
 		{
@@ -191,7 +203,7 @@ public class ImageViewer extends Activity
 		}
 		else if ( getIntent().getData() != null )
 		{
-			Uri data = getIntent().getData();//set a variable for the Intent
+			Uri data = getIntent().getData();
 
 			Log.v( TAG, "Data is: " + data.toString() );
 
@@ -199,16 +211,10 @@ public class ImageViewer extends Activity
 		}
 		else
 		{
-			loadImage( Uri.parse( "https://media3.giphy.com/media/JLQUx1mbgv2hO/200.gif" ) );
+			//loadImage( Uri.parse( "https://media3.giphy.com/media/JLQUx1mbgv2hO/200.gif" ) );
+
+			loadResource( Uri.parse( "https://imgur.com/a/6RLyq" ) );
 		}
-	}
-
-	@Override
-	protected void onDestroy()
-	{
-		super.onDestroy();
-
-		Fresco.shutDown();
 	}
 
 	@Override

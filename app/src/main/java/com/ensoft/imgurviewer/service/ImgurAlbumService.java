@@ -3,15 +3,21 @@ package com.ensoft.imgurviewer.service;
 import android.net.Uri;
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.ImgurAlbum;
 import com.ensoft.imgurviewer.service.interfaces.ImgurAlbumResolverListener;
 import com.google.gson.Gson;
+import com.imgurviewer.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ImgurAlbumService
 {
@@ -54,6 +60,8 @@ public class ImgurAlbumService
 				}
 				catch ( JSONException e )
 				{
+					Log.v( TAG, e.getMessage() );
+
 					imgurAlbumResolverListener.onError( e.toString() );
 				}
 			}
@@ -62,9 +70,20 @@ public class ImgurAlbumService
 			@Override
 			public void onErrorResponse(VolleyError error)
 			{
+				Log.v( TAG, error.toString() );
+
 				imgurAlbumResolverListener.onError( error.toString() );
 			}
-		});
+		})
+		{
+			@Override
+			public Map<String, String> getHeaders() throws AuthFailureError
+			{
+				Map<String, String>  params = new HashMap<>();
+				params.put("Authorization", "Client-ID " + App.getInstance().getString( R.string.imgur_client_id ) );
+				return params;
+			}
+		};
 
 		RequestQueueService.getInstance().addToRequestQueue( jsonObjectRequest );
 	}
