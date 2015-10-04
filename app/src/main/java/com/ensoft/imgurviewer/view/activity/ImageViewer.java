@@ -170,13 +170,6 @@ public class ImageViewer extends Activity
 	{
 		super.onCreate( savedInstanceState );
 
-		ImagePipelineConfig config = ImagePipelineConfig.newBuilder( getBaseContext() )
-			.setDownsampleEnabled( true )
-			.build();
-
-		RequestQueueService.init( getBaseContext() );
-		Fresco.initialize( getBaseContext(), config );
-		
 		setContentView( R.layout.activity_imageviewer );
 
 		mVisible = true;
