@@ -15,9 +15,11 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.ensoft.imgurviewer.service.FrescoService;
 import com.ensoft.imgurviewer.service.ImgurService;
 import com.ensoft.imgurviewer.service.RequestQueueService;
 import com.ensoft.imgurviewer.service.interfaces.ImgurPathResolverListener;
+import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.ControllerListener;
@@ -37,8 +39,8 @@ import com.imgurviewer.R;
 
 public class ImageViewer extends Activity
 {
-	public static final int IMGUR_COLOR = 0xFF85bf25;
 	public static final String TAG = ImageViewer.class.getCanonicalName();
+	public static final String PARAM_RESOURCE_PATH = "resourcePath";
 	private static final int UI_ANIMATION_DELAY = 300;
 
 	private View mContentView;
@@ -89,53 +91,21 @@ public class ImageViewer extends Activity
 	{
 		Log.v( TAG, "Loading image: " + uri.toString() );
 
-		ImageRequestBuilder imageRequestBuilder = ImageRequestBuilder.newBuilderWithSource( uri );
-
-		if ( UriUtil.isNetworkUri( uri ) )
+		new FrescoService().loadImage( uri, mImageView, new ControllerImageInfoListener()
 		{
-			imageRequestBuilder.setProgressiveRenderingEnabled( true );
-		}
-		else
-		{
-			imageRequestBuilder.setResizeOptions( new ResizeOptions( mImageView.getLayoutParams().width, mImageView.getLayoutParams().height) );
-		}
-
-		imageRequestBuilder.setAutoRotateEnabled( true );
-
-		DraweeController draweeController = Fresco.newDraweeControllerBuilder()
-			.setTapToRetryEnabled( true )
-			.setControllerListener( new ControllerListener<ImageInfo>()
+			@Override
+			public void onFinalImageSet( String id, ImageInfo imageInfo, Animatable animatable )
 			{
-				@Override
-				public void onSubmit( String id, Object callerContext ) {}
+				mProgressBar.setVisibility( View.INVISIBLE );
+			}
 
-				@Override
-				public void onFinalImageSet( String id, ImageInfo imageInfo, Animatable animatable )
-				{
-					mProgressBar.setVisibility( View.INVISIBLE );
-				}
+			@Override
+			public void onFailure( String id, Throwable throwable )
+			{
+				Toast.makeText( ImageViewer.this, throwable.getMessage(), Toast.LENGTH_SHORT ).show();
+			}
+		} );
 
-				@Override
-				public void onIntermediateImageSet( String id, ImageInfo imageInfo ){}
-
-				@Override
-				public void onIntermediateImageFailed( String id, Throwable throwable ){}
-
-				@Override
-				public void onFailure( String id, Throwable throwable )
-				{
-					Toast.makeText( ImageViewer.this, throwable.getMessage(), Toast.LENGTH_SHORT ).show();
-				}
-
-				@Override
-				public void onRelease( String id ){}
-			} )
-			.setImageRequest( imageRequestBuilder.build() )
-			.setOldController( mImageView.getController() )
-			.setAutoPlayAnimations( true )
-			.build();
-
-		mImageView.setController( draweeController );
 		mImageView.setOnTouchListener( mTouchListener );
 	}
 
@@ -207,7 +177,7 @@ public class ImageViewer extends Activity
 		RequestQueueService.init( getBaseContext() );
 		Fresco.initialize( getBaseContext(), config );
 		
-		setContentView( R.layout.activity_main );
+		setContentView( R.layout.activity_imageviewer );
 
 		mVisible = true;
 		mClickTolerance = MetricsHelper.dpToPx( getBaseContext(), 50.f );
@@ -217,7 +187,7 @@ public class ImageViewer extends Activity
 		mProgressBar = (ProgressBar)findViewById( R.id.progressBar );
 
 		ProgressBarDrawable progressBarDrawable = new ProgressBarDrawable();
-		progressBarDrawable.setColor( IMGUR_COLOR );
+		progressBarDrawable.setColor( getResources().getColor( R.color.imgur_color ) );
 		progressBarDrawable.setBarWidth( MetricsHelper.dpToPx( this, 4 ) );
 
 		GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(getResources())
@@ -229,7 +199,11 @@ public class ImageViewer extends Activity
 
 		mContentView.setOnClickListener( mClickListener );
 
-		if ( getIntent().getData() != null )
+		if ( null != getIntent().getExtras() && null != getIntent().getExtras().getString( PARAM_RESOURCE_PATH ) )
+		{
+			loadResource( Uri.parse( getIntent().getExtras().getString( PARAM_RESOURCE_PATH ) ) );
+		}
+		else if ( getIntent().getData() != null )
 		{
 			Uri data = getIntent().getData();//set a variable for the Intent
 

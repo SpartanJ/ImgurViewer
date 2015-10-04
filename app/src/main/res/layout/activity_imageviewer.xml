@@ -29,7 +29,7 @@
 			android:id="@+id/progressBar"
 			android:indeterminate="true"
 			android:indeterminateTintMode="src_in"
-			android:indeterminateTint="#85bf25"
+			android:indeterminateTint="@color/imgur_color"
 			android:layout_gravity="center"
 			android:layout_centerVertical="true"
 			android:layout_centerHorizontal="true"/>
