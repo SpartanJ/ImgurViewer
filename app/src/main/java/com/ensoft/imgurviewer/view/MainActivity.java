@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.VideoView;
 
 import com.ensoft.imgurviewer.service.ImgurService;
+import com.ensoft.imgurviewer.service.RequestQueueService;
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
@@ -31,6 +32,7 @@ import com.imgurviewer.R;
 
 public class MainActivity extends Activity
 {
+	public static final int IMGUR_COLOR = 0x85bf25;
 	public static final String TAG = MainActivity.class.getCanonicalName();
 	private static final int UI_ANIMATION_DELAY = 300;
 
@@ -103,19 +105,8 @@ public class MainActivity extends Activity
 			.setAutoPlayAnimations( true )
 			.build();
 
-		GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(getResources())
-			.setActualImageScaleType( ScalingUtils.ScaleType.FIT_CENTER )
-			.setProgressBarImage( new ProgressBarDrawable() )
-			.build();
-
-		mImageView.setHierarchy( hierarchy );
 		mImageView.setController( draweeController );
 		mImageView.setOnTouchListener( mTouchListener );
-	}
-
-	protected void loadResource( String uri )
-	{
-		loadResource( Uri.parse( uri ) );
 	}
 
 	protected void loadVideo( Uri uri )
@@ -141,18 +132,29 @@ public class MainActivity extends Activity
 
 	protected void loadResource( Uri uri )
 	{
-		ImgurService imgurService = new ImgurService();
+		final ImgurService imgurService = new ImgurService();
 
-		Uri realPath = imgurService.getPathUri( uri );
+		imgurService.getPathUri( uri, new ImgurService.PathListener()
+		{
+			@Override
+			public void onPathObtained( Uri url )
+			{
+				if ( imgurService.isVideo( url ) )
+				{
+					loadVideo( url );
+				}
+				else
+				{
+					loadImage( url );
+				}
+			}
 
-		if ( imgurService.isVideo( realPath ) )
-		{
-			loadVideo( realPath );
-		}
-		else
-		{
-			loadImage( realPath );
-		}
+			@Override
+			public void onPathError( String error )
+			{
+				Log.v( TAG, error );
+			}
+		} );
 	}
 
 	@Override
@@ -164,6 +166,7 @@ public class MainActivity extends Activity
 			.setDownsampleEnabled( true )
 			.build();
 
+		RequestQueueService.init( getBaseContext() );
 		Fresco.initialize( getBaseContext(), config );
 		
 		setContentView( R.layout.activity_main );
@@ -175,6 +178,16 @@ public class MainActivity extends Activity
 		mVideoView = (VideoView)findViewById( R.id.videoView );
 		mProgressBar = (ProgressBar)findViewById( R.id.progressBar );
 
+		ProgressBarDrawable progressBarDrawable = new ProgressBarDrawable();
+		progressBarDrawable.setColor( IMGUR_COLOR );
+
+		GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(getResources())
+			.setActualImageScaleType( ScalingUtils.ScaleType.FIT_CENTER )
+			.setProgressBarImage( progressBarDrawable )
+			.build();
+
+		mImageView.setHierarchy( hierarchy );
+
 		mContentView.setOnClickListener( mClickListener );
 
 		if ( getIntent().getData() != null )
@@ -183,9 +196,7 @@ public class MainActivity extends Activity
 
 			Log.v( TAG, "Data is: " + data.toString() );
 
-			Uri url =  new ImgurService().getPathUri( data );
-
-			loadResource( url );
+			loadResource( data );
 		}
 		else
 		{
