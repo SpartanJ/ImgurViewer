@@ -24,4 +24,5 @@ dependencies {
 	compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
     compile 'com.android.support:support-v4:23.0.1'
 	compile 'com.facebook.fresco:fresco:0.7.0+'
+    compile 'com.mcxiaoke.volley:library:1.0.19'
 }

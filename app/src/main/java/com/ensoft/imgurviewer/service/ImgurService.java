@@ -1,17 +1,84 @@
 package com.ensoft.imgurviewer.service;
 
 import android.net.Uri;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ImgurService
 {
-	protected String getPath( String scheme, String fullPath )
-	{
-		if ( fullPath.startsWith( "imgur.com" ) )
-		{
-			fullPath = fullPath.replace( "imgur.com", "i.imgur.com" );
-		}
+	public static final String TAG = ImgurService.class.getCanonicalName();
+	public static final String ALBUM_API_URL = "https://api.imgur.com/3/album/";
 
-		String url = scheme + ":" + fullPath; //combine to get a full URI
+	public interface PathListener
+	{
+		void onPathObtained( Uri url );
+
+		void onPathError( String error );
+	}
+
+	protected String getAlbumId( String url )
+	{
+		return url.substring( url.lastIndexOf( "/a/" ) + 3 );
+	}
+
+	protected void getFirstImage( final String url, final PathListener pathListener )
+	{
+		String albumUrl = ALBUM_API_URL + getAlbumId( url );
+
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( albumUrl, null, new Response.Listener<JSONObject>()
+		{
+			@Override
+			public void onResponse(JSONObject response)
+			{
+				try
+				{
+					Log.v( TAG, response.toString() );
+
+					JSONObject data = response.getJSONObject( "data" );
+
+					JSONArray images = data.getJSONArray( "images" );
+
+					JSONObject image = images.getJSONObject( 0 );
+
+					pathListener.onPathObtained( Uri.parse( image.getString( "link" ) ) );
+				}
+				catch ( JSONException e )
+				{
+					pathListener.onPathError( e.toString() );
+				}
+			}
+		}, new Response.ErrorListener()
+		{
+			@Override
+			public void onErrorResponse(VolleyError error)
+			{
+				pathListener.onPathError( error.toString() );
+			}
+		});
+
+		RequestQueueService.getInstance().addToRequestQueue( jsonObjectRequest );
+	}
+
+	protected Uri processPath( Uri uri )
+	{
+		String url = uri.toString();
+
+		if ( url.contains( "//imgur.com" ) )
+		{
+			url = url.replace( "//imgur.com", "//i.imgur.com" );
+		}
+		else if ( url.contains( "//www.imgur.com" ) )
+		{
+			url = url.replace( "//www.imgur.com", "//i.imgur.com" );
+		}
 
 		if ( url.endsWith( ".gif" ) || url.endsWith( ".gifv" ) )
 		{
@@ -24,17 +91,26 @@ public class ImgurService
 			url += ".jpg";
 		}
 
-		return url;
+		return Uri.parse( url );
 	}
 
-	public String getPath( Uri uri )
+	public void getPath( Uri uri, PathListener pathListener )
 	{
-		return getPath( uri.getScheme(), uri.getEncodedSchemeSpecificPart() );
+		String url = uri.toString();
+
+		if ( url.contains( "/a/" ) )
+		{
+			getFirstImage( url, pathListener );
+		}
+		else
+		{
+			pathListener.onPathObtained( processPath( uri ) );
+		}
 	}
 
-	public Uri getPathUri( Uri uri )
+	public void getPathUri( Uri uri, PathListener pathListener )
 	{
-		return Uri.parse( getPath( uri ) );
+		getPath( uri, pathListener );
 	}
 
 	public boolean isVideo( Uri uri )
