@@ -1,8 +1,9 @@
-package com.ensoft.imgurviewer.view;
+package com.ensoft.imgurviewer.view.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.PointF;
+import android.graphics.drawable.Animatable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,12 +12,15 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.ensoft.imgurviewer.service.ImgurService;
 import com.ensoft.imgurviewer.service.RequestQueueService;
+import com.ensoft.imgurviewer.service.interfaces.ImgurPathResolverListener;
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
@@ -24,16 +28,17 @@ import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.fresco.ZoomableDraweeView;
 
 import com.helpers.MetricsHelper;
 import com.imgurviewer.R;
 
-public class MainActivity extends Activity
+public class ImageViewer extends Activity
 {
 	public static final int IMGUR_COLOR = 0xFF85bf25;
-	public static final String TAG = MainActivity.class.getCanonicalName();
+	public static final String TAG = ImageViewer.class.getCanonicalName();
 	private static final int UI_ANIMATION_DELAY = 300;
 
 	private View mContentView;
@@ -65,7 +70,6 @@ public class MainActivity extends Activity
 					}
 					break;
 				}
-
 			}
 
 			return false;
@@ -100,6 +104,29 @@ public class MainActivity extends Activity
 
 		DraweeController draweeController = Fresco.newDraweeControllerBuilder()
 			.setTapToRetryEnabled( true )
+			.setControllerListener( new ControllerListener<ImageInfo>()
+			{
+				@Override
+				public void onSubmit( String id, Object callerContext ) {}
+
+				@Override
+				public void onFinalImageSet( String id, ImageInfo imageInfo, Animatable animatable ){}
+
+				@Override
+				public void onIntermediateImageSet( String id, ImageInfo imageInfo ){}
+
+				@Override
+				public void onIntermediateImageFailed( String id, Throwable throwable ){}
+
+				@Override
+				public void onFailure( String id, Throwable throwable )
+				{
+					Toast.makeText( ImageViewer.this, throwable.getMessage(), Toast.LENGTH_SHORT ).show();
+				}
+
+				@Override
+				public void onRelease( String id ){}
+			} )
 			.setImageRequest( imageRequestBuilder.build() )
 			.setOldController( mImageView.getController() )
 			.setAutoPlayAnimations( true )
@@ -134,27 +161,35 @@ public class MainActivity extends Activity
 	{
 		final ImgurService imgurService = new ImgurService();
 
-		imgurService.getPathUri( uri, new ImgurService.PathListener()
+		if ( imgurService.isImgurPath( uri ) )
 		{
-			@Override
-			public void onPathObtained( Uri url )
+			imgurService.getPathUri( uri, new ImgurPathResolverListener()
 			{
-				if ( imgurService.isVideo( url ) )
+				@Override
+				public void onPathResolved( Uri url, Uri thumbnail )
 				{
-					loadVideo( url );
+					if ( imgurService.isVideo( url ) )
+					{
+						loadVideo( url );
+					}
+					else
+					{
+						loadImage( url );
+					}
 				}
-				else
-				{
-					loadImage( url );
-				}
-			}
 
-			@Override
-			public void onPathError( String error )
-			{
-				Log.v( TAG, error );
-			}
-		} );
+				@Override
+				public void onPathError( String error )
+				{
+					Log.v( TAG, error );
+					Toast.makeText( ImageViewer.this, error, Toast.LENGTH_SHORT ).show();
+				}
+			} );
+		}
+		else
+		{
+			loadImage( uri );
+		}
 	}
 
 	@Override

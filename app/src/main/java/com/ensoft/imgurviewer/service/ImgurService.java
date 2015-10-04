@@ -1,83 +1,49 @@
 package com.ensoft.imgurviewer.service;
 
 import android.net.Uri;
-import android.util.Log;
-import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.ensoft.imgurviewer.model.ImgurAlbum;
+import com.ensoft.imgurviewer.service.interfaces.ImgurAlbumResolverListener;
+import com.ensoft.imgurviewer.service.interfaces.ImgurPathResolverListener;
 
 public class ImgurService
 {
 	public static final String TAG = ImgurService.class.getCanonicalName();
-	public static final String ALBUM_API_URL = "https://api.imgur.com/3/album/";
+	public static final String IMGUR_DOMAIN = "imgur.com";
+	public static final String IMGUR_IMAGE_DOMAIN = "i.imgur.com";
+	public static final String IMGUR_API_URL = "https://api.imgur.com/3";
 
-	public interface PathListener
+	protected void getFirstImage( final Uri url, final ImgurPathResolverListener imgurPathResolverListener )
 	{
-		void onPathObtained( Uri url );
-
-		void onPathError( String error );
-	}
-
-	protected String getAlbumId( String url )
-	{
-		return url.substring( url.lastIndexOf( "/a/" ) + 3 );
-	}
-
-	protected void getFirstImage( final String url, final PathListener pathListener )
-	{
-		String albumUrl = ALBUM_API_URL + getAlbumId( url );
-
-		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( albumUrl, null, new Response.Listener<JSONObject>()
+		new ImgurAlbumService().getAlbum( url, new ImgurAlbumResolverListener()
 		{
 			@Override
-			public void onResponse(JSONObject response)
+			public void onAlbumResolved( ImgurAlbum album )
 			{
-				try
-				{
-					Log.v( TAG, response.toString() );
+				Uri uri = Uri.parse( album.getImage( 0 ).getLink() );
 
-					JSONObject data = response.getJSONObject( "data" );
-
-					JSONArray images = data.getJSONArray( "images" );
-
-					JSONObject image = images.getJSONObject( 0 );
-
-					pathListener.onPathObtained( Uri.parse( image.getString( "link" ) ) );
-				}
-				catch ( JSONException e )
-				{
-					pathListener.onPathError( e.toString() );
-				}
+				imgurPathResolverListener.onPathResolved( uri, getThumbnailPath( uri ) );
 			}
-		}, new Response.ErrorListener()
-		{
+
 			@Override
-			public void onErrorResponse(VolleyError error)
+			public void onError( String error )
 			{
-				pathListener.onPathError( error.toString() );
+				imgurPathResolverListener.onPathError( error );
 			}
-		});
-
-		RequestQueueService.getInstance().addToRequestQueue( jsonObjectRequest );
+		} );
 	}
 
 	protected Uri processPath( Uri uri )
 	{
 		String url = uri.toString();
 
-		if ( url.contains( "//imgur.com" ) )
+		if ( url.contains( "//" + IMGUR_DOMAIN ) )
 		{
-			url = url.replace( "//imgur.com", "//i.imgur.com" );
+			url = url.replace( "//" + IMGUR_DOMAIN, "//" + IMGUR_IMAGE_DOMAIN );
 		}
-		else if ( url.contains( "//www.imgur.com" ) )
+		else if ( url.contains( "//www." + IMGUR_DOMAIN ) )
 		{
-			url = url.replace( "//www.imgur.com", "//i.imgur.com" );
+			url = url.replace( "//www." + IMGUR_DOMAIN, "//" + IMGUR_IMAGE_DOMAIN );
 		}
 
 		if ( url.endsWith( ".gif" ) || url.endsWith( ".gifv" ) )
@@ -94,23 +60,34 @@ public class ImgurService
 		return Uri.parse( url );
 	}
 
-	public void getPath( Uri uri, PathListener pathListener )
+	protected Uri getThumbnailPath( Uri uri )
 	{
-		String url = uri.toString();
+		String fixedUri = processPath( uri ).toString();
 
-		if ( url.contains( "/a/" ) )
+		int pos = fixedUri.lastIndexOf( "." );
+
+		String path = fixedUri.substring( 0, pos - 1 );
+		String ext = fixedUri.substring( pos );
+
+		return Uri.parse( path + "s" + ext );
+	}
+
+	public void getPath( Uri uri, ImgurPathResolverListener imgurPathResolverListener )
+	{
+		if ( new ImgurAlbumService().isImgurAlbum( uri ) )
 		{
-			getFirstImage( url, pathListener );
+			getFirstImage( uri, imgurPathResolverListener );
 		}
 		else
 		{
-			pathListener.onPathObtained( processPath( uri ) );
+			Uri fixedUri = processPath( uri );
+			imgurPathResolverListener.onPathResolved( fixedUri, getThumbnailPath( fixedUri ) );
 		}
 	}
 
-	public void getPathUri( Uri uri, PathListener pathListener )
+	public void getPathUri( Uri uri, ImgurPathResolverListener imgurPathResolverListener )
 	{
-		getPath( uri, pathListener );
+		getPath( uri, imgurPathResolverListener );
 	}
 
 	public boolean isVideo( Uri uri )
@@ -121,5 +98,10 @@ public class ImgurService
 	public boolean isVideo( String uri )
 	{
 		return uri.endsWith( ".gifv" ) || uri.endsWith( ".mp4" ) || uri.endsWith( ".avi" ) || uri.endsWith( ".flv" ) || uri.endsWith( ".mkv" );
+	}
+
+	public boolean isImgurPath( Uri uri )
+	{
+		return uri.toString().contains( "imgur.com" );
 	}
 }

@@ -25,4 +25,5 @@ dependencies {
     compile 'com.android.support:support-v4:23.0.1'
 	compile 'com.facebook.fresco:fresco:0.7.0+'
     compile 'com.mcxiaoke.volley:library:1.0.19'
+    compile 'com.google.code.gson:gson:2.3.+'
 }
