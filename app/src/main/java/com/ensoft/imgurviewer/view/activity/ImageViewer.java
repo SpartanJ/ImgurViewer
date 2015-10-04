@@ -17,21 +17,14 @@ import android.widget.VideoView;
 
 import com.ensoft.imgurviewer.service.FrescoService;
 import com.ensoft.imgurviewer.service.ImgurService;
-import com.ensoft.imgurviewer.service.RequestQueueService;
 import com.ensoft.imgurviewer.service.interfaces.ImgurPathResolverListener;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
-import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.ImageInfo;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.fresco.ZoomableDraweeView;
 
 import com.helpers.MetricsHelper;
