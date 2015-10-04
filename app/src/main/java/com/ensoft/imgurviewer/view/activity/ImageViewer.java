@@ -215,6 +215,7 @@ public class ImageViewer extends Activity
 
 		ProgressBarDrawable progressBarDrawable = new ProgressBarDrawable();
 		progressBarDrawable.setColor( IMGUR_COLOR );
+		progressBarDrawable.setBarWidth( MetricsHelper.dpToPx( this, 4 ) );
 
 		GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(getResources())
 			.setActualImageScaleType( ScalingUtils.ScaleType.FIT_CENTER )
