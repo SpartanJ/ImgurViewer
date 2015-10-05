@@ -2,6 +2,7 @@ package com.ensoft.imgurviewer.view.adapter;
 
 import android.content.Intent;
 import android.graphics.drawable.Animatable;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.service.FrescoService;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
@@ -19,6 +21,7 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.helpers.MetricsHelper;
 import com.imgurviewer.R;
 
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumImageHolder>
@@ -43,7 +46,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumImageHo
 	@Override
 	public void onBindViewHolder( AlbumImageHolder holder, int position )
 	{
-		holder.setData( mDataSet[position] );
+		holder.setData( mDataSet[position], position, getItemCount() );
 	}
 
 	@Override
@@ -84,7 +87,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumImageHo
 			} );
 		}
 
-		public void setData( ImgurImage img )
+		public void setData( ImgurImage img, int position, int count )
 		{
 			image = img;
 
@@ -94,11 +97,35 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumImageHo
 
 			if ( null != image.getTitle() )
 			{
+				title.setVisibility( View.VISIBLE );
 				title.setText( image.getTitle() );
 			}
 			else
 			{
 				title.setVisibility( View.GONE );
+			}
+
+			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT )
+			{
+				if ( position == 0 )
+				{
+					if ( null != image.getTitle() )
+					{
+						title.setPadding( 0, MetricsHelper.getStatusBarHeight( App.getInstance() ), 0, 0 );
+					}
+					else
+					{
+						imageView.setPadding( 0, MetricsHelper.getStatusBarHeight( App.getInstance() ), 0, 0 );
+					}
+				}
+				else if ( position == count - 1 )
+				{
+					imageView.setPadding( 0, 0, 0, MetricsHelper.getNavigationBarHeight( App.getInstance() ) );
+				}
+				else
+				{
+					imageView.setPadding( 0, 0, 0, 0 );
+				}
 			}
 
 			new FrescoService().loadImage( img.getLinkUri(), img.getThumbnailLinkUri(), imageView, new ControllerImageInfoListener()
