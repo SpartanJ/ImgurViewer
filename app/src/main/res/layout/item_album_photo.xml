@@ -20,6 +20,14 @@
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
+
+		<com.ensoft.imgurviewer.view.widget.ImageViewForcedHeight
+			android:id="@+id/albumPhoto_photo"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:heightRatio="0.89"
+			fresco:actualImageScaleType="centerCrop"/>
+
 		<ProgressBar
 			style="?android:attr/progressBarStyleLarge"
 			android:layout_width="wrap_content"
@@ -31,12 +39,5 @@
 			android:layout_gravity="center"
 			android:layout_centerVertical="true"
 			android:layout_centerHorizontal="true"/>
-
-		<com.ensoft.imgurviewer.view.widget.ImageViewForcedHeight
-			android:id="@+id/albumPhoto_photo"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			app:heightRatio="0.89"
-			fresco:actualImageScaleType="centerCrop"/>
 	</RelativeLayout>
 </LinearLayout>
