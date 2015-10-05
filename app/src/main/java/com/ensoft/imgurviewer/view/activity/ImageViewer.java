@@ -81,11 +81,11 @@ public class ImageViewer extends AppActivity
 		}
 	};
 
-	private void loadImage( Uri uri )
+	private void loadImage( Uri uri, Uri thumbnail )
 	{
 		Log.v( TAG, "Loading image: " + uri.toString() );
 
-		new FrescoService().loadImage( uri, mImageView, new ControllerImageInfoListener()
+		new FrescoService().loadImage( uri, thumbnail, mImageView, new ControllerImageInfoListener()
 		{
 			@Override
 			public void onFinalImageSet( String id, ImageInfo imageInfo, Animatable animatable )
@@ -151,7 +151,7 @@ public class ImageViewer extends AppActivity
 						}
 						else
 						{
-							loadImage( url );
+							loadImage( url, thumbnail );
 						}
 					}
 
@@ -166,7 +166,7 @@ public class ImageViewer extends AppActivity
 		}
 		else
 		{
-			loadImage( uri );
+			loadImage( uri, null );
 		}
 	}
 
@@ -211,7 +211,7 @@ public class ImageViewer extends AppActivity
 		}
 		else
 		{
-			loadImage( Uri.parse( "https://media3.giphy.com/media/JLQUx1mbgv2hO/200.gif" ) );
+			loadImage( Uri.parse( "http://imgurviewer.ensoft-dev.com/img/nyancat.gif" ), null );
 		}
 	}
 

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.ensoft.imgurviewer.model.ImgurAlbum;
@@ -20,6 +22,7 @@ public class AlbumViewer extends AppActivity
 
 	protected ImgurAlbum mAlbum;
 	protected AlbumAdapter mAlbumAdapter;
+	protected ProgressBar mProgressBar;
 	protected RecyclerView mRecyclerView;
 
 	@Override
@@ -51,6 +54,8 @@ public class AlbumViewer extends AppActivity
 
 		Log.v( TAG, "Data is: " + albumData.toString() );
 
+		mProgressBar = (ProgressBar)findViewById( R.id.albumViewer_progressBar );
+
 		new ImgurAlbumService().getAlbum( albumData, new ImgurAlbumResolverListener()
 		{
 			@Override
@@ -71,6 +76,7 @@ public class AlbumViewer extends AppActivity
 	{
 		mAlbum = album;
 
+		mProgressBar.setVisibility( View.INVISIBLE );
 		mAlbumAdapter = new AlbumAdapter( R.layout.item_album_photo, mAlbum.getImages() );
 
 		mRecyclerView = (RecyclerView) findViewById( R.id.albumViewer_listView );

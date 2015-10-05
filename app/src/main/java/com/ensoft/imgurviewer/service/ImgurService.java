@@ -11,6 +11,7 @@ public class ImgurService
 	public static final String TAG = ImgurService.class.getCanonicalName();
 	public static final String IMGUR_DOMAIN = "imgur.com";
 	public static final String IMGUR_IMAGE_DOMAIN = "i.imgur.com";
+	public static final String IMGUR_MOBILE_DOMAIN = "m.imgur.com";
 	public static final String IMGUR_API_URL = "https://api.imgur.com/3";
 
 	protected void getFirstImage( final Uri url, final ImgurPathResolverListener imgurPathResolverListener )
@@ -45,6 +46,10 @@ public class ImgurService
 		{
 			url = url.replace( "//www." + IMGUR_DOMAIN, "//" + IMGUR_IMAGE_DOMAIN );
 		}
+		else if ( url.contains( "//" + IMGUR_MOBILE_DOMAIN ) )
+		{
+			url = url.replace( "//" + IMGUR_MOBILE_DOMAIN, "//" + IMGUR_IMAGE_DOMAIN );
+		}
 
 		if ( url.endsWith( ".gif" ) || url.endsWith( ".gifv" ) )
 		{
@@ -60,13 +65,13 @@ public class ImgurService
 		return Uri.parse( url );
 	}
 
-	protected Uri getThumbnailPath( Uri uri )
+	public Uri getThumbnailPath( Uri uri )
 	{
 		String fixedUri = processPath( uri ).toString();
 
 		int pos = fixedUri.lastIndexOf( "." );
 
-		String path = fixedUri.substring( 0, pos - 1 );
+		String path = fixedUri.substring( 0, pos );
 		String ext = fixedUri.substring( pos );
 
 		return Uri.parse( path + "s" + ext );

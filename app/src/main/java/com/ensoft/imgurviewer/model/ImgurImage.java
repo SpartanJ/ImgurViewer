@@ -2,6 +2,7 @@ package com.ensoft.imgurviewer.model;
 
 import android.net.Uri;
 
+import com.ensoft.imgurviewer.service.ImgurService;
 import com.google.gson.annotations.SerializedName;
 
 public class ImgurImage
@@ -85,5 +86,10 @@ public class ImgurImage
 	public Uri getLinkUri()
 	{
 		return Uri.parse( getLink() );
+	}
+
+	public Uri getThumbnailLinkUri()
+	{
+		return new ImgurService().getThumbnailPath( getLinkUri() );
 	}
 }

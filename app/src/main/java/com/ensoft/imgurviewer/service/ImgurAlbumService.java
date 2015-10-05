@@ -29,14 +29,38 @@ public class ImgurAlbumService
 		return getAlbumId( uri.toString() );
 	}
 
-	public String getAlbumId( String url )
+	public String getAlbumId( String uri )
 	{
-		return url.substring( url.lastIndexOf( "/a/" ) + 3 );
+		String endPart = null;
+
+		if ( uri.contains( "/a/" ) )
+		{
+			endPart = uri.substring( uri.lastIndexOf( "/a/" ) + 3 );
+		}
+		else if ( uri.contains( "/gallery/" ) )
+		{
+			endPart = uri.substring( uri.lastIndexOf( "/gallery/" ) + 9 );
+		}
+
+		if ( null != endPart )
+		{
+			int slash = endPart.indexOf( "/" );
+
+			if ( -1 != slash )
+			{
+				endPart = endPart.substring( 0, slash );
+			}
+		}
+
+		return endPart;
 	}
 
 	public boolean isImgurAlbum( Uri uri )
 	{
-		return new ImgurService().isImgurPath( uri ) && uri.toString().contains( "/a/" );
+		return new ImgurService().isImgurPath( uri ) && (
+			uri.toString().contains( "/a/" ) ||
+			uri.toString().contains( "/gallery/" )
+		);
 	}
 
 	public void getAlbum( Uri uri, final ImgurAlbumResolverListener imgurAlbumResolverListener )

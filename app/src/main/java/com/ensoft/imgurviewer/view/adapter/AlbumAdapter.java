@@ -86,36 +86,35 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumImageHo
 
 		public void setData( ImgurImage img )
 		{
-			if ( null == image || !img.getId().equals( image.getId() ) )
+			image = img;
+
+			Log.v( TAG, "Loading album image: " + image.getLink() );
+
+			progressBar.setVisibility( View.VISIBLE );
+
+			if ( null != image.getTitle() )
 			{
-				image = img;
-
-				Log.v( TAG, "Loading album image: " + image.getLink() );
-
-				if ( null != image.getTitle() )
-				{
-					title.setText( image.getTitle() );
-				}
-				else
-				{
-					title.setVisibility( View.GONE );
-				}
-
-				new FrescoService().loadImage( img.getLinkUri(), imageView, new ControllerImageInfoListener()
-				{
-					@Override
-					public void onFinalImageSet( String id, ImageInfo imageInfo, Animatable animatable )
-					{
-						progressBar.setVisibility( View.INVISIBLE );
-					}
-
-					@Override
-					public void onFailure( String id, Throwable throwable )
-					{
-						Log.v( TAG, throwable.toString() );
-					}
-				} );
+				title.setText( image.getTitle() );
 			}
+			else
+			{
+				title.setVisibility( View.GONE );
+			}
+
+			new FrescoService().loadImage( img.getLinkUri(), img.getThumbnailLinkUri(), imageView, new ControllerImageInfoListener()
+			{
+				@Override
+				public void onFinalImageSet( String id, ImageInfo imageInfo, Animatable animatable )
+				{
+					progressBar.setVisibility( View.INVISIBLE );
+				}
+
+				@Override
+				public void onFailure( String id, Throwable throwable )
+				{
+					Log.v( TAG, throwable.toString() );
+				}
+			} );
 		}
 	}
 }
