@@ -1,8 +1,8 @@
 package com.helpers;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Point;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.WindowManager;
 
@@ -23,23 +23,31 @@ public class MetricsHelper
 		return windowSize;
 	}
 
-	public static String getDensityAbbr( Context context )
+	public static int getNavigationBarHeight( Context context )
 	{
-		switch ( context.getResources().getDisplayMetrics().densityDpi )
+		Resources resources = context.getResources();
+
+		int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+
+		if ( resourceId > 0 )
 		{
-			case DisplayMetrics.DENSITY_LOW: return "ldpi";
-			case DisplayMetrics.DENSITY_MEDIUM: return "mdpi";
-			case DisplayMetrics.DENSITY_HIGH: return "hdpi";
-			case DisplayMetrics.DENSITY_XHIGH: return "xhdpi";
-			case DisplayMetrics.DENSITY_XXHIGH: return "xxhdpi";
-			case DisplayMetrics.DENSITY_XXXHIGH: return "xxxhdpi";
+			return resources.getDimensionPixelSize(resourceId);
 		}
 
-		return "xhdpi";
+		return 0;
 	}
 
-	public static String[] getDensities()
+	public static int getStatusBarHeight( Context context )
 	{
-		return new String[] { "ldpi", "mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi" };
+		Resources resources = context.getResources();
+
+		int resourceId = resources.getIdentifier( "status_bar_height", "dimen", "android" );
+
+		if ( resourceId > 0 )
+		{
+			return resources.getDimensionPixelSize(resourceId);
+		}
+
+		return 0;
 	}
 }
