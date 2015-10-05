@@ -211,9 +211,7 @@ public class ImageViewer extends AppActivity
 		}
 		else
 		{
-			//loadImage( Uri.parse( "https://media3.giphy.com/media/JLQUx1mbgv2hO/200.gif" ) );
-
-			loadResource( Uri.parse( "https://imgur.com/a/6RLyq" ) );
+			loadImage( Uri.parse( "https://media3.giphy.com/media/JLQUx1mbgv2hO/200.gif" ) );
 		}
 	}
 
