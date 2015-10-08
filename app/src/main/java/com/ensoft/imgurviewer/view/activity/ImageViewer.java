@@ -10,8 +10,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -44,6 +48,7 @@ public class ImageViewer extends AppActivity
 	private boolean mVisible;
 	private PointF mPos = new PointF();
 	private float mClickTolerance;
+	private ImageView mSettingsButton;
 
 	protected View.OnTouchListener mTouchListener = new View.OnTouchListener()
 	{
@@ -120,7 +125,7 @@ public class ImageViewer extends AppActivity
 
 				mProgressBar.setVisibility( View.INVISIBLE );
 			}
-		});
+		} );
 		mVideoView.start();
 	}
 
@@ -170,6 +175,11 @@ public class ImageViewer extends AppActivity
 		}
 	}
 
+	public void showPopup(View v)
+	{
+		startActivity( new Intent( ImageViewer.this, SettingsView.class ) );
+	}
+
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
 	{
@@ -183,6 +193,8 @@ public class ImageViewer extends AppActivity
 		mImageView = (ZoomableDraweeView)findViewById( R.id.imageView );
 		mVideoView = (VideoView)findViewById( R.id.videoView );
 		mProgressBar = (ProgressBar)findViewById( R.id.progressBar );
+		mSettingsButton = (ImageView)findViewById( R.id.settings );
+		mSettingsButton.setPadding( 0, MetricsHelper.getStatusBarHeight( this ), 0, 0 );
 
 		ProgressBarDrawable progressBarDrawable = new ProgressBarDrawable();
 		progressBarDrawable.setColor( getResources().getColor( R.color.imgur_color ) );

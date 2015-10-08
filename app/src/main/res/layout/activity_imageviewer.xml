@@ -5,6 +5,7 @@
 				android:background="@android:color/black"
 				android:fitsSystemWindows="true">
 
+
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
@@ -19,6 +20,7 @@
 				android:layout_gravity="center"
 				android:visibility="invisible"
 				android:background="@android:color/transparent" />
+
 		</FrameLayout>
 
 		<com.fresco.ZoomableDraweeView
@@ -42,4 +44,15 @@
 			android:layout_centerVertical="true"
 			android:layout_centerHorizontal="true"/>
 	</RelativeLayout>
+
+	<ImageView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/settings"
+		android:layout_gravity="right|top"
+		android:src="@drawable/ic_more_vert_white_24dp"
+		android:layout_alignParentBottom="false"
+		android:layout_alignParentRight="true"
+		android:onClick="showPopup"
+		/>
 </RelativeLayout>
