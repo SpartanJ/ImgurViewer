@@ -14,4 +14,7 @@
 
 	<style name="AppThemeFull" parent="AppThemeNoActionBar">
 	</style>
+
+	<style name="AppThemeSettings" parent="android:Theme.Holo.Dialog.NoActionBar">
+	</style>
 </resources>
