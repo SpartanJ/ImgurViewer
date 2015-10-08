@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<EditTextPreference
+		android:name="proxyHost"
+		android:summary="@string/proxyHost"
+		android:defaultValue=""
+		android:title="@string/proxyHostConf"
+		android:key="proxyHost" />
+
+	<EditTextPreference
+			android:name="proxyPort"
+			android:summary="@string/proxyPortConf"
+			android:defaultValue="8118"
+			android:title="@string/proxyPort"
+			android:key="proxyPort"
+			android:numeric="integer" />
+
+</PreferenceScreen>
