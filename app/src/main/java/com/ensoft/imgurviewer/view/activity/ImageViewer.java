@@ -1,7 +1,6 @@
 package com.ensoft.imgurviewer.view.activity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PointF;
 import android.graphics.drawable.Animatable;
@@ -10,12 +9,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -194,7 +192,7 @@ public class ImageViewer extends AppActivity
 		mVideoView = (VideoView)findViewById( R.id.videoView );
 		mProgressBar = (ProgressBar)findViewById( R.id.progressBar );
 		mSettingsButton = (ImageView)findViewById( R.id.settings );
-		mSettingsButton.setPadding( 0, MetricsHelper.getStatusBarHeight( this ), 0, 0 );
+		mSettingsButton.setPadding( 0, MetricsHelper.getStatusBarHeight( this ) + MetricsHelper.dpToPx( this, 16 ), MetricsHelper.dpToPx( this, 16 ), 0 );
 
 		ProgressBarDrawable progressBarDrawable = new ProgressBarDrawable();
 		progressBarDrawable.setColor( getResources().getColor( R.color.imgur_color ) );
@@ -261,6 +259,30 @@ public class ImageViewer extends AppActivity
 		public void run()
 		{
 			mContentView.setSystemUiVisibility( View.SYSTEM_UI_FLAG_LOW_PROFILE | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION );
+
+			mSettingsButton.setVisibility( View.VISIBLE );
+			AlphaAnimation alphaAnimation = new AlphaAnimation( 1, 0 );
+			alphaAnimation.setDuration( UI_ANIMATION_DELAY );
+			alphaAnimation.setAnimationListener( new Animation.AnimationListener()
+			{
+				@Override
+				public void onAnimationStart( Animation animation )
+				{
+				}
+
+				@Override
+				public void onAnimationEnd( Animation animation )
+				{
+					mSettingsButton.setVisibility( View.INVISIBLE );
+				}
+
+				@Override
+				public void onAnimationRepeat( Animation animation )
+				{
+				}
+			} );
+
+			mSettingsButton.startAnimation( alphaAnimation );
 		}
 	};
 	
@@ -271,6 +293,11 @@ public class ImageViewer extends AppActivity
 		mVisible = true;
 		mHideHandler.removeCallbacks( mHidePart2Runnable );
 		mHideHandler.postDelayed( mShowPart2Runnable, UI_ANIMATION_DELAY );
+
+		mSettingsButton.setVisibility( View.VISIBLE );
+		AlphaAnimation alphaAnimation = new AlphaAnimation( 0, 1 );
+		alphaAnimation.setDuration( UI_ANIMATION_DELAY );
+		mSettingsButton.startAnimation( alphaAnimation );
 	}
 	
 	private final Runnable mShowPart2Runnable = new Runnable()
