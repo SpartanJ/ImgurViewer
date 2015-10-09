@@ -2,6 +2,7 @@ package com.ensoft.imgurviewer;
 
 import android.app.Application;
 
+import com.ensoft.imgurviewer.service.PreferencesService;
 import com.ensoft.imgurviewer.service.RequestQueueService;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
@@ -16,6 +17,7 @@ public class App extends Application
 {
 	protected static App sInstance;
 	protected int mActivityCount = 0;
+	protected PreferencesService mPreferencesService;
 
 	public static App getInstance()
 	{
@@ -28,6 +30,8 @@ public class App extends Application
 		super.onCreate();
 
 		sInstance = this;
+
+		mPreferencesService = new PreferencesService( this );
 
 		RequestQueueService.init( this );
 
@@ -61,5 +65,10 @@ public class App extends Application
 		{
 			onDestroy();
 		}
+	}
+
+	public PreferencesService getPreferencesService()
+	{
+		return mPreferencesService;
 	}
 }
