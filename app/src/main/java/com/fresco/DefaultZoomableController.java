@@ -1,9 +1,13 @@
 package com.fresco;
 
+import android.animation.FloatEvaluator;
+import android.animation.ValueAnimator;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.MotionEvent;
+import android.view.animation.LinearInterpolator;
 
 /**
  * Zoomable controller that calculates transformation based on touch events.
@@ -158,8 +162,8 @@ public class DefaultZoomableController
 		points[0] = viewPoint.x;
 		points[1] = viewPoint.y;
 		mActiveTransform.invert(mActiveTransformInverse);
-		mActiveTransformInverse.mapPoints(points, 0, points, 0, 1);
-		mapAbsoluteToRelative(points, points, 1);
+		mActiveTransformInverse.mapPoints( points, 0, points, 0, 1 );
+		mapAbsoluteToRelative( points, points, 1 );
 		return new PointF(points[0], points[1]);
 	}
 
@@ -260,6 +264,10 @@ public class DefaultZoomableController
 			mViewBounds.centerX() - points[0],
 			mViewBounds.centerY() - points[1]);
 		limitTranslation();
+
+		if (mListener != null) {
+			mListener.onTransformChanged(mActiveTransform);
+		}
 	}
 
   /* TransformGestureDetector.Listener methods  */
@@ -294,13 +302,13 @@ public class DefaultZoomableController
 
 	@Override
 	public void onGestureEnd(TransformGestureDetector detector) {
-		mPreviousTransform.set(mActiveTransform);
+		mPreviousTransform.set( mActiveTransform );
 	}
 
 	/** Gets the current scale factor. */
 	@Override
 	public float getScaleFactor() {
-		mActiveTransform.getValues(mTempValues);
+		mActiveTransform.getValues( mTempValues );
 		return mTempValues[Matrix.MSCALE_X];
 	}
 
@@ -323,10 +331,10 @@ public class DefaultZoomableController
 		bounds.set(mImageBounds);
 		mActiveTransform.mapRect(bounds);
 
-		float offsetLeft = getOffset(bounds.left, bounds.width(), mViewBounds.width());
-		float offsetTop = getOffset(bounds.top, bounds.height(), mViewBounds.height());
+		float offsetLeft = getOffset( bounds.left, bounds.width(), mViewBounds.width() );
+		float offsetTop = getOffset( bounds.top, bounds.height(), mViewBounds.height() );
 		if (offsetLeft != bounds.left || offsetTop != bounds.top) {
-			mActiveTransform.postTranslate(offsetLeft - bounds.left, offsetTop - bounds.top);
+			mActiveTransform.postTranslate( offsetLeft - bounds.left, offsetTop - bounds.top );
 			return true;
 		}
 		return false;
@@ -341,4 +349,22 @@ public class DefaultZoomableController
 		return Math.min(Math.max(min, value), max);
 	}
 
+	public void animZoom( final float fromScale, final float toScale, long duration )
+	{
+		ValueAnimator valueAnimator = ValueAnimator.ofFloat( fromScale, toScale );
+		valueAnimator.setDuration( duration );
+		valueAnimator.setInterpolator( new LinearInterpolator() );
+		valueAnimator.setFloatValues( fromScale, toScale );
+		valueAnimator.setEvaluator( new FloatEvaluator() );
+		valueAnimator.addUpdateListener( new ValueAnimator.AnimatorUpdateListener()
+		{
+			@Override
+			public void onAnimationUpdate( ValueAnimator animation )
+			{
+				float val = fromScale + ( toScale > fromScale ? animation.getAnimatedFraction() : -animation.getAnimatedFraction() );
+				zoomToImagePoint( val, new PointF( 0.5f, 0.5f ) );
+			}
+		} );
+		valueAnimator.start();
+	}
 }

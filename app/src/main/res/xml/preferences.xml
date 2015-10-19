@@ -3,9 +3,9 @@
 
 	<EditTextPreference
 		android:name="proxyHost"
-		android:summary="@string/proxyHost"
+		android:summary="@string/proxyHostConf"
 		android:defaultValue=""
-		android:title="@string/proxyHostConf"
+		android:title="@string/proxyHost"
 		android:key="proxyHost" />
 
 	<EditTextPreference
