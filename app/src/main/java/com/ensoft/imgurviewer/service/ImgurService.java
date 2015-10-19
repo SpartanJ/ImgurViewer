@@ -51,6 +51,11 @@ public class ImgurService
 			url = url.replace( "//" + IMGUR_MOBILE_DOMAIN, "//" + IMGUR_IMAGE_DOMAIN );
 		}
 
+		if ( url.contains( "/r/" ) )
+		{
+			url = url.substring( 0, url.indexOf( "/r/" ) ) + url.substring( url.lastIndexOf( "/" ) );
+		}
+
 		if ( url.endsWith( ".gif" ) || url.endsWith( ".gifv" ) )
 		{
 			url = url.replace( ".gifv", ".mp4" );

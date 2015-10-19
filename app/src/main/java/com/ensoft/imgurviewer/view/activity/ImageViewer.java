@@ -28,6 +28,7 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.fresco.DefaultZoomableController;
 import com.fresco.ZoomableDraweeView;
 
 import com.helpers.MetricsHelper;
@@ -46,6 +47,7 @@ public class ImageViewer extends AppActivity
 	private boolean mVisible;
 	private PointF mPos = new PointF();
 	private float mClickTolerance;
+	private long mLastClickTime;
 	private ImageView mSettingsButton;
 
 	protected View.OnTouchListener mTouchListener = new View.OnTouchListener()
@@ -65,8 +67,43 @@ public class ImageViewer extends AppActivity
 				{
 					if ( Math.abs( mPos.x - event.getRawX() ) <= mClickTolerance && Math.abs( mPos.y - event.getRawY() ) <= mClickTolerance )
 					{
-						toggle();
+						if ( System.currentTimeMillis() - mLastClickTime <= UI_ANIMATION_DELAY )
+						{
+							if ( mImageView.getZoomableController() instanceof DefaultZoomableController )
+							{
+								DefaultZoomableController zoomableController = (DefaultZoomableController) mImageView.getZoomableController();
+								PointF pos = new PointF( event.getX(), event.getY() );
+
+								if ( zoomableController.getScaleFactor() == 1.f )
+								{
+									zoomableController.animZoom( zoomableController.getScaleFactor(), 2.f, 150 );
+								}
+								else
+								{
+									zoomableController.animZoom( zoomableController.getScaleFactor(), 1.f, 150 );
+								}
+							}
+						}
+						else
+						{
+							new Handler().postDelayed( new Runnable()
+							{
+								@Override
+								public void run()
+								{
+									long diff = System.currentTimeMillis() - mLastClickTime;
+
+									if ( diff >= UI_ANIMATION_DELAY )
+									{
+										toggle();
+									}
+								}
+							}, UI_ANIMATION_DELAY );
+						}
 					}
+
+					mLastClickTime = System.currentTimeMillis();
+
 					break;
 				}
 			}

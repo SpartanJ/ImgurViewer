@@ -69,7 +69,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
 	}
 
 	private void init() {
-		mZoomableController.setListener(this);
+		mZoomableController.setListener( this );
 	}
 
 	public void setZoomableController(ZoomableController zoomableController) {
@@ -81,7 +81,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
 
 	@Override
 	public void setController(@Nullable DraweeController controller) {
-		setControllers(controller, null);
+		setControllers( controller, null );
 	}
 
 	private void setControllersInternal(
@@ -90,7 +90,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
 		removeControllerListener(getController());
 		addControllerListener(controller);
 		mHugeImageController = hugeImageController;
-		super.setController(controller);
+		super.setController( controller );
 	}
 
 	/**
@@ -105,9 +105,9 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
 	public void setControllers(
 		@Nullable DraweeController controller,
 		@Nullable DraweeController hugeImageController) {
-		setControllersInternal(null, null);
+		setControllersInternal( null, null );
 		mZoomableController.setEnabled(false);
-		setControllersInternal(controller, hugeImageController);
+		setControllersInternal( controller, hugeImageController );
 	}
 
 	private void maybeSetHugeImageController() {
@@ -120,14 +120,14 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
 	private void removeControllerListener(DraweeController controller) {
 		if (controller instanceof AbstractDraweeController) {
 			((AbstractDraweeController) controller)
-				.removeControllerListener(mControllerListener);
+				.removeControllerListener( mControllerListener );
 		}
 	}
 
 	private void addControllerListener(DraweeController controller) {
 		if (controller instanceof AbstractDraweeController) {
 			((AbstractDraweeController) controller)
-				.addControllerListener(mControllerListener);
+				.addControllerListener( mControllerListener );
 		}
 	}
 
@@ -148,7 +148,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
 			FLog.v(TAG, "onTouchEvent: view %x, handled by zoomable controller", this.hashCode());
 			return true;
 		}
-		FLog.v(TAG, "onTouchEvent: view %x, handled by the super", this.hashCode());
+		FLog.v( TAG, "onTouchEvent: view %x, handled by the super", this.hashCode() );
 		return super.onTouchEvent(event);
 	}
 
@@ -160,7 +160,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
 	}
 
 	private void onFinalImageSet() {
-		FLog.v(TAG, "onFinalImageSet: view %x", this.hashCode());
+		FLog.v( TAG, "onFinalImageSet: view %x", this.hashCode() );
 		if (!mZoomableController.isEnabled()) {
 			updateZoomableControllerBounds();
 			mZoomableController.setEnabled(true);
@@ -169,7 +169,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
 
 	private void onRelease() {
 		FLog.v(TAG, "onRelease: view %x", this.hashCode());
-		mZoomableController.setEnabled(false);
+		mZoomableController.setEnabled( false );
 	}
 
 	@Override
@@ -181,14 +181,19 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
 
 	private void updateZoomableControllerBounds() {
 		getHierarchy().getActualImageBounds(mImageBounds);
-		mViewBounds.set(0, 0, getWidth(), getHeight());
-		mZoomableController.setImageBounds(mImageBounds);
-		mZoomableController.setViewBounds(mViewBounds);
+		mViewBounds.set( 0, 0, getWidth(), getHeight() );
+		mZoomableController.setImageBounds( mImageBounds );
+		mZoomableController.setViewBounds( mViewBounds );
 		FLog.v(
 			TAG,
 			"updateZoomableControllerBounds: view %x, view bounds: %s, image bounds: %s",
 			this.hashCode(),
 			mViewBounds,
-			mImageBounds);
+			mImageBounds );
+	}
+
+	public ZoomableController getZoomableController()
+	{
+		return mZoomableController;
 	}
 }
