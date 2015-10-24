@@ -27,32 +27,38 @@ import com.imgurviewer.R;
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumImageHolder>
 {
 	public static final String TAG = AlbumAdapter.class.getCanonicalName();
-	protected int mResourceId;
-	ImgurImage[] mDataSet;
+	protected int resourceId;
+	ImgurImage[] dataSet;
+	boolean isLandscape = false;
 
 	public AlbumAdapter( int resource, ImgurImage[] objects )
 	{
-		mResourceId = resource;
-		mDataSet = objects;
+		resourceId = resource;
+		dataSet = objects;
+	}
+
+	public void setOrientationLandscape( boolean landscape )
+	{
+		isLandscape = landscape;
 	}
 
 	@Override
 	public AlbumImageHolder onCreateViewHolder( ViewGroup parent, int viewType )
 	{
-		View v = LayoutInflater.from(parent.getContext()).inflate( mResourceId, parent, false );
+		View v = LayoutInflater.from(parent.getContext()).inflate( resourceId, parent, false );
 		return new AlbumImageHolder( v );
 	}
 
 	@Override
 	public void onBindViewHolder( AlbumImageHolder holder, int position )
 	{
-		holder.setData( mDataSet[position], position, getItemCount() );
+		holder.setData( dataSet[position], position, getItemCount(), isLandscape );
 	}
 
 	@Override
 	public int getItemCount()
 	{
-		return mDataSet.length;
+		return dataSet.length;
 	}
 
 	static class AlbumImageHolder extends RecyclerView.ViewHolder
@@ -87,7 +93,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumImageHo
 			} );
 		}
 
-		public void setData( ImgurImage img, int position, int count )
+		public void setData( ImgurImage img, int position, int count, boolean isLandscape )
 		{
 			image = img;
 
@@ -118,7 +124,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumImageHo
 						imageView.setPadding( 0, MetricsHelper.getStatusBarHeight( App.getInstance() ), 0, 0 );
 					}
 				}
-				else if ( position == count - 1 )
+				else if ( position == count - 1 && !isLandscape )
 				{
 					imageView.setPadding( 0, 0, 0, MetricsHelper.getNavigationBarHeight( App.getInstance() ) );
 				}

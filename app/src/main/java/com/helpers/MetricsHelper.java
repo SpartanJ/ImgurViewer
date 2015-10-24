@@ -13,16 +13,6 @@ public class MetricsHelper
 		return (int)TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, dpSize, context.getResources().getDisplayMetrics() );
 	}
 
-	public static Point getDisplaySize( WindowManager windowManager )
-	{
-		Point windowSize = new Point();
-
-		if ( null != windowManager )
-			windowManager.getDefaultDisplay().getSize(windowSize);
-
-		return windowSize;
-	}
-
 	public static int getNavigationBarHeight( Context context )
 	{
 		Resources resources = context.getResources();

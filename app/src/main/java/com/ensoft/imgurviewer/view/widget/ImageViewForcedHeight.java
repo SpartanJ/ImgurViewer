@@ -10,7 +10,7 @@ import com.imgurviewer.R;
 
 public class ImageViewForcedHeight extends DraweeView<GenericDraweeHierarchy>
 {
-	protected float mHeightRatio = 1.f;
+	protected float heightRatio = 1.f;
 
 	protected void obtainRatio( final Context context, final AttributeSet attrs )
 	{
@@ -18,7 +18,7 @@ public class ImageViewForcedHeight extends DraweeView<GenericDraweeHierarchy>
 
 		try
 		{
-			mHeightRatio = a.getFloat(R.styleable.ImageViewForcedHeight_heightRatio, mHeightRatio);
+			heightRatio = a.getFloat(R.styleable.ImageViewForcedHeight_heightRatio, heightRatio );
 		}
 		finally
 		{
@@ -51,6 +51,6 @@ public class ImageViewForcedHeight extends DraweeView<GenericDraweeHierarchy>
 		super.onMeasure( width, height );
 		int measuredWidth = getMeasuredWidth();
 
-		setMeasuredDimension( measuredWidth, (int)( (float)measuredWidth * mHeightRatio ) );
+		setMeasuredDimension( measuredWidth, (int)( (float)measuredWidth * heightRatio ) );
 	}
 }
