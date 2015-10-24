@@ -259,9 +259,7 @@ public class ImageViewer extends AppActivity
 		}
 		else
 		{
-			//loadImage( Uri.parse( "http://imgurviewer.ensoft-dev.com/img/nyancat.gif" ), null );
-			//loadResource( Uri.parse( "http://imgur.com/gallery/xite5zY" ) );
-			loadResource( Uri.parse( "http://imgur.com/cP3Q3eV,lJ8GISh,HpgzAs6,NOn7Jhn,Xy5KW9h,Xa23ZyF,udjV0dY" ) );
+			loadImage( Uri.parse( "http://imgurviewer.ensoft-dev.com/img/nyancat.gif" ), null );
 		}
 	}
 
