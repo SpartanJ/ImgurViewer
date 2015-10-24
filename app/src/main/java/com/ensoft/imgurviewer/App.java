@@ -15,13 +15,13 @@ import org.acra.annotation.*;
 )
 public class App extends Application
 {
-	protected static App sInstance;
-	protected int mActivityCount = 0;
-	protected PreferencesService mPreferencesService;
+	protected static App instance;
+	protected int activityCount = 0;
+	protected PreferencesService preferencesService;
 
 	public static App getInstance()
 	{
-		return sInstance;
+		return instance;
 	}
 
 	@Override
@@ -29,9 +29,9 @@ public class App extends Application
 	{
 		super.onCreate();
 
-		sInstance = this;
+		instance = this;
 
-		mPreferencesService = new PreferencesService( this );
+		preferencesService = new PreferencesService( this );
 
 		RequestQueueService.init( this );
 
@@ -45,7 +45,7 @@ public class App extends Application
 
 	public void addActivity()
 	{
-		if ( 0 == mActivityCount )
+		if ( 0 == activityCount )
 		{
 			ImagePipelineConfig config = ImagePipelineConfig.newBuilder( this )
 				.setDownsampleEnabled( true )
@@ -54,14 +54,14 @@ public class App extends Application
 			Fresco.initialize( this, config );
 		}
 
-		mActivityCount++;
+		activityCount++;
 	}
 
 	public void destroyActivity()
 	{
-		mActivityCount--;
+		activityCount--;
 
-		if ( 0 == mActivityCount )
+		if ( 0 == activityCount )
 		{
 			onDestroy();
 		}
@@ -69,6 +69,6 @@ public class App extends Application
 
 	public PreferencesService getPreferencesService()
 	{
-		return mPreferencesService;
+		return preferencesService;
 	}
 }

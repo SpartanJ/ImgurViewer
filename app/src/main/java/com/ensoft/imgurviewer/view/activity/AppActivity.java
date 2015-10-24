@@ -1,12 +1,13 @@
 package com.ensoft.imgurviewer.view.activity;
 
+import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.ensoft.imgurviewer.App;
 
-public class AppActivity extends android.app.Activity
+public class AppActivity extends Activity
 {
 	@Override
 	protected void onCreate( Bundle savedInstanceState )

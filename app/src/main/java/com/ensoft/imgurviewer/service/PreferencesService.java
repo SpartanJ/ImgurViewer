@@ -8,11 +8,11 @@ public class PreferencesService
 	public static final String PROXY_HOST = "proxyHost";
 	public static final String PROXY_PORT = "proxyPort";
 
-	protected Context mContext;
+	protected Context context;
 
 	public SharedPreferences getDefaultSharedPreferences()
 	{
-		return mContext.getSharedPreferences( getDefaultSharedPreferencesName( mContext ), getDefaultSharedPreferencesMode() );
+		return context.getSharedPreferences( getDefaultSharedPreferencesName( context ), getDefaultSharedPreferencesMode() );
 	}
 
 	private static String getDefaultSharedPreferencesName( Context context )
@@ -27,7 +27,7 @@ public class PreferencesService
 
 	public PreferencesService( Context context )
 	{
-		mContext = context;
+		this.context = context;
 	}
 
 	public String getProxyHost()

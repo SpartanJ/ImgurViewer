@@ -43,6 +43,12 @@ public class ImgurImage
 		this.link = link;
 	}
 
+	public ImgurImage( String id, String link )
+	{
+		this.id = id;
+		this.link = link;
+	}
+
 	public String getId()
 	{
 		return id;

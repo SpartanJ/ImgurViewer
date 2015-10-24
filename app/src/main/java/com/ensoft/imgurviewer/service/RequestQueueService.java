@@ -11,39 +11,39 @@ import com.ensoft.imgurviewer.service.network.ProxiedHurlStack;
 
 public class RequestQueueService
 {
-	private static RequestQueueService mInstance;
-	private RequestQueue mRequestQueue;
-	private static Context mContext;
+	private static RequestQueueService instance;
+	private RequestQueue requestQueue;
+	private Context context;
 
 	private RequestQueueService(Context context)
 	{
-		mContext = context;
-		mRequestQueue = getRequestQueue();
+		this.context = context;
+		requestQueue = getRequestQueue();
 	}
 
 	public static synchronized RequestQueueService init( Context context )
 	{
-		if (mInstance == null)
+		if ( instance == null)
 		{
-			mInstance = new RequestQueueService(context);
+			instance = new RequestQueueService(context);
 		}
 
-		return mInstance;
+		return instance;
 	}
 
 	public static synchronized RequestQueueService getInstance()
 	{
-		return mInstance;
+		return instance;
 	}
 
 	public RequestQueue getRequestQueue()
 	{
-		if (mRequestQueue == null)
+		if ( requestQueue == null)
 		{
 			createRequestQueue();
 		}
 
-		return mRequestQueue;
+		return requestQueue;
 	}
 
 	public <T> void addToRequestQueue(Request<T> req)
@@ -64,6 +64,6 @@ public class RequestQueueService
 
 		// getApplicationContext() is key, it keeps you from leaking the
 		// Activity or BroadcastReceiver if someone passes one in.
-		mRequestQueue = Volley.newRequestQueue( mContext.getApplicationContext(), httpStack );
+		requestQueue = Volley.newRequestQueue( context.getApplicationContext(), httpStack );
 	}
 }
