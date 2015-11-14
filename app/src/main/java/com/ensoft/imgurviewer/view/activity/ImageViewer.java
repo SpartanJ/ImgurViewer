@@ -2,14 +2,12 @@ package com.ensoft.imgurviewer.view.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.PointF;
 import android.graphics.drawable.Animatable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -29,11 +27,12 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.imagepipeline.image.ImageInfo;
-import com.fresco.DefaultZoomableController;
-import com.fresco.ZoomableDraweeView;
 
-import com.helpers.MetricsHelper;
+import com.ensoft.imgurviewer.view.helper.MetricsHelper;
 import com.imgurviewer.R;
+
+import me.relex.photodraweeview.OnViewTapListener;
+import me.relex.photodraweeview.PhotoDraweeView;
 
 public class ImageViewer extends AppActivity
 {
@@ -43,76 +42,39 @@ public class ImageViewer extends AppActivity
 
 	private View contentView;
 	private ProgressBar progressBar;
-	private ZoomableDraweeView imageView;
+	private PhotoDraweeView imageView;
 	private VideoView videoView;
 	private boolean visible;
-	private PointF touchPos = new PointF();
-	private float clickTolerance;
 	private long lastClickTime;
 	private ImageView settingsButton;
 
-	protected View.OnTouchListener mTouchListener = new View.OnTouchListener()
+	protected OnViewTapListener touchListener = new OnViewTapListener()
 	{
 		@Override
-		public boolean onTouch( View v, MotionEvent event )
+		public void onViewTap(View view, float x, float y)
 		{
-			switch ( event.getActionMasked() )
+			if ( !( System.currentTimeMillis() - lastClickTime <= UI_ANIMATION_DELAY ) )
 			{
-				case MotionEvent.ACTION_DOWN:
+				new Handler().postDelayed( new Runnable()
 				{
-					touchPos.x = event.getRawX();
-					touchPos.y = event.getRawY();
-					break;
-				}
-				case MotionEvent.ACTION_UP:
-				{
-					if ( Math.abs( touchPos.x - event.getRawX() ) <= clickTolerance && Math.abs( touchPos.y - event.getRawY() ) <= clickTolerance )
+					@Override
+					public void run()
 					{
-						if ( System.currentTimeMillis() - lastClickTime <= UI_ANIMATION_DELAY )
-						{
-							if ( imageView.getZoomableController() instanceof DefaultZoomableController )
-							{
-								DefaultZoomableController zoomableController = (DefaultZoomableController) imageView.getZoomableController();
+						long diff = System.currentTimeMillis() - lastClickTime;
 
-								if ( zoomableController.getScaleFactor() == 1.f )
-								{
-									zoomableController.animZoom( zoomableController.getScaleFactor(), 2.f, 150 );
-								}
-								else
-								{
-									zoomableController.animZoom( zoomableController.getScaleFactor(), 1.f, 150 );
-								}
-							}
-						}
-						else
+						if ( diff >= UI_ANIMATION_DELAY )
 						{
-							new Handler().postDelayed( new Runnable()
-							{
-								@Override
-								public void run()
-								{
-									long diff = System.currentTimeMillis() - lastClickTime;
-
-									if ( diff >= UI_ANIMATION_DELAY )
-									{
-										toggle();
-									}
-								}
-							}, UI_ANIMATION_DELAY );
+							toggle();
 						}
 					}
-
-					lastClickTime = System.currentTimeMillis();
-
-					break;
-				}
+				}, UI_ANIMATION_DELAY );
 			}
 
-			return false;
+			lastClickTime = System.currentTimeMillis();
 		}
 	};
 
-	protected View.OnClickListener mClickListener = new View.OnClickListener()
+	protected View.OnClickListener clickListener = new View.OnClickListener()
 	{
 		@Override
 		public void onClick( View v )
@@ -131,6 +93,8 @@ public class ImageViewer extends AppActivity
 			public void onFinalImageSet( String id, ImageInfo imageInfo, Animatable animatable )
 			{
 				progressBar.setVisibility( View.INVISIBLE );
+
+				imageView.update( imageInfo.getWidth(), imageInfo.getHeight() );
 			}
 
 			@Override
@@ -140,7 +104,7 @@ public class ImageViewer extends AppActivity
 			}
 		} );
 
-		imageView.setOnTouchListener( mTouchListener );
+		imageView.setOnViewTapListener( touchListener );
 	}
 
 	protected void loadVideo( Uri uri )
@@ -149,7 +113,7 @@ public class ImageViewer extends AppActivity
 
 		imageView.setVisibility( View.GONE );
 		videoView.setVisibility( View.VISIBLE );
-		videoView.setOnClickListener( mClickListener );
+		videoView.setOnClickListener( clickListener );
 		videoView.setVideoURI( uri );
 		videoView.setOnPreparedListener( new MediaPlayer.OnPreparedListener()
 		{
@@ -224,9 +188,8 @@ public class ImageViewer extends AppActivity
 		setContentView( R.layout.activity_imageviewer );
 
 		visible = true;
-		clickTolerance = MetricsHelper.dpToPx( getBaseContext(), 50.f );
 		contentView = findViewById( R.id.fullscreen_content );
-		imageView = (ZoomableDraweeView)findViewById( R.id.imageView );
+		imageView = (PhotoDraweeView)findViewById( R.id.imageView );
 		videoView = (VideoView)findViewById( R.id.videoView );
 		progressBar = (ProgressBar)findViewById( R.id.progressBar );
 		settingsButton = (ImageView)findViewById( R.id.settings );
@@ -243,7 +206,7 @@ public class ImageViewer extends AppActivity
 
 		imageView.setHierarchy( hierarchy );
 
-		contentView.setOnClickListener( mClickListener );
+		contentView.setOnClickListener( clickListener );
 
 		if ( null != getIntent().getExtras() && null != getIntent().getExtras().getString( PARAM_RESOURCE_PATH ) )
 		{
