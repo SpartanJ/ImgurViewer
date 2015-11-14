@@ -21,7 +21,7 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.imagepipeline.image.ImageInfo;
-import com.helpers.MetricsHelper;
+import com.ensoft.imgurviewer.view.helper.MetricsHelper;
 import com.imgurviewer.R;
 
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumImageHolder>

@@ -1,10 +1,8 @@
-package com.helpers;
+package com.ensoft.imgurviewer.view.helper;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Point;
 import android.util.TypedValue;
-import android.view.WindowManager;
 
 public class MetricsHelper
 {
