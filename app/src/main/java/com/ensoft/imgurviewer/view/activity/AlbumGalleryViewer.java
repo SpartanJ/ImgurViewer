@@ -125,6 +125,11 @@ public class AlbumGalleryViewer extends AppActivity
 	{
 		super.onConfigurationChanged( newConfig );
 
+		if ( null == albumAdapter )
+		{
+			return;
+		}
+
 		if ( newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE )
 		{
 			albumAdapter.setOrientationLandscape( true );
