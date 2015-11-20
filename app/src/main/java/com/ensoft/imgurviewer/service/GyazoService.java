@@ -1,0 +1,63 @@
+package com.ensoft.imgurviewer.service;
+
+import android.net.Uri;
+import android.util.Log;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.ensoft.imgurviewer.model.GyazoOEmbed;
+import com.ensoft.imgurviewer.service.interfaces.PathResolverListener;
+import com.google.gson.Gson;
+import org.json.JSONObject;
+
+public class GyazoService
+{
+	public static final String TAG = GyazoService.class.getCanonicalName();
+	public static final String GYAZO_DOMAIN = "gyazo.com";
+	public static final String GYAZO_API_URL = "https://api.gyazo.com/api";
+	public static final String GYAZO_GET_IMAGE_URL = GYAZO_API_URL + "/oembed?url=";
+
+	public boolean isGyazoPath( Uri uri )
+	{
+		return uri.toString().contains( GYAZO_DOMAIN );
+	}
+
+	public void getPath( Uri uri, final PathResolverListener pathResolverListener )
+	{
+		String oEmbedUrl = GYAZO_GET_IMAGE_URL + uri.toString();
+
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( oEmbedUrl, null, new Response.Listener<JSONObject>()
+		{
+			@Override
+			public void onResponse(JSONObject response)
+			{
+				try
+				{
+					Log.v( TAG, response.toString() );
+
+					GyazoOEmbed oEmbed = new Gson().fromJson( response.toString(), GyazoOEmbed.class );
+
+					pathResolverListener.onPathResolved( oEmbed.getUri(), null );
+				}
+				catch ( Exception e )
+				{
+					Log.v( TAG, e.getMessage() );
+
+					pathResolverListener.onPathError( e.toString() );;
+				}
+			}
+		}, new Response.ErrorListener()
+		{
+			@Override
+			public void onErrorResponse(VolleyError error)
+			{
+				Log.v( TAG, error.toString() );
+
+				pathResolverListener.onPathError( error.toString() );
+			}
+		});
+
+		RequestQueueService.getInstance().addToRequestQueue( jsonObjectRequest );
+	}
+}
