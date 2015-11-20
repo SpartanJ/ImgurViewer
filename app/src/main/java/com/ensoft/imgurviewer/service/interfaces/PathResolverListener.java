@@ -2,9 +2,21 @@ package com.ensoft.imgurviewer.service.interfaces;
 
 import android.net.Uri;
 
-public interface PathResolverListener
+public abstract class PathResolverListener
 {
-	void onPathResolved( Uri url, Uri thumbnail );
+	protected ImageServiceSolver serviceSolver;
 
-	void onPathError( String error );
+	public PathResolverListener( ImageServiceSolver serviceSolver )
+	{
+		this.serviceSolver = serviceSolver;
+	}
+
+	public ImageServiceSolver getServiceSolver()
+	{
+		return serviceSolver;
+	}
+
+	public abstract void onPathResolved( Uri url, Uri thumbnail );
+
+	public abstract void onPathError( String error );
 }

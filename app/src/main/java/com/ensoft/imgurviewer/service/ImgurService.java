@@ -4,11 +4,12 @@ import android.net.Uri;
 
 import com.ensoft.imgurviewer.model.ImgurAlbum;
 import com.ensoft.imgurviewer.model.ImgurImage;
+import com.ensoft.imgurviewer.service.interfaces.ImageServiceSolver;
 import com.ensoft.imgurviewer.service.interfaces.ImgurAlbumResolverListener;
 import com.ensoft.imgurviewer.service.interfaces.ImgurGalleryResolverListener;
 import com.ensoft.imgurviewer.service.interfaces.PathResolverListener;
 
-public class ImgurService
+public class ImgurService extends ImageServiceSolver
 {
 	public static final String IMGUR_DOMAIN = "imgur.com";
 	public static final String IMGUR_IMAGE_DOMAIN = "i.imgur.com";
@@ -129,14 +130,10 @@ public class ImgurService
 		}
 	}
 
-	public boolean isVideo( Uri uri )
+	@Override
+	public boolean isServicePath( Uri uri )
 	{
-		return isVideo( uri.toString() );
-	}
-
-	public boolean isVideo( String uri )
-	{
-		return uri.endsWith( ".gifv" ) || uri.endsWith( ".mp4" ) || uri.endsWith( ".avi" ) || uri.endsWith( ".flv" ) || uri.endsWith( ".mkv" ) || uri.endsWith( ".webm" );
+		return isImgurPath( uri );
 	}
 
 	public boolean isImgurPath( Uri uri )

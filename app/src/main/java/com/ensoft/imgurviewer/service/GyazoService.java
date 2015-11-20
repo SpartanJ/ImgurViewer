@@ -7,11 +7,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.model.GyazoOEmbed;
+import com.ensoft.imgurviewer.service.interfaces.ImageServiceSolver;
 import com.ensoft.imgurviewer.service.interfaces.PathResolverListener;
 import com.google.gson.Gson;
 import org.json.JSONObject;
 
-public class GyazoService
+public class GyazoService extends ImageServiceSolver
 {
 	public static final String TAG = GyazoService.class.getCanonicalName();
 	public static final String GYAZO_DOMAIN = "gyazo.com";
@@ -59,5 +60,11 @@ public class GyazoService
 		});
 
 		RequestQueueService.getInstance().addToRequestQueue( jsonObjectRequest );
+	}
+
+	@Override
+	public boolean isServicePath( Uri uri )
+	{
+		return isGyazoPath( uri );
 	}
 }
