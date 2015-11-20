@@ -21,6 +21,7 @@ import com.ensoft.imgurviewer.service.GyazoService;
 import com.ensoft.imgurviewer.service.ImgurAlbumService;
 import com.ensoft.imgurviewer.service.ImgurGalleryService;
 import com.ensoft.imgurviewer.service.ImgurService;
+import com.ensoft.imgurviewer.service.interfaces.ImageServiceSolver;
 import com.ensoft.imgurviewer.service.interfaces.PathResolverListener;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
@@ -133,6 +134,32 @@ public class ImageViewer extends AppActivity
 		videoView.start();
 	}
 
+	protected PathResolverListener getPathResolverListener( ImageServiceSolver imageServiceSolver )
+	{
+		return new PathResolverListener( imageServiceSolver )
+		{
+			@Override
+			public void onPathResolved( Uri url, Uri thumbnail )
+			{
+				if ( serviceSolver.isVideo( url ) )
+				{
+					loadVideo( url );
+				}
+				else
+				{
+					loadImage( url, thumbnail );
+				}
+			}
+
+			@Override
+			public void onPathError( String error )
+			{
+				Log.v( TAG, error );
+				Toast.makeText( ImageViewer.this, error, Toast.LENGTH_SHORT ).show();
+			}
+		};
+	}
+
 	protected void loadResource( Uri uri )
 	{
 		if ( imgurService.isImgurPath( uri ) )
@@ -146,47 +173,12 @@ public class ImageViewer extends AppActivity
 			}
 			else
 			{
-				imgurService.getPath( uri, new PathResolverListener( imgurService )
-				{
-					@Override
-					public void onPathResolved( Uri url, Uri thumbnail )
-					{
-						if ( serviceSolver.isVideo( url ) )
-						{
-							loadVideo( url );
-						}
-						else
-						{
-							loadImage( url, thumbnail );
-						}
-					}
-
-					@Override
-					public void onPathError( String error )
-					{
-						Log.v( TAG, error );
-						Toast.makeText( ImageViewer.this, error, Toast.LENGTH_SHORT ).show();
-					}
-				} );
+				imgurService.getPath( uri, getPathResolverListener( imgurService ) );
 			}
 		}
 		else if ( gyazoService.isGyazoPath( uri ) )
 		{
-			gyazoService.getPath( uri, new PathResolverListener( gyazoService )
-			{
-				@Override
-				public void onPathResolved( Uri url, Uri thumbnail )
-				{
-					loadImage( url, thumbnail );
-				}
-
-				@Override
-				public void onPathError( String error )
-				{
-					Log.v( TAG, error );
-					Toast.makeText( ImageViewer.this, error, Toast.LENGTH_SHORT ).show();
-				}
-			} );
+			gyazoService.getPath( uri, getPathResolverListener( gyazoService ) );
 		}
 		else
 		{
