@@ -48,6 +48,10 @@ public class ImageViewer extends AppActivity
 	private boolean visible;
 	private long lastClickTime;
 	private ImageView settingsButton;
+	private ImgurService imgurService = new ImgurService();
+	private ImgurAlbumService imgurAlbumService = new ImgurAlbumService();
+	private ImgurGalleryService imgurGalleryService = new ImgurGalleryService();
+	private GyazoService gyazoService = new GyazoService();
 
 	protected OnViewTapListener touchListener = new OnViewTapListener()
 	{
@@ -131,11 +135,6 @@ public class ImageViewer extends AppActivity
 
 	protected void loadResource( Uri uri )
 	{
-		final ImgurService imgurService = new ImgurService();
-		final ImgurAlbumService imgurAlbumService = new ImgurAlbumService();
-		final ImgurGalleryService imgurGalleryService = new ImgurGalleryService();
-		final GyazoService gyazoService = new GyazoService();
-
 		if ( imgurService.isImgurPath( uri ) )
 		{
 			if ( imgurAlbumService.isImgurAlbum( uri ) || imgurGalleryService.isImgurGallery( uri ) || imgurService.isMultiImageUri( uri ) )
@@ -147,12 +146,12 @@ public class ImageViewer extends AppActivity
 			}
 			else
 			{
-				imgurService.getPath( uri, new PathResolverListener()
+				imgurService.getPath( uri, new PathResolverListener( imgurService )
 				{
 					@Override
 					public void onPathResolved( Uri url, Uri thumbnail )
 					{
-						if ( imgurService.isVideo( url ) )
+						if ( serviceSolver.isVideo( url ) )
 						{
 							loadVideo( url );
 						}
@@ -173,7 +172,7 @@ public class ImageViewer extends AppActivity
 		}
 		else if ( gyazoService.isGyazoPath( uri ) )
 		{
-			gyazoService.getPath( uri, new PathResolverListener()
+			gyazoService.getPath( uri, new PathResolverListener( gyazoService )
 			{
 				@Override
 				public void onPathResolved( Uri url, Uri thumbnail )
