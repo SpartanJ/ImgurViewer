@@ -6,17 +6,16 @@ import com.ensoft.imgurviewer.model.ImgurAlbum;
 import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.service.interfaces.ImgurAlbumResolverListener;
 import com.ensoft.imgurviewer.service.interfaces.ImgurGalleryResolverListener;
-import com.ensoft.imgurviewer.service.interfaces.ImgurPathResolverListener;
+import com.ensoft.imgurviewer.service.interfaces.PathResolverListener;
 
 public class ImgurService
 {
-	public static final String TAG = ImgurService.class.getCanonicalName();
 	public static final String IMGUR_DOMAIN = "imgur.com";
 	public static final String IMGUR_IMAGE_DOMAIN = "i.imgur.com";
 	public static final String IMGUR_MOBILE_DOMAIN = "m.imgur.com";
 	public static final String IMGUR_API_URL = "https://api.imgur.com/3";
 
-	protected void getFirstAlbumImage( final Uri url, final ImgurPathResolverListener imgurPathResolverListener )
+	protected void getFirstAlbumImage( final Uri url, final PathResolverListener pathResolverListener )
 	{
 		new ImgurAlbumService().getAlbum( url, new ImgurAlbumResolverListener()
 		{
@@ -25,18 +24,18 @@ public class ImgurService
 			{
 				Uri uri = Uri.parse( album.getImage( 0 ).getLink() );
 
-				imgurPathResolverListener.onPathResolved( uri, getThumbnailPath( uri ) );
+				pathResolverListener.onPathResolved( uri, getThumbnailPath( uri ) );
 			}
 
 			@Override
 			public void onError( String error )
 			{
-				imgurPathResolverListener.onPathError( error );
+				pathResolverListener.onPathError( error );
 			}
 		} );
 	}
 
-	protected void getFirstGalleryImage( final Uri url, final ImgurPathResolverListener imgurPathResolverListener )
+	protected void getFirstGalleryImage( final Uri url, final PathResolverListener pathResolverListener )
 	{
 		new ImgurGalleryService().getGallery( url, new ImgurGalleryResolverListener()
 		{
@@ -45,7 +44,7 @@ public class ImgurService
 			{
 				Uri uri = Uri.parse( album.getImage( 0 ).getLink() );
 
-				imgurPathResolverListener.onPathResolved( uri, getThumbnailPath( uri ) );
+				pathResolverListener.onPathResolved( uri, getThumbnailPath( uri ) );
 			}
 
 			@Override
@@ -53,13 +52,13 @@ public class ImgurService
 			{
 				Uri uri = image.getLinkUri();
 
-				imgurPathResolverListener.onPathResolved( uri, getThumbnailPath( uri ) );
+				pathResolverListener.onPathResolved( uri, getThumbnailPath( uri ) );
 			}
 
 			@Override
 			public void onError( String error )
 			{
-				imgurPathResolverListener.onPathError( error );
+				pathResolverListener.onPathError( error );
 			}
 		} );
 	}
@@ -112,27 +111,22 @@ public class ImgurService
 		return Uri.parse( path + "s" + ext );
 	}
 
-	public void getPath( Uri uri, ImgurPathResolverListener imgurPathResolverListener )
+	public void getPath( Uri uri, PathResolverListener pathResolverListener )
 	{
 		if ( new ImgurAlbumService().isImgurAlbum( uri ) )
 		{
-			getFirstAlbumImage( uri, imgurPathResolverListener );
+			getFirstAlbumImage( uri, pathResolverListener );
 		}
 		else if ( new ImgurGalleryService().isImgurGallery( uri ) )
 		{
-			getFirstGalleryImage( uri, imgurPathResolverListener );
+			getFirstGalleryImage( uri, pathResolverListener );
 		}
 		else
 		{
 			Uri fixedUri = processPath( uri );
 
-			imgurPathResolverListener.onPathResolved( fixedUri, getThumbnailPath( fixedUri ) );
+			pathResolverListener.onPathResolved( fixedUri, getThumbnailPath( fixedUri ) );
 		}
-	}
-
-	public void getPathUri( Uri uri, ImgurPathResolverListener imgurPathResolverListener )
-	{
-		getPath( uri, imgurPathResolverListener );
 	}
 
 	public boolean isVideo( Uri uri )
@@ -147,7 +141,7 @@ public class ImgurService
 
 	public boolean isImgurPath( Uri uri )
 	{
-		return uri.toString().contains( "imgur.com" );
+		return uri.toString().contains( IMGUR_DOMAIN );
 	}
 
 	public String getImageId( Uri uri )

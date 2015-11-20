@@ -17,10 +17,11 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.ensoft.imgurviewer.service.FrescoService;
+import com.ensoft.imgurviewer.service.GyazoService;
 import com.ensoft.imgurviewer.service.ImgurAlbumService;
 import com.ensoft.imgurviewer.service.ImgurGalleryService;
 import com.ensoft.imgurviewer.service.ImgurService;
-import com.ensoft.imgurviewer.service.interfaces.ImgurPathResolverListener;
+import com.ensoft.imgurviewer.service.interfaces.PathResolverListener;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -133,6 +134,7 @@ public class ImageViewer extends AppActivity
 		final ImgurService imgurService = new ImgurService();
 		final ImgurAlbumService imgurAlbumService = new ImgurAlbumService();
 		final ImgurGalleryService imgurGalleryService = new ImgurGalleryService();
+		final GyazoService gyazoService = new GyazoService();
 
 		if ( imgurService.isImgurPath( uri ) )
 		{
@@ -145,7 +147,7 @@ public class ImageViewer extends AppActivity
 			}
 			else
 			{
-				imgurService.getPathUri( uri, new ImgurPathResolverListener()
+				imgurService.getPath( uri, new PathResolverListener()
 				{
 					@Override
 					public void onPathResolved( Uri url, Uri thumbnail )
@@ -168,6 +170,24 @@ public class ImageViewer extends AppActivity
 					}
 				} );
 			}
+		}
+		else if ( gyazoService.isGyazoPath( uri ) )
+		{
+			gyazoService.getPath( uri, new PathResolverListener()
+			{
+				@Override
+				public void onPathResolved( Uri url, Uri thumbnail )
+				{
+					loadImage( url, thumbnail );
+				}
+
+				@Override
+				public void onPathError( String error )
+				{
+					Log.v( TAG, error );
+					Toast.makeText( ImageViewer.this, error, Toast.LENGTH_SHORT ).show();
+				}
+			} );
 		}
 		else
 		{
