@@ -1,4 +1,4 @@
-package com.ensoft.imgurviewer.service;
+package com.ensoft.imgurviewer.service.resource;
 
 import android.net.Uri;
 import android.util.Log;
@@ -7,8 +7,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.model.GyazoOEmbed;
-import com.ensoft.imgurviewer.service.interfaces.ImageServiceSolver;
-import com.ensoft.imgurviewer.service.interfaces.PathResolverListener;
+import com.ensoft.imgurviewer.service.listener.PathResolverListener;
+import com.ensoft.imgurviewer.service.network.RequestQueueService;
 import com.google.gson.Gson;
 import org.json.JSONObject;
 

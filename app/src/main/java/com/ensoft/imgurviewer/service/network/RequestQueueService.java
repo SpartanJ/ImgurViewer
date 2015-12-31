@@ -1,4 +1,4 @@
-package com.ensoft.imgurviewer.service;
+package com.ensoft.imgurviewer.service.network;
 
 import android.content.Context;
 
@@ -7,7 +7,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.Volley;
 import com.ensoft.imgurviewer.App;
-import com.ensoft.imgurviewer.service.network.ProxiedHurlStack;
+import com.ensoft.imgurviewer.service.PreferencesService;
 
 public class RequestQueueService
 {

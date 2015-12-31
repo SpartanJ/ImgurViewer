@@ -13,11 +13,11 @@ import android.widget.Toast;
 import com.ensoft.imgurviewer.model.ImgurAlbum;
 import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.service.DeviceService;
-import com.ensoft.imgurviewer.service.ImgurService;
-import com.ensoft.imgurviewer.service.ImgurAlbumService;
-import com.ensoft.imgurviewer.service.ImgurGalleryService;
-import com.ensoft.imgurviewer.service.interfaces.ImgurAlbumResolverListener;
-import com.ensoft.imgurviewer.service.interfaces.ImgurGalleryResolverListener;
+import com.ensoft.imgurviewer.service.resource.ImgurService;
+import com.ensoft.imgurviewer.service.resource.ImgurAlbumService;
+import com.ensoft.imgurviewer.service.resource.ImgurGalleryService;
+import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
+import com.ensoft.imgurviewer.service.listener.ImgurGalleryResolverListener;
 import com.ensoft.imgurviewer.view.adapter.AlbumAdapter;
 import com.imgurviewer.R;
 

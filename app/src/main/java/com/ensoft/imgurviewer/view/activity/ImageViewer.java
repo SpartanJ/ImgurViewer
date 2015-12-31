@@ -17,12 +17,13 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.ensoft.imgurviewer.service.FrescoService;
-import com.ensoft.imgurviewer.service.GyazoService;
-import com.ensoft.imgurviewer.service.ImgurAlbumService;
-import com.ensoft.imgurviewer.service.ImgurGalleryService;
-import com.ensoft.imgurviewer.service.ImgurService;
-import com.ensoft.imgurviewer.service.interfaces.ImageServiceSolver;
-import com.ensoft.imgurviewer.service.interfaces.PathResolverListener;
+import com.ensoft.imgurviewer.service.resource.GfycatService;
+import com.ensoft.imgurviewer.service.resource.GyazoService;
+import com.ensoft.imgurviewer.service.resource.ImgurAlbumService;
+import com.ensoft.imgurviewer.service.resource.ImgurGalleryService;
+import com.ensoft.imgurviewer.service.resource.ImgurService;
+import com.ensoft.imgurviewer.service.resource.ImageServiceSolver;
+import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -53,6 +54,7 @@ public class ImageViewer extends AppActivity
 	private ImgurAlbumService imgurAlbumService = new ImgurAlbumService();
 	private ImgurGalleryService imgurGalleryService = new ImgurGalleryService();
 	private GyazoService gyazoService = new GyazoService();
+	private GfycatService gfycatService = new GfycatService();
 
 	protected OnViewTapListener touchListener = new OnViewTapListener()
 	{
@@ -179,6 +181,10 @@ public class ImageViewer extends AppActivity
 		else if ( gyazoService.isGyazoPath( uri ) )
 		{
 			gyazoService.getPath( uri, getPathResolverListener( gyazoService ) );
+		}
+		else if ( gfycatService.isServicePath( uri ) )
+		{
+			gfycatService.getPath( uri, getPathResolverListener( gfycatService ) );
 		}
 		else
 		{

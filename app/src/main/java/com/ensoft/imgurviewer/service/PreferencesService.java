@@ -3,6 +3,8 @@ package com.ensoft.imgurviewer.service;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.ensoft.imgurviewer.service.network.RequestQueueService;
+
 public class PreferencesService
 {
 	public static final String PROXY_HOST = "proxyHost";
