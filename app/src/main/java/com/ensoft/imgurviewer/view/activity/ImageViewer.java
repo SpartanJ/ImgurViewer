@@ -164,7 +164,7 @@ public class ImageViewer extends AppActivity
 
 	protected void loadResource( Uri uri )
 	{
-		if ( imgurService.isImgurPath( uri ) )
+		if ( imgurService.isServicePath( uri ) )
 		{
 			if ( imgurAlbumService.isImgurAlbum( uri ) || imgurGalleryService.isImgurGallery( uri ) || imgurService.isMultiImageUri( uri ) )
 			{
@@ -178,7 +178,7 @@ public class ImageViewer extends AppActivity
 				imgurService.getPath( uri, getPathResolverListener( imgurService ) );
 			}
 		}
-		else if ( gyazoService.isGyazoPath( uri ) )
+		else if ( gyazoService.isServicePath( uri ) )
 		{
 			gyazoService.getPath( uri, getPathResolverListener( gyazoService ) );
 		}
