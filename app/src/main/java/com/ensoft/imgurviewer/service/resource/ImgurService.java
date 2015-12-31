@@ -135,6 +135,12 @@ public class ImgurService extends ImageServiceSolver
 		return uri.toString().contains( IMGUR_DOMAIN );
 	}
 
+	@Override
+	public boolean isGallery( Uri uri )
+	{
+		return new ImgurAlbumService().isImgurAlbum( uri ) || new ImgurGalleryService().isImgurGallery( uri ) || isMultiImageUri( uri );
+	}
+
 	public String getImageId( Uri uri )
 	{
 		return getImageId( uri.toString() );

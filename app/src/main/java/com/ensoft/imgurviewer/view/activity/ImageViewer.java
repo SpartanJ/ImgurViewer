@@ -17,13 +17,8 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.ensoft.imgurviewer.service.FrescoService;
-import com.ensoft.imgurviewer.service.resource.GfycatService;
-import com.ensoft.imgurviewer.service.resource.GyazoService;
-import com.ensoft.imgurviewer.service.resource.ImgurAlbumService;
-import com.ensoft.imgurviewer.service.resource.ImgurGalleryService;
-import com.ensoft.imgurviewer.service.resource.ImgurService;
-import com.ensoft.imgurviewer.service.resource.ImageServiceSolver;
-import com.ensoft.imgurviewer.service.listener.PathResolverListener;
+import com.ensoft.imgurviewer.service.ResourceSolver;
+import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -50,11 +45,6 @@ public class ImageViewer extends AppActivity
 	private boolean visible;
 	private long lastClickTime;
 	private ImageView settingsButton;
-	private ImgurService imgurService = new ImgurService();
-	private ImgurAlbumService imgurAlbumService = new ImgurAlbumService();
-	private ImgurGalleryService imgurGalleryService = new ImgurGalleryService();
-	private GyazoService gyazoService = new GyazoService();
-	private GfycatService gfycatService = new GfycatService();
 
 	protected OnViewTapListener touchListener = new OnViewTapListener()
 	{
@@ -136,60 +126,31 @@ public class ImageViewer extends AppActivity
 		videoView.start();
 	}
 
-	protected PathResolverListener getPathResolverListener( ImageServiceSolver imageServiceSolver )
-	{
-		return new PathResolverListener( imageServiceSolver )
-		{
-			@Override
-			public void onPathResolved( Uri url, Uri thumbnail )
-			{
-				if ( serviceSolver.isVideo( url ) )
-				{
-					loadVideo( url );
-				}
-				else
-				{
-					loadImage( url, thumbnail );
-				}
-			}
-
-			@Override
-			public void onPathError( String error )
-			{
-				Log.v( TAG, error );
-				Toast.makeText( ImageViewer.this, error, Toast.LENGTH_SHORT ).show();
-			}
-		};
-	}
-
 	protected void loadResource( Uri uri )
 	{
-		if ( imgurService.isServicePath( uri ) )
+		new ResourceSolver( new ResourceLoadListener()
 		{
-			if ( imgurAlbumService.isImgurAlbum( uri ) || imgurGalleryService.isImgurGallery( uri ) || imgurService.isMultiImageUri( uri ) )
+			@Override
+			public void loadVideo( Uri uri )
 			{
-				Intent intent = new Intent( ImageViewer.this, AlbumGalleryViewer.class );
-				intent.putExtra( AlbumGalleryViewer.ALBUM_DATA, uri.toString() );
+				ImageViewer.this.loadVideo( uri );
+			}
+
+			@Override
+			public void loadImage( Uri uri, Uri thumbnail )
+			{
+				ImageViewer.this.loadImage( uri, thumbnail );
+			}
+
+			@Override
+			public void loadAlbum( Uri uri, Class<?> view )
+			{
+				Intent intent = new Intent( ImageViewer.this, view );
+				intent.putExtra( AppActivity.ALBUM_DATA, uri.toString() );
 				startActivity( intent );
 				finish();
 			}
-			else
-			{
-				imgurService.getPath( uri, getPathResolverListener( imgurService ) );
-			}
-		}
-		else if ( gyazoService.isServicePath( uri ) )
-		{
-			gyazoService.getPath( uri, getPathResolverListener( gyazoService ) );
-		}
-		else if ( gfycatService.isServicePath( uri ) )
-		{
-			gfycatService.getPath( uri, getPathResolverListener( gfycatService ) );
-		}
-		else
-		{
-			loadImage( uri, null );
-		}
+		} ).solve( uri );
 	}
 
 	public void showPopup(View v)

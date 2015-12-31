@@ -9,6 +9,8 @@ import com.ensoft.imgurviewer.App;
 
 public class AppActivity extends Activity
 {
+	public static final String ALBUM_DATA = "albumData";
+
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
 	{

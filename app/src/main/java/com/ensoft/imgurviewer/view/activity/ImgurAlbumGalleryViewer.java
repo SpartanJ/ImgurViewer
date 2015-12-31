@@ -18,15 +18,14 @@ import com.ensoft.imgurviewer.service.resource.ImgurAlbumService;
 import com.ensoft.imgurviewer.service.resource.ImgurGalleryService;
 import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
 import com.ensoft.imgurviewer.service.listener.ImgurGalleryResolverListener;
-import com.ensoft.imgurviewer.view.adapter.AlbumAdapter;
+import com.ensoft.imgurviewer.view.adapter.ImgurAlbumAdapter;
 import com.imgurviewer.R;
 
-public class AlbumGalleryViewer extends AppActivity
+public class ImgurAlbumGalleryViewer extends AppActivity
 {
-	public static final String TAG = AlbumGalleryViewer.class.getCanonicalName();
-	public static final String ALBUM_DATA = "albumData";
+	public static final String TAG = ImgurAlbumGalleryViewer.class.getCanonicalName();
 
-	protected AlbumAdapter albumAdapter;
+	protected ImgurAlbumAdapter albumAdapter;
 	protected ProgressBar progressBar;
 	protected RecyclerView recyclerView;
 
@@ -74,7 +73,7 @@ public class AlbumGalleryViewer extends AppActivity
 				@Override
 				public void onError( String error )
 				{
-					Toast.makeText( AlbumGalleryViewer.this, error, Toast.LENGTH_SHORT ).show();
+					Toast.makeText( ImgurAlbumGalleryViewer.this, error, Toast.LENGTH_SHORT ).show();
 				}
 			} );
 		}
@@ -99,7 +98,7 @@ public class AlbumGalleryViewer extends AppActivity
 				@Override
 				public void onError( String error )
 				{
-					Toast.makeText( AlbumGalleryViewer.this, error, Toast.LENGTH_SHORT ).show();
+					Toast.makeText( ImgurAlbumGalleryViewer.this, error, Toast.LENGTH_SHORT ).show();
 				}
 			} );
 		}
@@ -112,7 +111,7 @@ public class AlbumGalleryViewer extends AppActivity
 	protected void create( ImgurImage[] images )
 	{
 		progressBar.setVisibility( View.INVISIBLE );
-		albumAdapter = new AlbumAdapter( R.layout.item_album_photo, images );
+		albumAdapter = new ImgurAlbumAdapter( R.layout.item_album_photo, images );
 		albumAdapter.setOrientationLandscape( new DeviceService().isLandscapeOrientation( this ) );
 
 		recyclerView = (RecyclerView) findViewById( R.id.albumViewer_listView );

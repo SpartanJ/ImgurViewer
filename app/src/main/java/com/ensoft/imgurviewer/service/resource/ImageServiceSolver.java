@@ -19,4 +19,6 @@ public abstract class ImageServiceSolver
 	{
 		return uri.endsWith( ".gifv" ) || uri.endsWith( ".mp4" ) || uri.endsWith( ".avi" ) || uri.endsWith( ".flv" ) || uri.endsWith( ".mkv" ) || uri.endsWith( ".webm" );
 	}
+
+	public abstract boolean isGallery( Uri uri );
 }
