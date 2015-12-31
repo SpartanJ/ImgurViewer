@@ -55,7 +55,7 @@ public class ImgurGalleryService
 
 	public boolean isImgurGallery( Uri uri )
 	{
-		return new ImgurService().isImgurPath( uri ) && (
+		return new ImgurService().isServicePath( uri ) && (
 			uri.toString().contains( "/a/" ) ||
 				uri.toString().contains( "/gallery/" )
 		);

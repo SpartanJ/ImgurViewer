@@ -54,7 +54,7 @@ public class ImgurAlbumService
 
 	public boolean isImgurAlbum( Uri uri )
 	{
-		return new ImgurService().isImgurPath( uri ) && ( uri.toString().contains( "/a/" ) );
+		return new ImgurService().isServicePath( uri ) && ( uri.toString().contains( "/a/" ) );
 	}
 
 	public void getAlbum( Uri uri, final ImgurAlbumResolverListener imgurAlbumResolverListener )

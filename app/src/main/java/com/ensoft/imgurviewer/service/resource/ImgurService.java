@@ -132,11 +132,6 @@ public class ImgurService extends ImageServiceSolver
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
-		return isImgurPath( uri );
-	}
-
-	public boolean isImgurPath( Uri uri )
-	{
 		return uri.toString().contains( IMGUR_DOMAIN );
 	}
 
@@ -159,7 +154,7 @@ public class ImgurService extends ImageServiceSolver
 
 	public boolean isMultiImageUri( Uri uri )
 	{
-		if ( isImgurPath( uri ) && !new ImgurAlbumService().isImgurAlbum( uri ) && !new ImgurGalleryService().isImgurGallery( uri ) )
+		if ( isServicePath( uri ) && !new ImgurAlbumService().isImgurAlbum( uri ) && !new ImgurGalleryService().isImgurGallery( uri ) )
 		{
 			String id = getImageId( uri );
 

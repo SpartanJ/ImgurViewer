@@ -19,11 +19,6 @@ public class GyazoService extends ImageServiceSolver
 	public static final String GYAZO_API_URL = "https://api.gyazo.com/api";
 	public static final String GYAZO_GET_IMAGE_URL = GYAZO_API_URL + "/oembed?url=";
 
-	public boolean isGyazoPath( Uri uri )
-	{
-		return uri.toString().contains( GYAZO_DOMAIN );
-	}
-
 	public void getPath( Uri uri, final PathResolverListener pathResolverListener )
 	{
 		String oEmbedUrl = GYAZO_GET_IMAGE_URL + uri.toString();
@@ -65,6 +60,6 @@ public class GyazoService extends ImageServiceSolver
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
-		return isGyazoPath( uri );
+		return uri.toString().contains( GYAZO_DOMAIN );
 	}
 }
