@@ -1,6 +1,8 @@
-package com.ensoft.imgurviewer.service.interfaces;
+package com.ensoft.imgurviewer.service.listener;
 
 import android.net.Uri;
+
+import com.ensoft.imgurviewer.service.resource.ImageServiceSolver;
 
 public abstract class PathResolverListener
 {

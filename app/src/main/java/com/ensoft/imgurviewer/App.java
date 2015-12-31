@@ -3,7 +3,7 @@ package com.ensoft.imgurviewer;
 import android.app.Application;
 
 import com.ensoft.imgurviewer.service.PreferencesService;
-import com.ensoft.imgurviewer.service.RequestQueueService;
+import com.ensoft.imgurviewer.service.network.RequestQueueService;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 

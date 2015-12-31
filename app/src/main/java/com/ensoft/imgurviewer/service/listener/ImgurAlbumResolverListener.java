@@ -1,4 +1,4 @@
-package com.ensoft.imgurviewer.service.interfaces;
+package com.ensoft.imgurviewer.service.listener;
 
 import com.ensoft.imgurviewer.model.ImgurAlbum;
 

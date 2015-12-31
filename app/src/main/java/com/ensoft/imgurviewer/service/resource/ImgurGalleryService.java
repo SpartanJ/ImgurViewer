@@ -1,4 +1,4 @@
-package com.ensoft.imgurviewer.service;
+package com.ensoft.imgurviewer.service.resource;
 
 import android.net.Uri;
 import android.util.Log;
@@ -9,7 +9,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.ImgurAlbum;
-import com.ensoft.imgurviewer.service.interfaces.ImgurAlbumResolverListener;
+import com.ensoft.imgurviewer.model.ImgurImage;
+import com.ensoft.imgurviewer.service.listener.ImgurGalleryResolverListener;
+import com.ensoft.imgurviewer.service.network.RequestQueueService;
 import com.google.gson.Gson;
 import com.imgurviewer.R;
 
@@ -19,23 +21,23 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ImgurAlbumService
+public class ImgurGalleryService
 {
 	public static final String TAG = ImgurAlbumService.class.getCanonicalName();
-	public static final String IMGUR_ALBUM_API_URL = ImgurService.IMGUR_API_URL + "/album/";
+	public static final String IMGUR_GALLERY_API_URL = ImgurService.IMGUR_API_URL + "/gallery/";
 
-	public String getAlbumId( Uri uri )
+	public String getGalleryId( Uri uri )
 	{
-		return getAlbumId( uri.toString() );
+		return getGalleryId( uri.toString() );
 	}
 
-	public String getAlbumId( String uri )
+	public String getGalleryId( String uri )
 	{
 		String endPart = null;
 
-		if ( uri.contains( "/a/" ) )
+		if ( uri.contains( "/gallery/" ) )
 		{
-			endPart = uri.substring( uri.lastIndexOf( "/a/" ) + 3 );
+			endPart = uri.substring( uri.lastIndexOf( "/gallery/" ) + 9 );
 		}
 
 		if ( null != endPart )
@@ -51,14 +53,17 @@ public class ImgurAlbumService
 		return endPart;
 	}
 
-	public boolean isImgurAlbum( Uri uri )
+	public boolean isImgurGallery( Uri uri )
 	{
-		return new ImgurService().isImgurPath( uri ) && ( uri.toString().contains( "/a/" ) );
+		return new ImgurService().isImgurPath( uri ) && (
+			uri.toString().contains( "/a/" ) ||
+				uri.toString().contains( "/gallery/" )
+		);
 	}
 
-	public void getAlbum( Uri uri, final ImgurAlbumResolverListener imgurAlbumResolverListener )
+	public void getGallery( Uri uri, final ImgurGalleryResolverListener imgurGalleryResolverListener )
 	{
-		String albumUrl = IMGUR_ALBUM_API_URL + getAlbumId( uri );
+		String albumUrl = IMGUR_GALLERY_API_URL + getGalleryId( uri );
 
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( albumUrl, null, new Response.Listener<JSONObject>()
 		{
@@ -71,15 +76,33 @@ public class ImgurAlbumService
 
 					JSONObject data = response.getJSONObject( "data" );
 
-					ImgurAlbum album = new Gson().fromJson( data.toString(), ImgurAlbum.class );
+					try
+					{
+						boolean isAlbum = data.getBoolean( "is_album" );
 
-					imgurAlbumResolverListener.onAlbumResolved( album );
+						if ( isAlbum )
+						{
+							ImgurAlbum album = new Gson().fromJson( data.toString(), ImgurAlbum.class );
+
+							imgurGalleryResolverListener.onAlbumResolved( album );
+						}
+						else
+						{
+							ImgurImage image = new Gson().fromJson( data.toString(), ImgurImage.class );
+
+							imgurGalleryResolverListener.onImageResolved( image );
+						}
+					}
+					catch ( JSONException e )
+					{
+						Log.e( TAG, e.getMessage() );
+					}
 				}
 				catch ( JSONException e )
 				{
 					Log.v( TAG, e.getMessage() );
 
-					imgurAlbumResolverListener.onError( e.toString() );
+					imgurGalleryResolverListener.onError( e.toString() );
 				}
 			}
 		}, new Response.ErrorListener()
@@ -89,7 +112,7 @@ public class ImgurAlbumService
 			{
 				Log.v( TAG, error.toString() );
 
-				imgurAlbumResolverListener.onError( error.toString() );
+				imgurGalleryResolverListener.onError( error.toString() );
 			}
 		})
 		{

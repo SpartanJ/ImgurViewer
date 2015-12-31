@@ -2,7 +2,7 @@ package com.ensoft.imgurviewer.model;
 
 import android.net.Uri;
 
-import com.ensoft.imgurviewer.service.ImgurService;
+import com.ensoft.imgurviewer.service.resource.ImgurService;
 import com.google.gson.annotations.SerializedName;
 
 public class ImgurImage
