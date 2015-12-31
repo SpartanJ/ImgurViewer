@@ -62,4 +62,10 @@ public class GyazoService extends ImageServiceSolver
 	{
 		return uri.toString().contains( GYAZO_DOMAIN );
 	}
+
+	@Override
+	public boolean isGallery( Uri uri )
+	{
+		return false;
+	}
 }

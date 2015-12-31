@@ -73,4 +73,10 @@ public class GfycatService extends ImageServiceSolver
 	{
 		return uri.toString().contains( GFYCAT_DOMAIN );
 	}
+
+	@Override
+	public boolean isGallery( Uri uri )
+	{
+		return false;
+	}
 }

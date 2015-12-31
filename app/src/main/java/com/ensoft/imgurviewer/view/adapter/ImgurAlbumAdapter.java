@@ -24,14 +24,14 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.ensoft.imgurviewer.view.helper.MetricsHelper;
 import com.imgurviewer.R;
 
-public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumImageHolder>
+public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.AlbumImageHolder>
 {
-	public static final String TAG = AlbumAdapter.class.getCanonicalName();
+	public static final String TAG = ImgurAlbumAdapter.class.getCanonicalName();
 	protected int resourceId;
 	ImgurImage[] dataSet;
 	boolean isLandscape = false;
 
-	public AlbumAdapter( int resource, ImgurImage[] objects )
+	public ImgurAlbumAdapter( int resource, ImgurImage[] objects )
 	{
 		resourceId = resource;
 		dataSet = objects;
