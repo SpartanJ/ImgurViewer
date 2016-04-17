@@ -108,6 +108,46 @@
 				<data android:pathPattern=".*..*..*.webp" />
 				<data android:pathPattern=".*..*.webp" />
 				<data android:pathPattern=".*.webp" />
+
+				<data android:pathPattern=".*\\.JPG" />
+				<data android:pathPattern=".*..*..*..*..*..*.JPG" />
+				<data android:pathPattern=".*..*..*..*..*.JPG" />
+				<data android:pathPattern=".*..*..*..*.JPG" />
+				<data android:pathPattern=".*..*..*.JPG" />
+				<data android:pathPattern=".*..*.JPG" />
+				<data android:pathPattern=".*.JPG" />
+
+				<data android:pathPattern=".*\\.JPEG" />
+				<data android:pathPattern=".*..*..*..*..*..*.JPEG" />
+				<data android:pathPattern=".*..*..*..*..*.JPEG" />
+				<data android:pathPattern=".*..*..*..*.JPEG" />
+				<data android:pathPattern=".*..*..*.JPEG" />
+				<data android:pathPattern=".*..*.JPEG" />
+				<data android:pathPattern=".*.JPEG" />
+
+				<data android:pathPattern=".*\\.PNG" />
+				<data android:pathPattern=".*..*..*..*..*..*.PNG" />
+				<data android:pathPattern=".*..*..*..*..*.PNG" />
+				<data android:pathPattern=".*..*..*..*.PNG" />
+				<data android:pathPattern=".*..*..*.PNG" />
+				<data android:pathPattern=".*..*.PNG" />
+				<data android:pathPattern=".*.PNG" />
+
+				<data android:pathPattern=".*\\.GIF" />
+				<data android:pathPattern=".*..*..*..*..*..*.GIF" />
+				<data android:pathPattern=".*..*..*..*..*.GIF" />
+				<data android:pathPattern=".*..*..*..*.GIF" />
+				<data android:pathPattern=".*..*..*.GIF" />
+				<data android:pathPattern=".*..*.GIF" />
+				<data android:pathPattern=".*.GIF" />
+
+				<data android:pathPattern=".*\\.WEBP" />
+				<data android:pathPattern=".*..*..*..*..*..*.WEBP" />
+				<data android:pathPattern=".*..*..*..*..*.WEBP" />
+				<data android:pathPattern=".*..*..*..*.WEBP" />
+				<data android:pathPattern=".*..*..*.WEBP" />
+				<data android:pathPattern=".*..*.WEBP" />
+				<data android:pathPattern=".*.WEBP" />
 			</intent-filter>
         </activity>
 		<activity
