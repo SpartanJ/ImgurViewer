@@ -28,4 +28,5 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.google.code.gson:gson:2.3.+'
     compile 'ch.acra:acra:4.6.2'
+    compile 'com.ensoft-dev.restafari:restafari:0.1.7'
 }

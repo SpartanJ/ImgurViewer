@@ -10,7 +10,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.ImgurAlbum;
 import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
-import com.ensoft.imgurviewer.service.network.RequestQueueService;
+import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
 import com.imgurviewer.R;
 
@@ -103,6 +103,6 @@ public class ImgurAlbumService
 			}
 		};
 
-		RequestQueueService.getInstance().addToRequestQueue( jsonObjectRequest );
+		RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
 	}
 }

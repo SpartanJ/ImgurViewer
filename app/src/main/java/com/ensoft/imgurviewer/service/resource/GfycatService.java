@@ -8,7 +8,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.model.GfycatVideo;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
-import com.ensoft.imgurviewer.service.network.RequestQueueService;
+import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -65,7 +65,7 @@ public class GfycatService extends ImageServiceSolver
 			}
 		});
 
-		RequestQueueService.getInstance().addToRequestQueue( jsonObjectRequest );
+		RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
 	}
 
 	@Override

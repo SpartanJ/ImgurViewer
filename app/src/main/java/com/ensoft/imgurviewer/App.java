@@ -2,8 +2,9 @@ package com.ensoft.imgurviewer;
 
 import android.app.Application;
 
-import com.ensoft.imgurviewer.service.PreferencesService;
-import com.ensoft.imgurviewer.service.network.RequestQueueService;
+import com.ensoft.restafari.network.service.NetworkPreferencesService;
+import com.ensoft.restafari.network.service.RequestService;
+import com.ensoft.restafari.network.service.RequestServiceOptions;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 
@@ -17,7 +18,7 @@ public class App extends Application
 {
 	protected static App instance;
 	protected int activityCount = 0;
-	protected PreferencesService preferencesService;
+	protected NetworkPreferencesService preferencesService;
 
 	public static App getInstance()
 	{
@@ -31,11 +32,16 @@ public class App extends Application
 
 		instance = this;
 
-		preferencesService = new PreferencesService( this );
-
-		RequestQueueService.init( this );
+		preferencesService = new NetworkPreferencesService( this );
 
 		ACRA.init( this );
+
+		RequestServiceOptions requestServiceOptions = new RequestServiceOptions.Builder().
+			setProxyHost( getPreferencesService().getProxyHost() ).
+			setProxyPort( getPreferencesService().getProxyPort() ).
+			build();
+
+		RequestService.init( this, requestServiceOptions );
 	}
 
 	protected void onDestroy()
@@ -67,7 +73,7 @@ public class App extends Application
 		}
 	}
 
-	public PreferencesService getPreferencesService()
+	public NetworkPreferencesService getPreferencesService()
 	{
 		return preferencesService;
 	}
