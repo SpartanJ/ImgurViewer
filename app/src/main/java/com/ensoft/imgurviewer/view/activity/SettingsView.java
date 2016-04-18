@@ -6,7 +6,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 
 import com.ensoft.imgurviewer.App;
-import com.ensoft.imgurviewer.service.PreferencesService;
+import com.ensoft.restafari.network.service.NetworkPreferencesService;
 import com.imgurviewer.R;
 
 public class SettingsView extends PreferenceActivity
@@ -24,7 +24,7 @@ public class SettingsView extends PreferenceActivity
 		@Override
 		public void onCreate(final Bundle savedInstanceState)
 		{
-			final PreferencesService preferencesService = App.getInstance().getPreferencesService();
+			final NetworkPreferencesService preferencesService = App.getInstance().getPreferencesService();
 			super.onCreate( savedInstanceState );
 			addPreferencesFromResource( R.xml.preferences );
 
