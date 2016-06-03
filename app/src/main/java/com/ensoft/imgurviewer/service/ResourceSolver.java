@@ -3,6 +3,7 @@ package com.ensoft.imgurviewer.service;
 import android.net.Uri;
 
 import com.ensoft.imgurviewer.service.resource.ImgurService;
+import com.ensoft.imgurviewer.service.resource.RedditUploadsService;
 import com.ensoft.imgurviewer.service.resource.ResourceServiceSolver;
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
 import com.ensoft.imgurviewer.service.resource.GfycatService;
@@ -28,6 +29,7 @@ public class ResourceSolver
 		resourceServiceSolvers.add( new ResourceServiceSolver( new ImgurService(), resourceLoadListener, ImgurAlbumGalleryViewer.class ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new GyazoService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new GfycatService(), resourceLoadListener, null ) );
+		resourceServiceSolvers.add( new ResourceServiceSolver( new RedditUploadsService(), resourceLoadListener, null ) );
 	}
 
 	public void solve( Uri uri )
