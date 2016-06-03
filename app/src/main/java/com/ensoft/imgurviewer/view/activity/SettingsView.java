@@ -48,7 +48,24 @@ public class SettingsView extends PreferenceActivity
 				@Override
 				public boolean onPreferenceChange(Preference preference, Object newValue)
 				{
-					preferencesService.setProxyPort( Integer.valueOf( (String)newValue ) );
+					if ( newValue != null && !((String)newValue).isEmpty() )
+					{
+						try
+						{
+							int intValue = Integer.valueOf( (String) newValue );
+
+							preferencesService.setProxyPort( intValue );
+						}
+						catch ( Exception e )
+						{
+							return false;
+						}
+					}
+					else
+					{
+						return false;
+					}
+
 					return true;
 				}
 			});
