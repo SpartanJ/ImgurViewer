@@ -7,4 +7,6 @@
 	<string name="proxyPort">Proxy Port</string>
 	<string name="proxyHostConf">Configure Proxy Host</string>
 	<string name="proxyPortConf">Configure Proxy Port</string>
+	<string name="share">Share</string>
+	<string name="shareUsing">Share using&#8230;</string>
 </resources>

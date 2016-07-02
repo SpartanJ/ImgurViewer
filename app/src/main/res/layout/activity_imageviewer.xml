@@ -5,7 +5,6 @@
 				android:background="@android:color/black"
 				android:fitsSystemWindows="true">
 
-
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
@@ -45,14 +44,50 @@
 			android:layout_centerHorizontal="true"/>
 	</RelativeLayout>
 
-	<ImageView
+	<LinearLayout
+		android:id="@+id/floating_menu"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:id="@+id/settings"
-		android:layout_gravity="right|top"
-		android:src="@drawable/ic_more_vert_white_24dp"
+		android:layout_gravity="end|top"
 		android:layout_alignParentBottom="false"
 		android:layout_alignParentRight="true"
-		android:onClick="showPopup"
-		/>
+		android:layout_alignParentEnd="true">
+
+		<ImageView
+			android:foreground="?android:attr/selectableItemBackgroundBorderless"
+			android:background="@android:color/transparent"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/download"
+			android:src="@drawable/ic_file_download_white_24dp"
+			android:padding="8dp"
+			android:onClick="downloadImage"
+			/>
+
+		<ImageView
+			android:foreground="?android:attr/selectableItemBackgroundBorderless"
+			android:background="@android:color/transparent"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/share"
+			android:src="@drawable/ic_share_white_24dp"
+			android:padding="8dp"
+			android:onClick="shareImage"
+			/>
+
+		<ImageView
+			android:foreground="?android:attr/selectableItemBackgroundBorderless"
+			android:background="@android:color/transparent"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/settings"
+			android:src="@drawable/ic_settings_white_24dp"
+			android:padding="8dp"
+			android:layout_marginEnd="8dp"
+			android:layout_marginRight="8dp"
+			android:onClick="showSettings"
+			/>
+
+	</LinearLayout>
+
 </RelativeLayout>
