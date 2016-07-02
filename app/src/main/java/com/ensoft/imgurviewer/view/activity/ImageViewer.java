@@ -11,12 +11,15 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.ImageView;
+import android.webkit.URLUtil;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.ensoft.imgurviewer.service.DownloadService;
 import com.ensoft.imgurviewer.service.FrescoService;
+import com.ensoft.imgurviewer.service.IntentUtils;
 import com.ensoft.imgurviewer.service.ResourceSolver;
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
@@ -44,7 +47,8 @@ public class ImageViewer extends AppActivity
 	private VideoView videoView;
 	private boolean visible;
 	private long lastClickTime;
-	private ImageView settingsButton;
+	private LinearLayout floatingMenu;
+	private Uri currentResource;
 
 	protected OnViewTapListener touchListener = new OnViewTapListener()
 	{
@@ -83,6 +87,8 @@ public class ImageViewer extends AppActivity
 
 	private void loadImage( Uri uri, Uri thumbnail )
 	{
+		currentResource = uri;
+
 		Log.v( TAG, "Loading image: " + uri.toString() );
 
 		new FrescoService().loadImage( uri, thumbnail, imageView, new ControllerImageInfoListener()
@@ -107,6 +113,8 @@ public class ImageViewer extends AppActivity
 
 	protected void loadVideo( Uri uri )
 	{
+		currentResource = uri;
+
 		Log.v( TAG, "Loading video: " + uri.toString() );
 
 		imageView.setVisibility( View.GONE );
@@ -153,9 +161,25 @@ public class ImageViewer extends AppActivity
 		} ).solve( uri );
 	}
 
-	public void showPopup(View v)
+	public void showSettings( View v )
 	{
 		startActivity( new Intent( ImageViewer.this, SettingsView.class ) );
+	}
+
+	public void downloadImage( View v )
+	{
+		if ( null != currentResource )
+		{
+			new DownloadService( this ).download( currentResource, URLUtil.guessFileName( currentResource.toString(), null, null ) );
+		}
+	}
+
+	public void shareImage( View v )
+	{
+		if ( currentResource != null )
+		{
+			IntentUtils.shareMessage( this, getString( R.string.share ), currentResource.toString(), getString( R.string.shareUsing ) );
+		}
 	}
 
 	@Override
@@ -170,9 +194,8 @@ public class ImageViewer extends AppActivity
 		imageView = (PhotoDraweeView)findViewById( R.id.imageView );
 		videoView = (VideoView)findViewById( R.id.videoView );
 		progressBar = (ProgressBar)findViewById( R.id.progressBar );
-		settingsButton = (ImageView)findViewById( R.id.settings );
-		settingsButton.setPadding( 0, MetricsHelper.getStatusBarHeight( this ) + MetricsHelper.dpToPx( this, 16 ), MetricsHelper.dpToPx( this, 16 ), 0 );
-
+		floatingMenu = (LinearLayout)findViewById( R.id.floating_menu );
+		floatingMenu.setPadding( 0, MetricsHelper.getStatusBarHeight( this ) + MetricsHelper.dpToPx( this, 8 ), 0, 0 );
 		ProgressBarDrawable progressBarDrawable = new ProgressBarDrawable();
 		progressBarDrawable.setColor( getResources().getColor( R.color.imgur_color ) );
 		progressBarDrawable.setBarWidth( MetricsHelper.dpToPx( this, 4 ) );
@@ -227,11 +250,10 @@ public class ImageViewer extends AppActivity
 	private void hide()
 	{
 		visible = false;
-		mHideHandler.removeCallbacks( mShowPart2Runnable );
-		mHideHandler.postDelayed( mHidePart2Runnable, UI_ANIMATION_DELAY );
+		hideHandler.postDelayed( hidePart2Runnable, UI_ANIMATION_DELAY );
 	}
 	
-	private final Runnable mHidePart2Runnable = new Runnable()
+	private final Runnable hidePart2Runnable = new Runnable()
 	{
 		@SuppressLint( "InlinedApi" )
 		@Override
@@ -239,7 +261,7 @@ public class ImageViewer extends AppActivity
 		{
 			contentView.setSystemUiVisibility( View.SYSTEM_UI_FLAG_LOW_PROFILE | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION );
 
-			settingsButton.setVisibility( View.VISIBLE );
+			floatingMenu.setVisibility( View.VISIBLE );
 			AlphaAnimation alphaAnimation = new AlphaAnimation( 1, 0 );
 			alphaAnimation.setDuration( UI_ANIMATION_DELAY );
 			alphaAnimation.setAnimationListener( new Animation.AnimationListener()
@@ -252,7 +274,7 @@ public class ImageViewer extends AppActivity
 				@Override
 				public void onAnimationEnd( Animation animation )
 				{
-					settingsButton.setVisibility( View.INVISIBLE );
+					floatingMenu.setVisibility( View.INVISIBLE );
 				}
 
 				@Override
@@ -261,7 +283,7 @@ public class ImageViewer extends AppActivity
 				}
 			} );
 
-			settingsButton.startAnimation( alphaAnimation );
+			floatingMenu.startAnimation( alphaAnimation );
 		}
 	};
 	
@@ -270,24 +292,15 @@ public class ImageViewer extends AppActivity
 	{
 		contentView.setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION );
 		visible = true;
-		mHideHandler.removeCallbacks( mHidePart2Runnable );
-		mHideHandler.postDelayed( mShowPart2Runnable, UI_ANIMATION_DELAY );
+		hideHandler.removeCallbacks( hidePart2Runnable );
 
-		settingsButton.setVisibility( View.VISIBLE );
+		floatingMenu.setVisibility( View.VISIBLE );
 		AlphaAnimation alphaAnimation = new AlphaAnimation( 0, 1 );
 		alphaAnimation.setDuration( UI_ANIMATION_DELAY );
-		settingsButton.startAnimation( alphaAnimation );
+		floatingMenu.startAnimation( alphaAnimation );
 	}
-	
-	private final Runnable mShowPart2Runnable = new Runnable()
-	{
-		@Override
-		public void run()
-		{
-		}
-	};
-	
-	private final Handler mHideHandler = new Handler();
+
+	private final Handler hideHandler = new Handler();
 	private final Runnable mHideRunnable = new Runnable()
 	{
 		@Override
@@ -299,7 +312,7 @@ public class ImageViewer extends AppActivity
 
 	private void delayedHide( int delayMillis )
 	{
-		mHideHandler.removeCallbacks( mHideRunnable );
-		mHideHandler.postDelayed( mHideRunnable, delayMillis );
+		hideHandler.removeCallbacks( mHideRunnable );
+		hideHandler.postDelayed( mHideRunnable, delayMillis );
 	}
 }
