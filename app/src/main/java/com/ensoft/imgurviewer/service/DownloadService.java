@@ -21,6 +21,7 @@ public class DownloadService
 		DownloadManager.Request request = new DownloadManager.Request( uriDownload );
 
 		request.setAllowedOverRoaming(false);
+		request.setNotificationVisibility( DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED );
 		request.setDestinationInExternalFilesDir( context, Environment.DIRECTORY_DOWNLOADS, fileName );
 
 		return downloadManager.enqueue( request );
