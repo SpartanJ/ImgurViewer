@@ -8,8 +8,8 @@ android {
         applicationId "com.ensoft.imgurviewer"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 1110
-        versionName "1.1.10"
+        versionCode 1150
+        versionName "1.1.50"
     }
     buildTypes {
         release {
