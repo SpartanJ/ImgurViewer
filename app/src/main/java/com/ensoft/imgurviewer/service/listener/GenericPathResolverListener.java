@@ -1,6 +1,8 @@
 package com.ensoft.imgurviewer.service.listener;
 
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -32,9 +34,17 @@ public class GenericPathResolverListener extends PathResolverListener
 	}
 
 	@Override
-	public void onPathError( String error )
+	public void onPathError( final String error )
 	{
 		Log.v( TAG, error );
-		Toast.makeText( App.getInstance(), error, Toast.LENGTH_SHORT ).show();
+		Handler h = new Handler( Looper.getMainLooper());
+		h.post(new Runnable()
+		{
+			public void run()
+			{
+
+				Toast.makeText( App.getInstance(), error, Toast.LENGTH_SHORT ).show();
+			}
+		});
 	}
 }

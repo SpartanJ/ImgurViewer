@@ -44,50 +44,5 @@
 			android:layout_centerHorizontal="true"/>
 	</RelativeLayout>
 
-	<LinearLayout
-		android:id="@+id/floating_menu"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="end|top"
-		android:layout_alignParentBottom="false"
-		android:layout_alignParentRight="true"
-		android:layout_alignParentEnd="true">
-
-		<ImageView
-			android:foreground="?android:attr/selectableItemBackgroundBorderless"
-			android:background="@android:color/transparent"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/download"
-			android:src="@drawable/ic_file_download_white_24dp"
-			android:padding="8dp"
-			android:onClick="downloadImage"
-			/>
-
-		<ImageView
-			android:foreground="?android:attr/selectableItemBackgroundBorderless"
-			android:background="@android:color/transparent"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/share"
-			android:src="@drawable/ic_share_white_24dp"
-			android:padding="8dp"
-			android:onClick="shareImage"
-			/>
-
-		<ImageView
-			android:foreground="?android:attr/selectableItemBackgroundBorderless"
-			android:background="@android:color/transparent"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/settings"
-			android:src="@drawable/ic_settings_white_24dp"
-			android:padding="8dp"
-			android:layout_marginEnd="8dp"
-			android:layout_marginRight="8dp"
-			android:onClick="showSettings"
-			/>
-
-	</LinearLayout>
-
+	<include layout="@layout/toolbar" />
 </RelativeLayout>
