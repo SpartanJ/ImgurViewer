@@ -9,4 +9,6 @@
 	<string name="proxyPortConf">Configure Proxy Port</string>
 	<string name="share">Share</string>
 	<string name="shareUsing">Share using&#8230;</string>
+	<string name="videoRemoved">"Video removed."</string>
+	<string name="videoUrlNotFound">Video url not found.</string>
 </resources>

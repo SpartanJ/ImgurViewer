@@ -9,6 +9,7 @@ import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
 import com.ensoft.imgurviewer.service.resource.GfycatService;
 import com.ensoft.imgurviewer.service.resource.GyazoService;
 import com.ensoft.imgurviewer.service.resource.StreamableService;
+import com.ensoft.imgurviewer.service.resource.TwitchClipsService;
 import com.ensoft.imgurviewer.view.activity.ImgurAlbumGalleryViewer;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class ResourceSolver
 		resourceServiceSolvers.add( new ResourceServiceSolver( new GfycatService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new RedditUploadsService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new StreamableService(), resourceLoadListener, null ) );
+		resourceServiceSolvers.add( new ResourceServiceSolver( new TwitchClipsService(), resourceLoadListener, null ) );
 	}
 
 	public void solve( Uri uri )
