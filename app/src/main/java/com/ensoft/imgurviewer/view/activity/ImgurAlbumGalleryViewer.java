@@ -1,5 +1,6 @@
 package com.ensoft.imgurviewer.view.activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,27 +8,35 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.webkit.URLUtil;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.ensoft.imgurviewer.model.ImgurAlbum;
 import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.service.DeviceService;
+import com.ensoft.imgurviewer.service.DownloadService;
+import com.ensoft.imgurviewer.service.IntentUtils;
 import com.ensoft.imgurviewer.service.resource.ImgurService;
 import com.ensoft.imgurviewer.service.resource.ImgurAlbumService;
 import com.ensoft.imgurviewer.service.resource.ImgurGalleryService;
 import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
 import com.ensoft.imgurviewer.service.listener.ImgurGalleryResolverListener;
 import com.ensoft.imgurviewer.view.adapter.ImgurAlbumAdapter;
+import com.ensoft.imgurviewer.view.helper.MetricsHelper;
 import com.imgurviewer.R;
 
 public class ImgurAlbumGalleryViewer extends AppActivity
 {
 	public static final String TAG = ImgurAlbumGalleryViewer.class.getCanonicalName();
 
+	private LinearLayout floatingMenu;
 	protected ImgurAlbumAdapter albumAdapter;
 	protected ProgressBar progressBar;
 	protected RecyclerView recyclerView;
+	protected Uri albumData;
+	protected ImgurImage[] images;
 
 	@Override
 	public void onCreate( Bundle savedInstanceState )
@@ -36,7 +45,8 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 
 		setContentView( R.layout.activity_albumviewer );
 
-		Uri albumData = null;
+		floatingMenu = (LinearLayout)findViewById( R.id.floating_menu );
+		floatingMenu.setPadding( 0, MetricsHelper.getStatusBarHeight( this ) + MetricsHelper.dpToPx( this, 8 ), 0, 0 );
 
 		if ( null != getIntent().getExtras() && null != getIntent().getExtras().getString( ALBUM_DATA ) )
 		{
@@ -110,6 +120,7 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 
 	protected void create( ImgurImage[] images )
 	{
+		this.images = images;
 		progressBar.setVisibility( View.INVISIBLE );
 		albumAdapter = new ImgurAlbumAdapter( R.layout.item_album_photo, images );
 		albumAdapter.setOrientationLandscape( new DeviceService().isLandscapeOrientation( this ) );
@@ -138,6 +149,30 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		{
 			albumAdapter.setOrientationLandscape( false );
 			albumAdapter.notifyDataSetChanged();
+		}
+	}
+
+	public void showSettings( View v )
+	{
+		startActivity( new Intent( this, SettingsView.class ) );
+	}
+
+	public void downloadImage( View v )
+	{
+		if ( null != images )
+		{
+			for ( ImgurImage image : images )
+			{
+				new DownloadService( this ).download( image.getLinkUri(), URLUtil.guessFileName( image.getLink(), null, null ) );
+			}
+		}
+	}
+
+	public void shareImage( View v )
+	{
+		if ( albumData != null )
+		{
+			IntentUtils.shareMessage( this, getString( R.string.share ), albumData.toString(), getString( R.string.shareUsing ) );
 		}
 	}
 }
