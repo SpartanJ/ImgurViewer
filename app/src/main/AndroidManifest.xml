@@ -39,6 +39,8 @@
 
 				<data android:host="gfycat.com" />
 
+				<data android:host="clips.twitch.tv" />
+
 				<data android:scheme="https" />
 				<data android:scheme="http" />
 
