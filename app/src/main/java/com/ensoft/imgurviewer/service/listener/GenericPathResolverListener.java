@@ -37,14 +37,7 @@ public class GenericPathResolverListener extends PathResolverListener
 	public void onPathError( final String error )
 	{
 		Log.v( TAG, error );
-		Handler h = new Handler( Looper.getMainLooper());
-		h.post(new Runnable()
-		{
-			public void run()
-			{
 
-				Toast.makeText( App.getInstance(), error, Toast.LENGTH_SHORT ).show();
-			}
-		});
+		Toast.makeText( App.getInstance(), error, Toast.LENGTH_SHORT ).show();
 	}
 }

@@ -1,6 +1,8 @@
 package com.ensoft.imgurviewer.service.resource;
 
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.android.volley.Response;
@@ -8,10 +10,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.model.StreamableVideo;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
+import com.ensoft.restafari.network.rest.response.HttpStatus;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class StreamableService extends ImageServiceSolver
 {
@@ -36,9 +42,65 @@ public class StreamableService extends ImageServiceSolver
 				{
 					Log.v( TAG, response.toString() );
 
-					StreamableVideo video = new Gson().fromJson( response.toString(), StreamableVideo.class );
+					final StreamableVideo video = new Gson().fromJson( response.toString(), StreamableVideo.class );
 
-					pathResolverListener.onPathResolved( video.getUri(), null );
+					new Thread( new Runnable()
+					{
+						@Override
+						public void run()
+						{
+
+							HttpURLConnection urlConnection = null;
+
+							System.setProperty("http.keepAlive", "false");
+
+							try
+							{
+								URL url = new URL( video.getUri().toString() );
+								urlConnection = (HttpURLConnection) url.openConnection();
+								urlConnection.setRequestMethod("HEAD");
+								urlConnection.getInputStream().close();
+
+								if ( urlConnection.getResponseCode() == HttpStatus.OK_200.getCode() )
+								{
+									new Handler( Looper.getMainLooper() ).post( new Runnable()
+									{
+										public void run()
+										{
+											pathResolverListener.onPathResolved( video.getUri(), null );
+										}
+									});
+								}
+								else
+								{
+									new Handler( Looper.getMainLooper() ).post( new Runnable()
+									{
+										public void run()
+										{
+											pathResolverListener.onPathError( "Video removed." );
+										}
+									});
+								}
+							}
+							catch ( final Exception e )
+							{
+								new Handler( Looper.getMainLooper() ).post( new Runnable()
+								{
+									public void run()
+									{
+										pathResolverListener.onPathError( "Video removed." );
+									}
+								});
+							}
+							finally
+							{
+								if ( urlConnection != null )
+								{
+									urlConnection.disconnect();
+								}
+							}
+						}
+					} ).start();
 				}
 				catch ( Exception e )
 				{
