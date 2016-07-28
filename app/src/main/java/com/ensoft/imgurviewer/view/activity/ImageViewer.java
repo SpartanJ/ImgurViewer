@@ -223,7 +223,8 @@ public class ImageViewer extends AppActivity
 		}
 		else
 		{
-			loadImage( Uri.parse( "http://imgurviewer.ensoft-dev.com/img/nyancat.gif" ), null );
+			//loadImage( Uri.parse( "http://imgurviewer.ensoft-dev.com/img/nyancat.gif" ), null );
+			loadResource( Uri.parse( "https://clips.twitch.tv/sc2starleague/SillyRavenANELE" ) );
 		}
 	}
 
