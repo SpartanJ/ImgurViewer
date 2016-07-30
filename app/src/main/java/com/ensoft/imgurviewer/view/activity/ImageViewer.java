@@ -1,7 +1,9 @@
 package com.ensoft.imgurviewer.view.activity;
 
 import android.annotation.SuppressLint;
+import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.Animatable;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -23,6 +25,8 @@ import com.ensoft.imgurviewer.service.IntentUtils;
 import com.ensoft.imgurviewer.service.ResourceSolver;
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
+import com.ensoft.imgurviewer.view.fragment.MediaPlayerFragment;
+import com.ensoft.imgurviewer.view.helper.ViewHelper;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
@@ -85,6 +89,17 @@ public class ImageViewer extends AppActivity
 		}
 	};
 
+	protected MediaPlayerFragment mediaPlayerFragment;
+
+	protected void createMediaPlayer()
+	{
+		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+		fragmentTransaction.replace( R.id.player, mediaPlayerFragment = new MediaPlayerFragment() );
+		fragmentTransaction.commit();
+
+		mediaPlayerFragment.setVideoView( videoView );
+	}
+
 	private void loadImage( Uri uri, Uri thumbnail )
 	{
 		currentResource = uri;
@@ -121,7 +136,11 @@ public class ImageViewer extends AppActivity
 		videoView.setVisibility( View.VISIBLE );
 		videoView.setOnClickListener( clickListener );
 		videoView.setVideoURI( uri );
-		videoView.setOnPreparedListener( new MediaPlayer.OnPreparedListener()
+		videoView.start();
+
+		createMediaPlayer();
+
+		mediaPlayerFragment.setOnPreparedListener( new MediaPlayer.OnPreparedListener()
 		{
 			@Override
 			public void onPrepared( MediaPlayer mp )
@@ -131,7 +150,6 @@ public class ImageViewer extends AppActivity
 				progressBar.setVisibility( View.INVISIBLE );
 			}
 		} );
-		videoView.start();
 	}
 
 	protected void loadResource( Uri uri )
@@ -195,7 +213,12 @@ public class ImageViewer extends AppActivity
 		videoView = (VideoView)findViewById( R.id.videoView );
 		progressBar = (ProgressBar)findViewById( R.id.progressBar );
 		floatingMenu = (LinearLayout)findViewById( R.id.floating_menu );
-		floatingMenu.setPadding( 0, MetricsHelper.getStatusBarHeight( this ) + MetricsHelper.dpToPx( this, 8 ), 0, 0 );
+
+		if ( null != getResources() && null != getResources().getConfiguration() )
+		{
+			setFloatingMenuOrientation( getResources().getConfiguration().orientation );
+		}
+
 		ProgressBarDrawable progressBarDrawable = new ProgressBarDrawable();
 		progressBarDrawable.setColor( getResources().getColor( R.color.imgur_color ) );
 		progressBarDrawable.setBarWidth( MetricsHelper.dpToPx( this, 4 ) );
@@ -223,8 +246,7 @@ public class ImageViewer extends AppActivity
 		}
 		else
 		{
-			//loadImage( Uri.parse( "http://imgurviewer.ensoft-dev.com/img/nyancat.gif" ), null );
-			loadResource( Uri.parse( "https://clips.twitch.tv/sc2starleague/SillyRavenANELE" ) );
+			loadResource( Uri.parse( "http://imgurviewer.ensoft-dev.com/img/nyancat.gif" ) );
 		}
 	}
 
@@ -263,6 +285,12 @@ public class ImageViewer extends AppActivity
 			contentView.setSystemUiVisibility( View.SYSTEM_UI_FLAG_LOW_PROFILE | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION );
 
 			floatingMenu.setVisibility( View.VISIBLE );
+
+			if ( null != mediaPlayerFragment )
+			{
+				mediaPlayerFragment.setVisibility( View.VISIBLE );
+			}
+
 			AlphaAnimation alphaAnimation = new AlphaAnimation( 1, 0 );
 			alphaAnimation.setDuration( UI_ANIMATION_DELAY );
 			alphaAnimation.setAnimationListener( new Animation.AnimationListener()
@@ -276,6 +304,11 @@ public class ImageViewer extends AppActivity
 				public void onAnimationEnd( Animation animation )
 				{
 					floatingMenu.setVisibility( View.INVISIBLE );
+
+					if ( null != mediaPlayerFragment )
+					{
+						mediaPlayerFragment.setVisibility( View.INVISIBLE );
+					}
 				}
 
 				@Override
@@ -285,6 +318,11 @@ public class ImageViewer extends AppActivity
 			} );
 
 			floatingMenu.startAnimation( alphaAnimation );
+
+			if ( null != mediaPlayerFragment )
+			{
+				mediaPlayerFragment.startAnimation( alphaAnimation );
+			}
 		}
 	};
 	
@@ -299,10 +337,16 @@ public class ImageViewer extends AppActivity
 		AlphaAnimation alphaAnimation = new AlphaAnimation( 0, 1 );
 		alphaAnimation.setDuration( UI_ANIMATION_DELAY );
 		floatingMenu.startAnimation( alphaAnimation );
+
+		if ( null != mediaPlayerFragment )
+		{
+			mediaPlayerFragment.setVisibility( View.VISIBLE );
+			mediaPlayerFragment.startAnimation( alphaAnimation );
+		}
 	}
 
 	private final Handler hideHandler = new Handler();
-	private final Runnable mHideRunnable = new Runnable()
+	private final Runnable hideRunnable = new Runnable()
 	{
 		@Override
 		public void run()
@@ -313,7 +357,37 @@ public class ImageViewer extends AppActivity
 
 	private void delayedHide( int delayMillis )
 	{
-		hideHandler.removeCallbacks( mHideRunnable );
-		hideHandler.postDelayed( mHideRunnable, delayMillis );
+		hideHandler.removeCallbacks( hideRunnable );
+		hideHandler.postDelayed( hideRunnable, delayMillis );
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig)
+	{
+		super.onConfigurationChanged( newConfig );
+
+		if ( null != mediaPlayerFragment )
+		{
+			mediaPlayerFragment.setOrientationMargins( newConfig.orientation );
+		}
+
+		setFloatingMenuOrientation( newConfig.orientation );
+	}
+
+	protected void setFloatingMenuOrientation( int orientation )
+	{
+		if ( null != floatingMenu )
+		{
+			if ( orientation == Configuration.ORIENTATION_PORTRAIT )
+			{
+				floatingMenu.setPadding( 0, MetricsHelper.dpToPx( this, 8 ), 0, 0 );
+				ViewHelper.setMargins( floatingMenu, 0, MetricsHelper.getStatusBarHeight( this ), 0, 0 );
+			}
+			else if ( orientation == Configuration.ORIENTATION_LANDSCAPE )
+			{
+				floatingMenu.setPadding( 0, MetricsHelper.dpToPx( this, 8 ), 0, 0 );
+				ViewHelper.setMargins( floatingMenu, 0, MetricsHelper.getStatusBarHeight( this ), MetricsHelper.getNavigationBarWidth( this ), 0 );
+			}
+		}
 	}
 }
