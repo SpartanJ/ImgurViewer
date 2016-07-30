@@ -15,23 +15,29 @@ import android.widget.Toast;
 
 import com.ensoft.imgurviewer.model.ImgurAlbum;
 import com.ensoft.imgurviewer.model.ImgurImage;
+import com.ensoft.imgurviewer.model.InstagramItem;
+import com.ensoft.imgurviewer.model.InstagramProfileModel;
 import com.ensoft.imgurviewer.service.DeviceService;
 import com.ensoft.imgurviewer.service.DownloadService;
 import com.ensoft.imgurviewer.service.IntentUtils;
+import com.ensoft.imgurviewer.service.listener.InstagramProfileResolverListener;
 import com.ensoft.imgurviewer.service.resource.ImgurService;
 import com.ensoft.imgurviewer.service.resource.ImgurAlbumService;
 import com.ensoft.imgurviewer.service.resource.ImgurGalleryService;
 import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
 import com.ensoft.imgurviewer.service.listener.ImgurGalleryResolverListener;
+import com.ensoft.imgurviewer.service.resource.InstagramProfileService;
+import com.ensoft.imgurviewer.service.resource.InstagramService;
 import com.ensoft.imgurviewer.view.adapter.ImgurAlbumAdapter;
 import com.ensoft.imgurviewer.view.helper.MetricsHelper;
+import com.ensoft.imgurviewer.view.helper.ViewHelper;
 import com.imgurviewer.R;
 
 public class ImgurAlbumGalleryViewer extends AppActivity
 {
 	public static final String TAG = ImgurAlbumGalleryViewer.class.getCanonicalName();
 
-	private LinearLayout floatingMenu;
+	protected LinearLayout floatingMenu;
 	protected ImgurAlbumAdapter albumAdapter;
 	protected ProgressBar progressBar;
 	protected RecyclerView recyclerView;
@@ -46,7 +52,11 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		setContentView( R.layout.activity_albumviewer );
 
 		floatingMenu = (LinearLayout)findViewById( R.id.floating_menu );
-		floatingMenu.setPadding( 0, MetricsHelper.getStatusBarHeight( this ) + MetricsHelper.dpToPx( this, 8 ), 0, 0 );
+
+		if ( null != getResources() && null != getResources().getConfiguration() )
+		{
+			setFloatingMenuOrientation( getResources().getConfiguration().orientation );
+		}
 
 		if ( null != getIntent().getExtras() && null != getIntent().getExtras().getString( ALBUM_DATA ) )
 		{
@@ -116,6 +126,26 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		{
 			create( new ImgurService().getImagesFromMultiImageUri( albumData ) );
 		}
+		else if ( new InstagramService().isInstagramProfile( albumData ) )
+		{
+			new InstagramProfileService().getProfile( albumData, new InstagramProfileResolverListener()
+			{
+				@Override
+				public void onProfileResolved( InstagramProfileModel profile )
+				{
+					if ( profile.getStatus().equals( "ok" ) && profile.hasItems() )
+					{
+						create( profile.getImages() );
+					}
+				}
+
+				@Override
+				public void onError( String error )
+				{
+					Toast.makeText( ImgurAlbumGalleryViewer.this, error, Toast.LENGTH_SHORT ).show();
+				}
+			} );
+		}
 	}
 
 	protected void create( ImgurImage[] images )
@@ -131,9 +161,11 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 	}
 
 	@Override
-	public void onConfigurationChanged(Configuration newConfig)
+	public void onConfigurationChanged( Configuration newConfig )
 	{
 		super.onConfigurationChanged( newConfig );
+
+		setFloatingMenuOrientation( newConfig.orientation );
 
 		if ( null == albumAdapter )
 		{
@@ -173,6 +205,23 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		if ( albumData != null )
 		{
 			IntentUtils.shareMessage( this, getString( R.string.share ), albumData.toString(), getString( R.string.shareUsing ) );
+		}
+	}
+
+	protected void setFloatingMenuOrientation( int orientation )
+	{
+		if ( null != floatingMenu )
+		{
+			if ( orientation == Configuration.ORIENTATION_PORTRAIT )
+			{
+				floatingMenu.setPadding( 0, MetricsHelper.dpToPx( this, 8 ), 0, 0 );
+				ViewHelper.setMargins( floatingMenu, 0, MetricsHelper.getStatusBarHeight( this ), 0, 0 );
+			}
+			else if ( orientation == Configuration.ORIENTATION_LANDSCAPE )
+			{
+				floatingMenu.setPadding( 0, MetricsHelper.dpToPx( this, 8 ), 0, 0 );
+				ViewHelper.setMargins( floatingMenu, 0, MetricsHelper.getStatusBarHeight( this ), MetricsHelper.getNavigationBarWidth( this ), 0 );
+			}
 		}
 	}
 }

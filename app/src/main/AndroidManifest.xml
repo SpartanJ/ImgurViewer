@@ -41,6 +41,9 @@
 
 				<data android:host="clips.twitch.tv" />
 
+				<data android:host="instagram.com" />
+				<data android:host="www.instagram.com" />
+
 				<data android:scheme="https" />
 				<data android:scheme="http" />
 
