@@ -12,4 +12,10 @@
 	<string name="videoRemoved">"Video removed."</string>
 	<string name="videoUrlNotFound">Video url not found.</string>
 	<string name="seconds_abbr">s</string>
+	<string name="tutorial">How to use ImgurViewer?</string>
+	<string name="tutorial_open">Tap on any image, imgur album or clip video link from an external application.</string>
+	<string name="tutorial_open_with">Select ImgurViewer to open the link.</string>
+	<string name="tutorial_that_is_it">That\'s it!\nImgurViewer is designed to open image and video links from external applications.\nThat\'s its only purpose.</string>
+	<string name="tutorial_next">Next</string>
+	<string name="tutorial_ended">Enjoy!</string>
 </resources>
