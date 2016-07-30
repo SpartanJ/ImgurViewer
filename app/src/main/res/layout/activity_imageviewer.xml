@@ -20,6 +20,13 @@
 				android:visibility="invisible"
 				android:background="@android:color/transparent" />
 
+			<FrameLayout
+				android:id="@+id/player"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal|bottom">
+			</FrameLayout>
+
 		</FrameLayout>
 
 		<me.relex.photodraweeview.PhotoDraweeView
@@ -45,4 +52,5 @@
 	</RelativeLayout>
 
 	<include layout="@layout/toolbar" />
+
 </RelativeLayout>

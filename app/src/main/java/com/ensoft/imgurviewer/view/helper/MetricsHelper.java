@@ -11,6 +11,20 @@ public class MetricsHelper
 		return (int)TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, dpSize, context.getResources().getDisplayMetrics() );
 	}
 
+	public static int getNavigationBarWidth( Context context )
+	{
+		Resources resources = context.getResources();
+
+		int resourceId = resources.getIdentifier("navigation_bar_width", "dimen", "android");
+
+		if ( resourceId > 0 )
+		{
+			return resources.getDimensionPixelSize(resourceId);
+		}
+
+		return 0;
+	}
+
 	public static int getNavigationBarHeight( Context context )
 	{
 		Resources resources = context.getResources();
