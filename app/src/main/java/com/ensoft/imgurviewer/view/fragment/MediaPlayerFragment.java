@@ -32,6 +32,7 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 	protected MediaPlayer.OnPreparedListener userOnPreparedListener;
 	protected Handler seekBarHandler = new Handler();
 	protected Rect margins = new Rect( 0, 0, 0, 0 );
+	protected boolean initialized = false;
 
 	protected void updatePlayPauseState()
 	{
@@ -142,6 +143,8 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 			seekBarView.setMax( videoView.getDuration() );
 
 			updateProgressBar();
+
+			initialized = true;
 		}
 	}
 
@@ -215,6 +218,28 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 		else if ( orientation == Configuration.ORIENTATION_PORTRAIT )
 		{
 			setMargins( 0, 0, 0, MetricsHelper.getNavigationBarHeight( getActivity() ) + MetricsHelper.dpToPx( getActivity(), 8 ) );
+		}
+	}
+
+	@Override
+	public void onPause()
+	{
+		super.onPause();
+
+		if ( initialized )
+		{
+			seekBarHandler.removeCallbacks( seekBarRunnable );
+		}
+	}
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+
+		if ( initialized )
+		{
+			updateProgressBar();
 		}
 	}
 }
