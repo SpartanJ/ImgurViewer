@@ -246,7 +246,8 @@ public class ImageViewer extends AppActivity
 		}
 		else
 		{
-			loadResource( Uri.parse( "http://imgurviewer.ensoft-dev.com/img/nyancat.gif" ) );
+			TutorialActivity.newInstance( this );
+			finish();
 		}
 	}
 
