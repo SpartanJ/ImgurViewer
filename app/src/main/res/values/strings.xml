@@ -11,6 +11,7 @@
 	<string name="shareUsing">Share using&#8230;</string>
 	<string name="videoRemoved">"Video removed."</string>
 	<string name="videoUrlNotFound">Video url not found.</string>
+	<string name="could_not_resolve_url">Couldn\'t resolve image url.</string>
 	<string name="seconds_abbr">s</string>
 	<string name="tutorial">How to use ImgurViewer?</string>
 	<string name="tutorial_open">Tap on any image, imgur album or clip video link from an external application.</string>

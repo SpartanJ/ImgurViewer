@@ -87,7 +87,16 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 				public void onClick( View v )
 				{
 					Intent intent = new Intent( v.getContext(), ImageViewer.class );
-					intent.putExtra( ImageViewer.PARAM_RESOURCE_PATH, image.getLink() );
+
+					if ( image.hasVideo() )
+					{
+						intent.putExtra( ImageViewer.PARAM_RESOURCE_PATH, image.getVideoUri().toString() );
+					}
+					else
+					{
+						intent.putExtra( ImageViewer.PARAM_RESOURCE_PATH, image.getLink() );
+					}
+
 					v.getContext().startActivity( intent );
 				}
 			} );

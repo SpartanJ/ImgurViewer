@@ -2,7 +2,9 @@ package com.ensoft.imgurviewer.service;
 
 import android.net.Uri;
 
+import com.ensoft.imgurviewer.service.resource.ImageServiceSolver;
 import com.ensoft.imgurviewer.service.resource.ImgurService;
+import com.ensoft.imgurviewer.service.resource.InstagramService;
 import com.ensoft.imgurviewer.service.resource.RedditUploadsService;
 import com.ensoft.imgurviewer.service.resource.ResourceServiceSolver;
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
@@ -34,6 +36,7 @@ public class ResourceSolver
 		resourceServiceSolvers.add( new ResourceServiceSolver( new RedditUploadsService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new StreamableService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new TwitchClipsService(), resourceLoadListener, null ) );
+		resourceServiceSolvers.add( new ResourceServiceSolver( new InstagramService(), resourceLoadListener, ImgurAlbumGalleryViewer.class ) );
 	}
 
 	public void solve( Uri uri )
@@ -46,6 +49,13 @@ public class ResourceSolver
 			}
 		}
 
-		resourceLoadListener.loadImage( uri, null );
+		if ( ImageServiceSolver.isVideoUrl( uri ) )
+		{
+			resourceLoadListener.loadVideo( uri );
+		}
+		else
+		{
+			resourceLoadListener.loadImage( uri, null );
+		}
 	}
 }
