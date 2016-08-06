@@ -19,4 +19,5 @@
 	<string name="tutorial_that_is_it">That\'s it!\nImgurViewer is designed to open image and video links from external applications.\nThat\'s its only purpose.</string>
 	<string name="tutorial_next">Next</string>
 	<string name="tutorial_ended">Enjoy!</string>
+	<string name="unknown_error">Unknown Error</string>
 </resources>

@@ -44,6 +44,8 @@
 				<data android:host="instagram.com" />
 				<data android:host="www.instagram.com" />
 
+				<data android:host="vid.me" />
+
 				<data android:scheme="https" />
 				<data android:scheme="http" />
 
