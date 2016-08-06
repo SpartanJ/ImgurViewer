@@ -19,6 +19,8 @@ As the name suggest it was originally designed to open Imgur image links, but th
 
 **Instagram** image, video, and simple profile image gallery support.
 
+**vid.me** support.
+
 Also **ImgurViewer** can open any link with a path with and image extension, so, it will try to handle any image link.
 
 **ImgurViewer** as a standalone application doesn't do anything, so don't expect anything when opening the application. 

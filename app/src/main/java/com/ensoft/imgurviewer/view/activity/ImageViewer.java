@@ -124,6 +124,8 @@ public class ImageViewer extends AppActivity
 		} );
 
 		imageView.setOnViewTapListener( touchListener );
+
+		delayedHide( 100 );
 	}
 
 	protected void loadVideo( Uri uri )
@@ -150,6 +152,8 @@ public class ImageViewer extends AppActivity
 				progressBar.setVisibility( View.INVISIBLE );
 			}
 		} );
+
+		delayedHide( 100 );
 	}
 
 	protected void loadResource( Uri uri )
@@ -249,14 +253,6 @@ public class ImageViewer extends AppActivity
 			TutorialActivity.newInstance( this );
 			finish();
 		}
-	}
-
-	@Override
-	protected void onPostCreate( Bundle savedInstanceState )
-	{
-		super.onPostCreate( savedInstanceState );
-
-		delayedHide( 100 );
 	}
 
 	private void toggle()
