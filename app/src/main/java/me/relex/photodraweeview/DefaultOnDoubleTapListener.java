@@ -3,6 +3,7 @@ package me.relex.photodraweeview;
 import android.graphics.RectF;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.view.DraweeView;
 

@@ -51,7 +51,7 @@ public class GfycatService extends ImageServiceSolver
 				{
 					Log.v( TAG, e.getMessage() );
 
-					pathResolverListener.onPathError( e.toString() );;
+					pathResolverListener.onPathError( e.toString() );
 				}
 			}
 		}, new Response.ErrorListener()

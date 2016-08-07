@@ -8,8 +8,8 @@ import com.ensoft.restafari.network.service.RequestServiceOptions;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 
-import org.acra.*;
-import org.acra.annotation.*;
+import org.acra.ACRA;
+import org.acra.annotation.ReportsCrashes;
 
 @ReportsCrashes(
 	formUri = "http://imgurviewer.ensoft-dev.com/"

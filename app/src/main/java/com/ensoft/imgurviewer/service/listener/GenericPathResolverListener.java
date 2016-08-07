@@ -1,8 +1,6 @@
 package com.ensoft.imgurviewer.service.listener;
 
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 

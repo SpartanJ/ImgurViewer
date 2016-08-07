@@ -23,17 +23,16 @@ import com.ensoft.imgurviewer.service.DownloadService;
 import com.ensoft.imgurviewer.service.FrescoService;
 import com.ensoft.imgurviewer.service.IntentUtils;
 import com.ensoft.imgurviewer.service.ResourceSolver;
-import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
+import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
 import com.ensoft.imgurviewer.view.fragment.MediaPlayerFragment;
+import com.ensoft.imgurviewer.view.helper.MetricsHelper;
 import com.ensoft.imgurviewer.view.helper.ViewHelper;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.imagepipeline.image.ImageInfo;
-
-import com.ensoft.imgurviewer.view.helper.MetricsHelper;
 import com.imgurviewer.R;
 
 import me.relex.photodraweeview.OnViewTapListener;

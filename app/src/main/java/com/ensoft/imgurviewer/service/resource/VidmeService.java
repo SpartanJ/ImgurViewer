@@ -17,7 +17,7 @@ import org.json.JSONObject;
 
 public class VidmeService extends ImageServiceSolver
 {
-	public static final String TAG = GyazoService.class.getCanonicalName();
+	public static final String TAG = VidmeService.class.getCanonicalName();
 	public static final String VIDME_DOMAIN = "vid.me";
 	public static final String VIDME_API_URL = "https://api.vid.me";
 	public static final String VIDME_GET_IMAGE_URL = VIDME_API_URL + "/videoByUrl?url=";

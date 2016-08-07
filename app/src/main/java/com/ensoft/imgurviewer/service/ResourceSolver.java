@@ -2,14 +2,15 @@ package com.ensoft.imgurviewer.service;
 
 import android.net.Uri;
 
+import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
+import com.ensoft.imgurviewer.service.resource.FlickrService;
+import com.ensoft.imgurviewer.service.resource.GfycatService;
+import com.ensoft.imgurviewer.service.resource.GyazoService;
 import com.ensoft.imgurviewer.service.resource.ImageServiceSolver;
 import com.ensoft.imgurviewer.service.resource.ImgurService;
 import com.ensoft.imgurviewer.service.resource.InstagramService;
 import com.ensoft.imgurviewer.service.resource.RedditUploadsService;
 import com.ensoft.imgurviewer.service.resource.ResourceServiceSolver;
-import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
-import com.ensoft.imgurviewer.service.resource.GfycatService;
-import com.ensoft.imgurviewer.service.resource.GyazoService;
 import com.ensoft.imgurviewer.service.resource.StreamableService;
 import com.ensoft.imgurviewer.service.resource.TwitchClipsService;
 import com.ensoft.imgurviewer.service.resource.VidmeService;
@@ -39,6 +40,7 @@ public class ResourceSolver
 		resourceServiceSolvers.add( new ResourceServiceSolver( new TwitchClipsService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new InstagramService(), resourceLoadListener, ImgurAlbumGalleryViewer.class ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new VidmeService(), resourceLoadListener, null ) );
+		resourceServiceSolvers.add( new ResourceServiceSolver( new FlickrService(), resourceLoadListener, null ) );
 	}
 
 	public void solve( Uri uri )
