@@ -15,7 +15,7 @@ import org.json.JSONObject;
 
 public class InstagramProfileService
 {
-	public static final String TAG = ImgurAlbumService.class.getCanonicalName();
+	public static final String TAG = InstagramProfileService.class.getCanonicalName();
 
 	protected String getProfileMediaUrl( Uri uri )
 	{
