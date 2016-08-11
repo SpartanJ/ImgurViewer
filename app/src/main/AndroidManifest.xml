@@ -69,6 +69,19 @@
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
 
+				<data android:host="giphy.com" />
+				<data android:host="www.giphy.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/gifs/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
 				<data android:host="*" />
 
 				<data android:scheme="http" />

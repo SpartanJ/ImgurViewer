@@ -6,7 +6,7 @@ import android.util.Log;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.ensoft.imgurviewer.model.GfycatVideo;
+import com.ensoft.imgurviewer.model.GfycatResource;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
@@ -41,11 +41,9 @@ public class GfycatService extends ImageServiceSolver
 				{
 					Log.v( TAG, response.toString() );
 
-					JSONObject item = response.getJSONObject( "gfyItem" );
+					GfycatResource resource = new Gson().fromJson( response.toString(), GfycatResource.class );
 
-					GfycatVideo video = new Gson().fromJson( item.toString(), GfycatVideo.class );
-
-					pathResolverListener.onPathResolved( video.getUri(), null );
+					pathResolverListener.onPathResolved( resource.item.getUri(), null );
 				}
 				catch ( Exception e )
 				{
