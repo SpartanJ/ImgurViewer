@@ -5,6 +5,7 @@ import android.net.Uri;
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
 import com.ensoft.imgurviewer.service.resource.FlickrService;
 import com.ensoft.imgurviewer.service.resource.GfycatService;
+import com.ensoft.imgurviewer.service.resource.GiphyService;
 import com.ensoft.imgurviewer.service.resource.GyazoService;
 import com.ensoft.imgurviewer.service.resource.ImageServiceSolver;
 import com.ensoft.imgurviewer.service.resource.ImgurService;
@@ -41,6 +42,7 @@ public class ResourceSolver
 		resourceServiceSolvers.add( new ResourceServiceSolver( new InstagramService(), resourceLoadListener, ImgurAlbumGalleryViewer.class ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new VidmeService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new FlickrService(), resourceLoadListener, null ) );
+		resourceServiceSolvers.add( new ResourceServiceSolver( new GiphyService(), resourceLoadListener, null ) );
 	}
 
 	public void solve( Uri uri )

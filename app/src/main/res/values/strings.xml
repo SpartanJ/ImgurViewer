@@ -2,6 +2,7 @@
 	<string name="app_name">ImgurViewer</string>
 	<string name="imgur_client_id">912617e18339d56</string>
 	<string name="flickr_key">2ba8fd93b3d6443c8c8b8f277770bf6e</string>
+	<string name="giphy_api_key">dc6zaTOxFJmzC</string>
 	<string name="proxyHost">Proxy Host</string>
 	<string name="proxyPort">Proxy Port</string>
 	<string name="proxyHostConf">Configure Proxy Host</string>
