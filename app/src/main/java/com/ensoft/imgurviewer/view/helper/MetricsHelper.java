@@ -13,6 +13,11 @@ public class MetricsHelper
 
 	public static int getNavigationBarWidth( Context context )
 	{
+		if ( !ViewHelper.hasImmersive( context ) )
+		{
+			return 0;
+		}
+
 		Resources resources = context.getResources();
 
 		int resourceId = resources.getIdentifier("navigation_bar_width", "dimen", "android");
@@ -27,6 +32,11 @@ public class MetricsHelper
 
 	public static int getNavigationBarHeight( Context context )
 	{
+		if ( !ViewHelper.hasImmersive( context ) )
+		{
+			return 0;
+		}
+
 		Resources resources = context.getResources();
 
 		int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
