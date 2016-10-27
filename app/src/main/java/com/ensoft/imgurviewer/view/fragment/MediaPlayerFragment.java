@@ -217,7 +217,9 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 		}
 		else if ( orientation == Configuration.ORIENTATION_PORTRAIT )
 		{
-			setMargins( 0, 0, 0, MetricsHelper.getNavigationBarHeight( getActivity() ) + MetricsHelper.dpToPx( getActivity(), 8 ) );
+			setMargins( 0, 0, 0, MetricsHelper.getNavigationBarHeight( getActivity() ) +
+									( ViewHelper.hasImmersive( getActivity() ) ? MetricsHelper.dpToPx( getActivity(), 8 ) : 0 )
+			);
 		}
 	}
 

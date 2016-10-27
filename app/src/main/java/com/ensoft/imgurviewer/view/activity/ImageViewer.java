@@ -94,7 +94,7 @@ public class ImageViewer extends AppActivity
 	{
 		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 		fragmentTransaction.replace( R.id.player, mediaPlayerFragment = new MediaPlayerFragment() );
-		fragmentTransaction.commit();
+		fragmentTransaction.commitAllowingStateLoss();
 
 		mediaPlayerFragment.setVideoView( videoView );
 	}
