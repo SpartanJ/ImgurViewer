@@ -21,7 +21,7 @@ public class GfycatService extends ImageServiceSolver
 
 	protected String getResourceName( Uri uri )
 	{
-		return uri.getPath().replace( "/", "" );
+		return uri.getLastPathSegment();
 	}
 
 	protected String getResourcePath( Uri uri )
