@@ -46,6 +46,8 @@
 
 				<data android:host="vid.me" />
 
+				<data android:host="v.redd.it" />
+
 				<data android:scheme="https" />
 				<data android:scheme="http" />
 
