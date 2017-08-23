@@ -81,6 +81,12 @@ public class VidmeService extends ImageServiceSolver
 	{
 		return false;
 	}
+	
+	@Override
+	public boolean isVideo( Uri uri )
+	{
+		return true;
+	}
 
 	@Override
 	public boolean isVideo( String uri )

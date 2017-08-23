@@ -11,6 +11,7 @@ import com.ensoft.imgurviewer.service.resource.ImageServiceSolver;
 import com.ensoft.imgurviewer.service.resource.ImgurService;
 import com.ensoft.imgurviewer.service.resource.InstagramService;
 import com.ensoft.imgurviewer.service.resource.RedditUploadsService;
+import com.ensoft.imgurviewer.service.resource.RedditVideoService;
 import com.ensoft.imgurviewer.service.resource.ResourceServiceSolver;
 import com.ensoft.imgurviewer.service.resource.StreamableService;
 import com.ensoft.imgurviewer.service.resource.TwitchClipsService;
@@ -43,6 +44,7 @@ public class ResourceSolver
 		resourceServiceSolvers.add( new ResourceServiceSolver( new VidmeService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new FlickrService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new GiphyService(), resourceLoadListener, null ) );
+		resourceServiceSolvers.add( new ResourceServiceSolver( new RedditVideoService(), resourceLoadListener, null ) );
 	}
 
 	public void solve( Uri uri )
