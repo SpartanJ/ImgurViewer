@@ -130,6 +130,46 @@
 				<data android:pathPattern=".*..*.webp" />
 				<data android:pathPattern=".*.webp" />
 
+				<data android:pathPattern=".*\\.mp4" />
+				<data android:pathPattern=".*..*..*..*..*..*.mp4" />
+				<data android:pathPattern=".*..*..*..*..*.mp4" />
+				<data android:pathPattern=".*..*..*..*.mp4" />
+				<data android:pathPattern=".*..*..*.mp4" />
+				<data android:pathPattern=".*..*.mp4" />
+				<data android:pathPattern=".*.mp4" />
+
+				<data android:pathPattern=".*\\.avi" />
+				<data android:pathPattern=".*..*..*..*..*..*.avi" />
+				<data android:pathPattern=".*..*..*..*..*.avi" />
+				<data android:pathPattern=".*..*..*..*.avi" />
+				<data android:pathPattern=".*..*..*.avi" />
+				<data android:pathPattern=".*..*.avi" />
+				<data android:pathPattern=".*.avi" />
+
+				<data android:pathPattern=".*\\.flv" />
+				<data android:pathPattern=".*..*..*..*..*..*.flv" />
+				<data android:pathPattern=".*..*..*..*..*.flv" />
+				<data android:pathPattern=".*..*..*..*.flv" />
+				<data android:pathPattern=".*..*..*.flv" />
+				<data android:pathPattern=".*..*.flv" />
+				<data android:pathPattern=".*.flv" />
+				
+				<data android:pathPattern=".*\\.mkv" />
+				<data android:pathPattern=".*..*..*..*..*..*.mkv" />
+				<data android:pathPattern=".*..*..*..*..*.mkv" />
+				<data android:pathPattern=".*..*..*..*.mkv" />
+				<data android:pathPattern=".*..*..*.mkv" />
+				<data android:pathPattern=".*..*.mkv" />
+				<data android:pathPattern=".*.mkv" />
+
+				<data android:pathPattern=".*\\.webm" />
+				<data android:pathPattern=".*..*..*..*..*..*.webm" />
+				<data android:pathPattern=".*..*..*..*..*.webm" />
+				<data android:pathPattern=".*..*..*..*.webm" />
+				<data android:pathPattern=".*..*..*.webm" />
+				<data android:pathPattern=".*..*.webm" />
+				<data android:pathPattern=".*.webm" />
+				
 				<data android:pathPattern=".*\\.JPG" />
 				<data android:pathPattern=".*..*..*..*..*..*.JPG" />
 				<data android:pathPattern=".*..*..*..*..*.JPG" />
@@ -169,6 +209,46 @@
 				<data android:pathPattern=".*..*..*.WEBP" />
 				<data android:pathPattern=".*..*.WEBP" />
 				<data android:pathPattern=".*.WEBP" />
+
+				<data android:pathPattern=".*\\.MP4" />
+				<data android:pathPattern=".*..*..*..*..*..*.MP4" />
+				<data android:pathPattern=".*..*..*..*..*.MP4" />
+				<data android:pathPattern=".*..*..*..*.MP4" />
+				<data android:pathPattern=".*..*..*.MP4" />
+				<data android:pathPattern=".*..*.MP4" />
+				<data android:pathPattern=".*.MP4" />
+				
+				<data android:pathPattern=".*\\.AVI" />
+				<data android:pathPattern=".*..*..*..*..*..*.AVI" />
+				<data android:pathPattern=".*..*..*..*..*.AVI" />
+				<data android:pathPattern=".*..*..*..*.AVI" />
+				<data android:pathPattern=".*..*..*.AVI" />
+				<data android:pathPattern=".*..*.AVI" />
+				<data android:pathPattern=".*.AVI" />
+
+				<data android:pathPattern=".*\\.FLV" />
+				<data android:pathPattern=".*..*..*..*..*..*.FLV" />
+				<data android:pathPattern=".*..*..*..*..*.FLV" />
+				<data android:pathPattern=".*..*..*..*.FLV" />
+				<data android:pathPattern=".*..*..*.FLV" />
+				<data android:pathPattern=".*..*.FLV" />
+				<data android:pathPattern=".*.FLV" />
+
+				<data android:pathPattern=".*\\.MKV" />
+				<data android:pathPattern=".*..*..*..*..*..*.MKV" />
+				<data android:pathPattern=".*..*..*..*..*.MKV" />
+				<data android:pathPattern=".*..*..*..*.MKV" />
+				<data android:pathPattern=".*..*..*.MKV" />
+				<data android:pathPattern=".*..*.MKV" />
+				<data android:pathPattern=".*.MKV" />
+
+				<data android:pathPattern=".*\\.WEBM" />
+				<data android:pathPattern=".*..*..*..*..*..*.WEBM" />
+				<data android:pathPattern=".*..*..*..*..*.WEBM" />
+				<data android:pathPattern=".*..*..*..*.WEBM" />
+				<data android:pathPattern=".*..*..*.WEBM" />
+				<data android:pathPattern=".*..*.WEBM" />
+				<data android:pathPattern=".*.WEBM" />
 			</intent-filter>
         </activity>
 
