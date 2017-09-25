@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -22,6 +23,7 @@ import android.widget.VideoView;
 import com.ensoft.imgurviewer.service.DownloadService;
 import com.ensoft.imgurviewer.service.FrescoService;
 import com.ensoft.imgurviewer.service.IntentUtils;
+import com.ensoft.imgurviewer.service.PermissionService;
 import com.ensoft.imgurviewer.service.ResourceSolver;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
@@ -186,12 +188,31 @@ public class ImageViewer extends AppActivity
 	{
 		startActivity( new Intent( ImageViewer.this, SettingsView.class ) );
 	}
-
-	public void downloadImage( View v )
+	
+	@Override
+	public void onRequestPermissionsResult( final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults )
+	{
+		super.onRequestPermissionsResult( requestCode, permissions, grantResults );
+		
+		if ( requestCode == PermissionService.REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION )
+		{
+			download();
+		}
+	}
+	
+	public void download()
 	{
 		if ( null != currentResource )
 		{
 			new DownloadService( this ).download( currentResource, URLUtil.guessFileName( currentResource.toString(), null, null ) );
+		}
+	}
+	
+	public void downloadImage( View v )
+	{
+		if ( !new PermissionService().askExternalStorageAccess( this ) )
+		{
+			download();
 		}
 	}
 

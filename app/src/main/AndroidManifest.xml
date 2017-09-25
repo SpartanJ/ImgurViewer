@@ -98,6 +98,30 @@
 				<data android:pathPattern=".*..*.jpg" />
 				<data android:pathPattern=".*.jpg" />
 
+				<data android:pathPattern=".*\\.jpg:large" />
+				<data android:pathPattern=".*..*..*..*..*..*.jpg:large" />
+				<data android:pathPattern=".*..*..*..*..*.jpg:large" />
+				<data android:pathPattern=".*..*..*..*.jpg:large" />
+				<data android:pathPattern=".*..*..*.jpg:large" />
+				<data android:pathPattern=".*..*.jpg:large" />
+				<data android:pathPattern=".*.jpg:large" />
+
+				<data android:pathPattern=".*\\.jpg:medium" />
+				<data android:pathPattern=".*..*..*..*..*..*.jpg:medium" />
+				<data android:pathPattern=".*..*..*..*..*.jpg:medium" />
+				<data android:pathPattern=".*..*..*..*.jpg:medium" />
+				<data android:pathPattern=".*..*..*.jpg:medium" />
+				<data android:pathPattern=".*..*.jpg:medium" />
+				<data android:pathPattern=".*.jpg:medium" />
+
+				<data android:pathPattern=".*\\.jpg:small" />
+				<data android:pathPattern=".*..*..*..*..*..*.jpg:small" />
+				<data android:pathPattern=".*..*..*..*..*.jpg:small" />
+				<data android:pathPattern=".*..*..*..*.jpg:small" />
+				<data android:pathPattern=".*..*..*.jpg:small" />
+				<data android:pathPattern=".*..*.jpg:small" />
+				<data android:pathPattern=".*.jpg:small" />
+
 				<data android:pathPattern=".*\\.jpeg" />
 				<data android:pathPattern=".*..*..*..*..*..*.jpeg" />
 				<data android:pathPattern=".*..*..*..*..*.jpeg" />
@@ -114,6 +138,30 @@
 				<data android:pathPattern=".*..*.png" />
 				<data android:pathPattern=".*.png" />
 
+				<data android:pathPattern=".*\\.png:large" />
+				<data android:pathPattern=".*..*..*..*..*..*.png:large" />
+				<data android:pathPattern=".*..*..*..*..*.png:large" />
+				<data android:pathPattern=".*..*..*..*.png:large" />
+				<data android:pathPattern=".*..*..*.png:large" />
+				<data android:pathPattern=".*..*.png:large" />
+				<data android:pathPattern=".*.png:large" />
+
+				<data android:pathPattern=".*\\.png:medium" />
+				<data android:pathPattern=".*..*..*..*..*..*.png:medium" />
+				<data android:pathPattern=".*..*..*..*..*.png:medium" />
+				<data android:pathPattern=".*..*..*..*.png:medium" />
+				<data android:pathPattern=".*..*..*.png:medium" />
+				<data android:pathPattern=".*..*.png:medium" />
+				<data android:pathPattern=".*.png:medium" />
+
+				<data android:pathPattern=".*\\.png:small" />
+				<data android:pathPattern=".*..*..*..*..*..*.png:small" />
+				<data android:pathPattern=".*..*..*..*..*.png:small" />
+				<data android:pathPattern=".*..*..*..*.png:small" />
+				<data android:pathPattern=".*..*..*.png:small" />
+				<data android:pathPattern=".*..*.png:small" />
+				<data android:pathPattern=".*.png:small" />
+
 				<data android:pathPattern=".*\\.gif" />
 				<data android:pathPattern=".*..*..*..*..*..*.gif" />
 				<data android:pathPattern=".*..*..*..*..*.gif" />
@@ -121,6 +169,30 @@
 				<data android:pathPattern=".*..*..*.gif" />
 				<data android:pathPattern=".*..*.gif" />
 				<data android:pathPattern=".*.gif" />
+
+				<data android:pathPattern=".*\\.gif:large" />
+				<data android:pathPattern=".*..*..*..*..*..*.gif:large" />
+				<data android:pathPattern=".*..*..*..*..*.gif:large" />
+				<data android:pathPattern=".*..*..*..*.gif:large" />
+				<data android:pathPattern=".*..*..*.gif:large" />
+				<data android:pathPattern=".*..*.gif:large" />
+				<data android:pathPattern=".*.gif:large" />
+
+				<data android:pathPattern=".*\\.gif:medium" />
+				<data android:pathPattern=".*..*..*..*..*..*.gif:medium" />
+				<data android:pathPattern=".*..*..*..*..*.gif:medium" />
+				<data android:pathPattern=".*..*..*..*.gif:medium" />
+				<data android:pathPattern=".*..*..*.gif:medium" />
+				<data android:pathPattern=".*..*.gif:medium" />
+				<data android:pathPattern=".*.gif:medium" />
+
+				<data android:pathPattern=".*\\.gif:small" />
+				<data android:pathPattern=".*..*..*..*..*..*.gif:small" />
+				<data android:pathPattern=".*..*..*..*..*.gif:small" />
+				<data android:pathPattern=".*..*..*..*.gif:small" />
+				<data android:pathPattern=".*..*..*.gif:small" />
+				<data android:pathPattern=".*..*.gif:small" />
+				<data android:pathPattern=".*.gif:small" />
 
 				<data android:pathPattern=".*\\.webp" />
 				<data android:pathPattern=".*..*..*..*..*..*.webp" />

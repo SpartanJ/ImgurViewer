@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.ensoft.imgurviewer.model.InstagramProfileModel;
 import com.ensoft.imgurviewer.service.DeviceService;
 import com.ensoft.imgurviewer.service.DownloadService;
 import com.ensoft.imgurviewer.service.IntentUtils;
+import com.ensoft.imgurviewer.service.PermissionService;
 import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
 import com.ensoft.imgurviewer.service.listener.ImgurGalleryResolverListener;
 import com.ensoft.imgurviewer.service.listener.InstagramProfileResolverListener;
@@ -187,8 +189,19 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 	{
 		startActivity( new Intent( this, SettingsView.class ) );
 	}
-
-	public void downloadImage( View v )
+	
+	@Override
+	public void onRequestPermissionsResult( final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults )
+	{
+		super.onRequestPermissionsResult( requestCode, permissions, grantResults );
+		
+		if ( requestCode == PermissionService.REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION )
+		{
+			download();
+		}
+	}
+	
+	public void download()
 	{
 		if ( null != images )
 		{
@@ -196,6 +209,14 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 			{
 				new DownloadService( this ).download( image.getLinkUri(), URLUtil.guessFileName( image.getLink(), null, null ) );
 			}
+		}
+	}
+	
+	public void downloadImage( View v )
+	{
+		if ( !new PermissionService().askExternalStorageAccess( this ) )
+		{
+			download();
 		}
 	}
 

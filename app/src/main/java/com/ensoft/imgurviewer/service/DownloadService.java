@@ -22,7 +22,15 @@ public class DownloadService
 
 		request.setAllowedOverRoaming(false);
 		request.setNotificationVisibility( DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED );
-		request.setDestinationInExternalFilesDir( context, Environment.DIRECTORY_DOWNLOADS, fileName );
+		
+		if ( new PermissionService().isExternalStorageAccess( context ) )
+		{
+			request.setDestinationInExternalPublicDir( Environment.DIRECTORY_DOWNLOADS, fileName );
+		}
+		else
+		{
+			request.setDestinationInExternalFilesDir( context, Environment.DIRECTORY_DOWNLOADS, fileName );
+		}
 
 		return downloadManager.enqueue( request );
 	}
