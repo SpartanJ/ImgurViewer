@@ -21,4 +21,9 @@
 	<string name="tutorial_next">Next</string>
 	<string name="tutorial_ended">Enjoy!</string>
 	<string name="unknown_error">Unknown Error</string>
+	<string name="muteVideos">Mute videos</string>
+	<string name="muteVideosConf">Mute videos by default</string>
+	<string name="clearCache">Clear cache</string>
+	<string name="clearCacheConf">Clear application image cache</string>
+	<string name="cacheCleared">Image cache cleared</string>
 </resources>
