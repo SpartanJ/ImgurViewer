@@ -9,6 +9,7 @@ import android.preference.PreferenceFragment;
 import android.widget.Toast;
 
 import com.ensoft.imgurviewer.App;
+import com.ensoft.imgurviewer.service.FrescoService;
 import com.ensoft.imgurviewer.service.PreferencesService;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.imgurviewer.R;
@@ -94,7 +95,7 @@ public class SettingsView extends PreferenceActivity
 				@Override
 				public boolean onPreferenceClick( Preference preference )
 				{
-					Fresco.getImagePipeline().clearCaches();
+					new FrescoService().clearCaches();
 					Toast.makeText( MyPreferenceFragment.this.getActivity(), R.string.cacheCleared, Toast.LENGTH_SHORT ).show();
 					return true;
 				}

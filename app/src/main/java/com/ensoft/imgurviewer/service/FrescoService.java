@@ -50,4 +50,9 @@ public class FrescoService
 	{
 		loadImage( uri, null, view, controllerListener );
 	}
+	
+	public void clearCaches()
+	{
+		Fresco.getImagePipeline().clearCaches();
+	}
 }
