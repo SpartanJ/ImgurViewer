@@ -26,5 +26,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:26.1.0'
     compile 'com.facebook.fresco:fresco:1.5.0'
     compile 'ch.acra:acra:4.9.2'
-    compile 'com.ensoft-dev.restafari:restafari:0.2.42'
+    compile 'com.ensoft-dev.restafari:restafari:0.2.43'
 }
