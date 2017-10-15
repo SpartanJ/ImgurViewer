@@ -1,7 +1,6 @@
 package com.ensoft.imgurviewer.view.activity;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -11,7 +10,6 @@ import android.widget.Toast;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.service.FrescoService;
 import com.ensoft.imgurviewer.service.PreferencesService;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.imgurviewer.R;
 
 public class SettingsView extends PreferenceActivity
