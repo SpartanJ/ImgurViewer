@@ -35,8 +35,6 @@
 			android:layout_gravity="center_vertical"
 			android:layout_marginLeft="16dp"
 			android:layout_marginStart="16dp"
-			android:layout_marginRight="8dp"
-			android:layout_marginEnd="8dp"
 			/>
 
 		<SeekBar
@@ -45,8 +43,6 @@
 			android:id="@+id/mediaPlayer_seekBar"
 			android:layout_gravity="center_vertical"
 			android:layout_weight="1"
-			android:layout_marginRight="8dp"
-			android:layout_marginEnd="8dp"
 			/>
 
 		<ImageView
