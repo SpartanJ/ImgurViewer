@@ -19,6 +19,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.view.helper.MetricsHelper;
 import com.ensoft.imgurviewer.view.helper.ViewHelper;
 import com.imgurviewer.R;
@@ -27,12 +28,15 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 {
 	protected VideoView videoView;
 	protected ImageView playPauseView;
+	protected ImageView audioOnOffView;
 	protected TextView timeTextView;
 	protected SeekBar seekBarView;
 	protected MediaPlayer.OnPreparedListener userOnPreparedListener;
 	protected Handler seekBarHandler = new Handler();
 	protected Rect margins = new Rect( 0, 0, 0, 0 );
 	protected boolean initialized = false;
+	protected MediaPlayer mediaPlayer;
+	protected boolean isMuted = false;
 
 	protected void updatePlayPauseState()
 	{
@@ -50,6 +54,23 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 			}
 		}
 	}
+	
+	protected void updateAudioOnOffState()
+	{
+		if ( null != videoView && null != mediaPlayer )
+		{
+			if ( isMuted )
+			{
+				unmute();
+				audioOnOffView.setImageResource( R.drawable.ic_volume_up_white_48dp );
+			}
+			else
+			{
+				mute();
+				audioOnOffView.setImageResource( R.drawable.ic_volume_off_white_48dp );
+			}
+		}
+	}
 
 	protected View.OnClickListener playPauseOnClickListener = new View.OnClickListener()
 	{
@@ -57,6 +78,15 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 		public void onClick( View v )
 		{
 			updatePlayPauseState();
+		}
+	};
+	
+	protected View.OnClickListener audioOnOffListener = new View.OnClickListener()
+	{
+		@Override
+		public void onClick( View v )
+		{
+			updateAudioOnOffState();
 		}
 	};
 
@@ -79,6 +109,9 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 
 		playPauseView = (ImageView)view.findViewById( R.id.mediaPlayer_playPause );
 		playPauseView.setOnClickListener( playPauseOnClickListener );
+		
+		audioOnOffView = (ImageView)view.findViewById( R.id.mediaPlayer_audioOnOff );
+		audioOnOffView.setOnClickListener( audioOnOffListener );
 
 		timeTextView = (TextView)view.findViewById( R.id.mediaPlayer_time );
 
@@ -125,13 +158,19 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 	{
 		public void run()
 		{
-			long timeLeft = ( videoView.getDuration() - videoView.getCurrentPosition() ) / 1000L;
-			String timeLeftStr = String.valueOf( timeLeft ) + getString( R.string.seconds_abbr );
-
-			timeTextView.setText( timeLeftStr );
-
-			seekBarView.setProgress( videoView.getCurrentPosition() );
-
+			try
+			{
+				if ( isAdded() )
+				{
+					long timeLeft = ( videoView.getDuration() - videoView.getCurrentPosition() ) / 1000L;
+					String timeLeftStr = String.valueOf( timeLeft ) + getString( R.string.seconds_abbr );
+					
+					timeTextView.setText( timeLeftStr );
+					
+					seekBarView.setProgress( videoView.getCurrentPosition() );
+				}
+			} catch ( Exception e ) {}
+			
 			seekBarHandler.postDelayed( this, 100 );
 		}
 	};
@@ -173,10 +212,16 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 	public void onPrepared( MediaPlayer mp )
 	{
 		init();
-
+		
 		updatePlayPauseState();
-
+		
+		mediaPlayer = mp;
+		
 		userOnPreparedListener.onPrepared( mp );
+		
+		isMuted = !App.getInstance().getPreferencesService().videosMuted();
+		
+		updateAudioOnOffState();
 	}
 
 	public void setVisibility(int visibility)
@@ -243,5 +288,32 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 		{
 			updateProgressBar();
 		}
+	}
+	
+	public void mute()
+	{
+		setVolume(0);
+		isMuted = true;
+	}
+	
+	public void unmute()
+	{
+		setVolume(100);
+		isMuted = false;
+	}
+	
+	public void setVolume(int amount)
+	{
+		try
+		{
+			if ( null != mediaPlayer )
+			{
+				final int max = 100;
+				final double numerator = max - amount > 0 ? Math.log( max - amount ) : 0;
+				final float volume = (float) ( 1 - ( numerator / Math.log( max ) ) );
+				mediaPlayer.setVolume( volume, volume );
+			}
+		}
+		catch ( Exception e ) {}
 	}
 }
