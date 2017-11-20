@@ -9,6 +9,7 @@ import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.DraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
@@ -18,16 +19,12 @@ public class FrescoService
 	{
 		ImageRequestBuilder imageRequestBuilder = ImageRequestBuilder.newBuilderWithSource( uri );
 
-		if ( UriUtil.isNetworkUri( uri ) )
-		{
-			imageRequestBuilder.setProgressiveRenderingEnabled( true );
-		}
-		else
+		if ( !UriUtil.isNetworkUri( uri ) )
 		{
 			imageRequestBuilder.setResizeOptions( new ResizeOptions( view.getLayoutParams().width, view.getLayoutParams().height) );
 		}
 
-		imageRequestBuilder.setAutoRotateEnabled( true );
+		imageRequestBuilder.setRotationOptions( RotationOptions.autoRotate() );
 
 		PipelineDraweeControllerBuilder draweeControllerBuilder = Fresco.newDraweeControllerBuilder()
 			.setTapToRetryEnabled( true )

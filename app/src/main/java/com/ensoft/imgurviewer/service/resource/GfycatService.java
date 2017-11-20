@@ -21,7 +21,23 @@ public class GfycatService extends ImageServiceSolver
 
 	protected String getResourceName( Uri uri )
 	{
-		return uri.getLastPathSegment();
+		String resourceName = uri.getLastPathSegment();
+		
+		String[] strings = { "-mobile.mp4", "-mobile.jpg", "-poster.jpg", "-360.mp4", "-thumb360.jpg", "-thumb100.jpg",
+							"-size_restricted.gif", "-small.gif", "-mini.mp4", "-mini.jpg", "-max-14mb.gif"
+		};
+		
+		for ( String string : strings )
+		{
+			if ( resourceName.contains( string ) )
+			{
+				resourceName = resourceName.replace( string, "" );
+				
+				break;
+			}
+		}
+		
+		return resourceName;
 	}
 
 	protected String getResourcePath( Uri uri )
