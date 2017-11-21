@@ -10,6 +10,7 @@ import com.ensoft.imgurviewer.model.GyazoOEmbed;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
+
 import org.json.JSONObject;
 
 public class GyazoService extends ImageServiceSolver
@@ -40,7 +41,7 @@ public class GyazoService extends ImageServiceSolver
 				{
 					Log.v( TAG, e.getMessage() );
 
-					pathResolverListener.onPathError( e.toString() );;
+					pathResolverListener.onPathError( e.toString() );
 				}
 			}
 		}, new Response.ErrorListener()

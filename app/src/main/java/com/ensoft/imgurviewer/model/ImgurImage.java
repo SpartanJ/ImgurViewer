@@ -31,22 +31,31 @@ public class ImgurImage
 	@SerializedName( "link" )
 	protected String link;
 
-	public ImgurImage( String id, String title, String description, long dateTime, int width, int height, long size, String link )
-	{
-		this.id = id;
-		this.title = title;
-		this.description = description;
-		this.dateTime = dateTime;
-		this.width = width;
-		this.height = height;
-		this.size = size;
-		this.link = link;
-	}
+	protected Uri thumbnailUri;
+
+	protected Uri videoUri;
 
 	public ImgurImage( String id, String link )
 	{
 		this.id = id;
 		this.link = link;
+	}
+
+	public ImgurImage( String id, String link, Uri thumbnailUri, Uri videoUri, String title )
+	{
+		this.id = id;
+		this.link = link;
+		this.thumbnailUri = thumbnailUri;
+		this.videoUri = videoUri;
+		this.title = title;
+	}
+
+	public ImgurImage( String id, String link, Uri thumbnailUri, String title )
+	{
+		this.id = id;
+		this.link = link;
+		this.thumbnailUri = thumbnailUri;
+		this.title = title;
 	}
 
 	public String getId()
@@ -96,6 +105,16 @@ public class ImgurImage
 
 	public Uri getThumbnailLinkUri()
 	{
-		return new ImgurService().getThumbnailPath( getLinkUri() );
+		return null != thumbnailUri ? thumbnailUri : new ImgurService().getThumbnailPath( getLinkUri() );
+	}
+
+	public boolean hasVideo()
+	{
+		return null != videoUri;
+	}
+
+	public Uri getVideoUri()
+	{
+		return videoUri;
 	}
 }

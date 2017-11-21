@@ -1,33 +1,49 @@
 package com.ensoft.imgurviewer.view.activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.webkit.URLUtil;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.ensoft.imgurviewer.model.ImgurAlbum;
 import com.ensoft.imgurviewer.model.ImgurImage;
+import com.ensoft.imgurviewer.model.InstagramProfileModel;
 import com.ensoft.imgurviewer.service.DeviceService;
-import com.ensoft.imgurviewer.service.resource.ImgurService;
-import com.ensoft.imgurviewer.service.resource.ImgurAlbumService;
-import com.ensoft.imgurviewer.service.resource.ImgurGalleryService;
+import com.ensoft.imgurviewer.service.DownloadService;
+import com.ensoft.imgurviewer.service.IntentUtils;
+import com.ensoft.imgurviewer.service.PermissionService;
 import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
 import com.ensoft.imgurviewer.service.listener.ImgurGalleryResolverListener;
+import com.ensoft.imgurviewer.service.listener.InstagramProfileResolverListener;
+import com.ensoft.imgurviewer.service.resource.ImgurAlbumService;
+import com.ensoft.imgurviewer.service.resource.ImgurGalleryService;
+import com.ensoft.imgurviewer.service.resource.ImgurService;
+import com.ensoft.imgurviewer.service.resource.InstagramProfileService;
+import com.ensoft.imgurviewer.service.resource.InstagramService;
 import com.ensoft.imgurviewer.view.adapter.ImgurAlbumAdapter;
+import com.ensoft.imgurviewer.view.helper.MetricsHelper;
+import com.ensoft.imgurviewer.view.helper.ViewHelper;
 import com.imgurviewer.R;
 
 public class ImgurAlbumGalleryViewer extends AppActivity
 {
 	public static final String TAG = ImgurAlbumGalleryViewer.class.getCanonicalName();
 
+	protected LinearLayout floatingMenu;
 	protected ImgurAlbumAdapter albumAdapter;
 	protected ProgressBar progressBar;
 	protected RecyclerView recyclerView;
+	protected Uri albumData;
+	protected ImgurImage[] images;
 
 	@Override
 	public void onCreate( Bundle savedInstanceState )
@@ -36,7 +52,12 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 
 		setContentView( R.layout.activity_albumviewer );
 
-		Uri albumData = null;
+		floatingMenu = (LinearLayout)findViewById( R.id.floating_menu );
+
+		if ( null != getResources() && null != getResources().getConfiguration() )
+		{
+			setFloatingMenuOrientation( getResources().getConfiguration().orientation );
+		}
 
 		if ( null != getIntent().getExtras() && null != getIntent().getExtras().getString( ALBUM_DATA ) )
 		{
@@ -106,10 +127,31 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		{
 			create( new ImgurService().getImagesFromMultiImageUri( albumData ) );
 		}
+		else if ( new InstagramService().isInstagramProfile( albumData ) )
+		{
+			new InstagramProfileService().getProfile( albumData, new InstagramProfileResolverListener()
+			{
+				@Override
+				public void onProfileResolved( InstagramProfileModel profile )
+				{
+					if ( profile.getStatus().equals( "ok" ) && profile.hasItems() )
+					{
+						create( profile.getImages() );
+					}
+				}
+
+				@Override
+				public void onError( String error )
+				{
+					Toast.makeText( ImgurAlbumGalleryViewer.this, error, Toast.LENGTH_SHORT ).show();
+				}
+			} );
+		}
 	}
 
 	protected void create( ImgurImage[] images )
 	{
+		this.images = images;
 		progressBar.setVisibility( View.INVISIBLE );
 		albumAdapter = new ImgurAlbumAdapter( R.layout.item_album_photo, images );
 		albumAdapter.setOrientationLandscape( new DeviceService().isLandscapeOrientation( this ) );
@@ -120,9 +162,11 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 	}
 
 	@Override
-	public void onConfigurationChanged(Configuration newConfig)
+	public void onConfigurationChanged( Configuration newConfig )
 	{
 		super.onConfigurationChanged( newConfig );
+
+		setFloatingMenuOrientation( newConfig.orientation );
 
 		if ( null == albumAdapter )
 		{
@@ -138,6 +182,66 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		{
 			albumAdapter.setOrientationLandscape( false );
 			albumAdapter.notifyDataSetChanged();
+		}
+	}
+
+	public void showSettings( View v )
+	{
+		startActivity( new Intent( this, SettingsView.class ) );
+	}
+	
+	@Override
+	public void onRequestPermissionsResult( final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults )
+	{
+		super.onRequestPermissionsResult( requestCode, permissions, grantResults );
+		
+		if ( requestCode == PermissionService.REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION )
+		{
+			download();
+		}
+	}
+	
+	public void download()
+	{
+		if ( null != images )
+		{
+			for ( ImgurImage image : images )
+			{
+				new DownloadService( this ).download( image.getLinkUri(), URLUtil.guessFileName( image.getLink(), null, null ) );
+			}
+		}
+	}
+	
+	public void downloadImage( View v )
+	{
+		if ( !new PermissionService().askExternalStorageAccess( this ) )
+		{
+			download();
+		}
+	}
+
+	public void shareImage( View v )
+	{
+		if ( albumData != null )
+		{
+			IntentUtils.shareMessage( this, getString( R.string.share ), albumData.toString(), getString( R.string.shareUsing ) );
+		}
+	}
+
+	protected void setFloatingMenuOrientation( int orientation )
+	{
+		if ( null != floatingMenu )
+		{
+			if ( orientation == Configuration.ORIENTATION_PORTRAIT )
+			{
+				floatingMenu.setPadding( 0, MetricsHelper.dpToPx( this, 8 ), 0, 0 );
+				ViewHelper.setMargins( floatingMenu, 0, MetricsHelper.getStatusBarHeight( this ), 0, 0 );
+			}
+			else if ( orientation == Configuration.ORIENTATION_LANDSCAPE )
+			{
+				floatingMenu.setPadding( 0, MetricsHelper.dpToPx( this, 8 ), 0, 0 );
+				ViewHelper.setMargins( floatingMenu, 0, MetricsHelper.getStatusBarHeight( this ), MetricsHelper.getNavigationBarWidth( this ), 0 );
+			}
 		}
 	}
 }

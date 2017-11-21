@@ -8,13 +8,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.App;
-import com.ensoft.imgurviewer.model.ImgurAlbum;
+import com.ensoft.imgurviewer.model.ImgurAlbumResource;
 import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
 import com.imgurviewer.R;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -70,13 +69,11 @@ public class ImgurAlbumService
 				{
 					Log.v( TAG, response.toString() );
 
-					JSONObject data = response.getJSONObject( "data" );
+					ImgurAlbumResource album = new Gson().fromJson( response.toString(), ImgurAlbumResource.class );
 
-					ImgurAlbum album = new Gson().fromJson( data.toString(), ImgurAlbum.class );
-
-					imgurAlbumResolverListener.onAlbumResolved( album );
+					imgurAlbumResolverListener.onAlbumResolved( album.data );
 				}
-				catch ( JSONException e )
+				catch ( Exception e )
 				{
 					Log.v( TAG, e.getMessage() );
 
