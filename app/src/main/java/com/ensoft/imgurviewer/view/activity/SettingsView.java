@@ -34,71 +34,54 @@ public class SettingsView extends PreferenceActivity
 			Preference proxyHost = findPreference("proxyHost");
 
 			proxyHost.setDefaultValue( preferencesService.getProxyHost() );
-			proxyHost.setOnPreferenceChangeListener( new Preference.OnPreferenceChangeListener()
+			proxyHost.setOnPreferenceChangeListener( (preference, newValue) ->
 			{
-				@Override
-				public boolean onPreferenceChange(Preference preference, Object newValue)
-				{
-					preferencesService.setProxyHost( (String)newValue );
-					return true;
-				}
-			});
+				preferencesService.setProxyHost( (String)newValue );
+				return true;
+			} );
 
 			Preference proxyPort = findPreference( "proxyPort" );
 			proxyPort.setDefaultValue( Integer.toString( preferencesService.getProxyPort() ) );
-			proxyPort.setOnPreferenceChangeListener( new Preference.OnPreferenceChangeListener()
+			proxyPort.setOnPreferenceChangeListener( (preference, newValue) ->
 			{
-				@Override
-				public boolean onPreferenceChange(Preference preference, Object newValue)
+				if ( newValue != null && !((String)newValue).isEmpty() )
 				{
-					if ( newValue != null && !((String)newValue).isEmpty() )
+					try
 					{
-						try
-						{
-							int intValue = Integer.valueOf( (String) newValue );
+						int intValue = Integer.valueOf( (String) newValue );
 
-							preferencesService.setProxyPort( intValue );
-						}
-						catch ( Exception e )
-						{
-							return false;
-						}
+						preferencesService.setProxyPort( intValue );
 					}
-					else
+					catch ( Exception e )
 					{
 						return false;
 					}
-
-					return true;
 				}
-			});
+				else
+				{
+					return false;
+				}
+
+				return true;
+			} );
 			
 			final CheckBoxPreference muteVideos = (CheckBoxPreference)findPreference( "muteVideos" );
 			muteVideos.setChecked( preferencesService.videosMuted() );
-			muteVideos.setOnPreferenceChangeListener( new Preference.OnPreferenceChangeListener()
+			muteVideos.setOnPreferenceChangeListener( (preference, newValue) ->
 			{
-				@Override
-				public boolean onPreferenceChange( Preference preference, Object newValue )
-				{
-					preferencesService.setMuteVideos( !preferencesService.videosMuted() );
-					muteVideos.setChecked( preferencesService.videosMuted() );
-					
-					return true;
-				}
+				preferencesService.setMuteVideos( !preferencesService.videosMuted() );
+				muteVideos.setChecked( preferencesService.videosMuted() );
+				
+				return true;
 			} );
 			
 			Preference clearCache = findPreference( "clearCache" );
-			clearCache.setOnPreferenceClickListener( new Preference.OnPreferenceClickListener()
+			clearCache.setOnPreferenceClickListener( ( preference ) ->
 			{
-				@Override
-				public boolean onPreferenceClick( Preference preference )
-				{
-					new FrescoService().clearCaches();
-					Toast.makeText( MyPreferenceFragment.this.getActivity(), R.string.cacheCleared, Toast.LENGTH_SHORT ).show();
-					return true;
-				}
+				new FrescoService().clearCaches();
+				Toast.makeText( MyPreferenceFragment.this.getActivity(), R.string.cacheCleared, Toast.LENGTH_SHORT ).show();
+				return true;
 			} );
 		}
-		
 	}
 }

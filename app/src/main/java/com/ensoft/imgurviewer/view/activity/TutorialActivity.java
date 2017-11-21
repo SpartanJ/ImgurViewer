@@ -38,9 +38,9 @@ public class TutorialActivity extends Activity implements View.OnClickListener
 	{
 		super.onPostCreate( savedInstanceState );
 
-		tutorialText = (TextView)findViewById( R.id.tutorial_text );
-		tutorialNext = (TextView)findViewById( R.id.tutorial_next );
-		tutorialImage = (ImageView)findViewById( R.id.tutorial_image );
+		tutorialText = findViewById( R.id.tutorial_text );
+		tutorialNext = findViewById( R.id.tutorial_next );
+		tutorialImage = findViewById( R.id.tutorial_image );
 
 		tutorialNext.setOnClickListener( this );
 	}

@@ -52,7 +52,7 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 
 		setContentView( R.layout.activity_albumviewer );
 
-		floatingMenu = (LinearLayout)findViewById( R.id.floating_menu );
+		floatingMenu = findViewById( R.id.floating_menu );
 
 		if ( null != getResources() && null != getResources().getConfiguration() )
 		{
@@ -79,8 +79,11 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 
 		Log.v( TAG, "Data is: " + albumData.toString() );
 
-		progressBar = (ProgressBar)findViewById( R.id.albumViewer_progressBar );
-
+		progressBar = findViewById( R.id.albumViewer_progressBar );
+		findViewById( R.id.settings ).setOnClickListener( this::showSettings );
+		findViewById( R.id.download ).setOnClickListener( this::downloadImage );
+		findViewById( R.id.share ).setOnClickListener( this::shareImage );
+		
 		if ( new ImgurAlbumService().isImgurAlbum( albumData ) )
 		{
 			new ImgurAlbumService().getAlbum( albumData, new ImgurAlbumResolverListener()
@@ -156,7 +159,7 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		albumAdapter = new ImgurAlbumAdapter( R.layout.item_album_photo, images );
 		albumAdapter.setOrientationLandscape( new DeviceService().isLandscapeOrientation( this ) );
 
-		recyclerView = (RecyclerView) findViewById( R.id.albumViewer_listView );
+		recyclerView = findViewById( R.id.albumViewer_listView );
 		recyclerView.setLayoutManager( new LinearLayoutManager( this ) );
 		recyclerView.setAdapter( albumAdapter );
 	}

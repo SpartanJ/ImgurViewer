@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,8 @@ import com.imgurviewer.R;
 
 public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, MediaPlayer.OnPreparedListener
 {
+	private static final String TAG = MediaPlayerFragment.class.getCanonicalName();
+	
 	protected VideoView videoView;
 	protected ImageView playPauseView;
 	protected ImageView audioOnOffView;
@@ -72,23 +75,9 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 		}
 	}
 
-	protected View.OnClickListener playPauseOnClickListener = new View.OnClickListener()
-	{
-		@Override
-		public void onClick( View v )
-		{
-			updatePlayPauseState();
-		}
-	};
+	protected View.OnClickListener playPauseOnClickListener = v -> updatePlayPauseState();
 	
-	protected View.OnClickListener audioOnOffListener = new View.OnClickListener()
-	{
-		@Override
-		public void onClick( View v )
-		{
-			updateAudioOnOffState();
-		}
-	};
+	protected View.OnClickListener audioOnOffListener = v -> updateAudioOnOffState();
 
 	@Nullable
 	@Override
@@ -107,15 +96,15 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 			setOrientationMargins( getResources().getConfiguration().orientation );
 		}
 
-		playPauseView = (ImageView)view.findViewById( R.id.mediaPlayer_playPause );
+		playPauseView = view.findViewById( R.id.mediaPlayer_playPause );
 		playPauseView.setOnClickListener( playPauseOnClickListener );
 		
-		audioOnOffView = (ImageView)view.findViewById( R.id.mediaPlayer_audioOnOff );
+		audioOnOffView = view.findViewById( R.id.mediaPlayer_audioOnOff );
 		audioOnOffView.setOnClickListener( audioOnOffListener );
 
-		timeTextView = (TextView)view.findViewById( R.id.mediaPlayer_time );
+		timeTextView = view.findViewById( R.id.mediaPlayer_time );
 
-		seekBarView = (SeekBar)view.findViewById( R.id.mediaPlayer_seekBar );
+		seekBarView = view.findViewById( R.id.mediaPlayer_seekBar );
 		seekBarView.setOnSeekBarChangeListener( this );
 
 		PorterDuffColorFilter colorFilter = new PorterDuffColorFilter( getResources().getColor( R.color.imgur_color ), PorterDuff.Mode.SRC_IN );
@@ -169,7 +158,11 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 					
 					seekBarView.setProgress( videoView.getCurrentPosition() );
 				}
-			} catch ( Exception e ) {}
+			}
+			catch ( Exception e )
+			{
+				Log.e( TAG, e.getMessage() );
+			}
 			
 			seekBarHandler.postDelayed( this, 100 );
 		}
@@ -314,6 +307,9 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 				mediaPlayer.setVolume( volume, volume );
 			}
 		}
-		catch ( Exception e ) {}
+		catch ( Exception e )
+		{
+			Log.e( TAG, e.getMessage() );
+		}
 	}
 }

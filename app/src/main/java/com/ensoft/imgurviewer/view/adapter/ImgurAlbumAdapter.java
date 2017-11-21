@@ -1,6 +1,5 @@
 package com.ensoft.imgurviewer.view.adapter;
 
-import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
@@ -68,41 +67,23 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 		TextView title;
 		ProgressBar progressBar;
 
-		public AlbumImageHolder( final View view )
+		private AlbumImageHolder( final View view )
 		{
 			super( view );
 
-			imageView = (ImageViewForcedHeight)view.findViewById( R.id.albumPhoto_photo );
-			progressBar = (ProgressBar)view.findViewById( R.id.albumPhoto_progressBar );
-			title = (TextView)view.findViewById( R.id.albumPhoto_title );
+			imageView = view.findViewById( R.id.albumPhoto_photo );
+			progressBar = view.findViewById( R.id.albumPhoto_progressBar );
+			title = view.findViewById( R.id.albumPhoto_title );
 
 			GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder( view.getResources() )
 				.setActualImageScaleType( ScalingUtils.ScaleType.CENTER_CROP )
 				.build();
 
 			imageView.setHierarchy( hierarchy );
-			imageView.setOnClickListener( new View.OnClickListener()
-			{
-				@Override
-				public void onClick( View v )
-				{
-					Intent intent = new Intent( v.getContext(), ImageViewer.class );
-
-					if ( image.hasVideo() )
-					{
-						intent.putExtra( ImageViewer.PARAM_RESOURCE_PATH, image.getVideoUri().toString() );
-					}
-					else
-					{
-						intent.putExtra( ImageViewer.PARAM_RESOURCE_PATH, image.getLink() );
-					}
-
-					v.getContext().startActivity( intent );
-				}
-			} );
+			imageView.setOnClickListener( v -> ImageViewer.newInstance( v.getContext(), image.hasVideo() ? image.getVideoUri().toString() : image.getLink() ) );
 		}
 
-		public void setData( ImgurImage img, int position, int count, boolean isLandscape )
+		private void setData( ImgurImage img, int position, int count, boolean isLandscape )
 		{
 			image = img;
 
