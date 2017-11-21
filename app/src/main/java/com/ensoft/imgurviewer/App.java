@@ -2,14 +2,14 @@ package com.ensoft.imgurviewer;
 
 import android.app.Application;
 
-import com.ensoft.restafari.network.service.NetworkPreferencesService;
+import com.ensoft.imgurviewer.service.PreferencesService;
 import com.ensoft.restafari.network.service.RequestService;
 import com.ensoft.restafari.network.service.RequestServiceOptions;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 
-import org.acra.*;
-import org.acra.annotation.*;
+import org.acra.ACRA;
+import org.acra.annotation.ReportsCrashes;
 
 @ReportsCrashes(
 	formUri = "http://imgurviewer.ensoft-dev.com/"
@@ -18,7 +18,7 @@ public class App extends Application
 {
 	protected static App instance;
 	protected int activityCount = 0;
-	protected NetworkPreferencesService preferencesService;
+	protected PreferencesService preferencesService;
 
 	public static App getInstance()
 	{
@@ -32,7 +32,7 @@ public class App extends Application
 
 		instance = this;
 
-		preferencesService = new NetworkPreferencesService( this );
+		preferencesService = new PreferencesService( this );
 
 		ACRA.init( this );
 
@@ -73,7 +73,7 @@ public class App extends Application
 		}
 	}
 
-	public NetworkPreferencesService getPreferencesService()
+	public PreferencesService getPreferencesService()
 	{
 		return preferencesService;
 	}

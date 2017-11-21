@@ -14,9 +14,11 @@ import android.view.View;
 import android.view.ViewParent;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
+
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.view.DraweeView;
+
 import java.lang.ref.WeakReference;
 
 public class Attacher implements IAttacher, View.OnTouchListener, OnScaleDragGestureListener {

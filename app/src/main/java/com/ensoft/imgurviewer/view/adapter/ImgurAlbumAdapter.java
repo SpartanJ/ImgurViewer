@@ -16,12 +16,12 @@ import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.service.FrescoService;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
 import com.ensoft.imgurviewer.view.activity.ImageViewer;
+import com.ensoft.imgurviewer.view.helper.MetricsHelper;
 import com.ensoft.imgurviewer.view.widget.ImageViewForcedHeight;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.imagepipeline.image.ImageInfo;
-import com.ensoft.imgurviewer.view.helper.MetricsHelper;
 import com.imgurviewer.R;
 
 public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.AlbumImageHolder>
@@ -87,7 +87,16 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 				public void onClick( View v )
 				{
 					Intent intent = new Intent( v.getContext(), ImageViewer.class );
-					intent.putExtra( ImageViewer.PARAM_RESOURCE_PATH, image.getLink() );
+
+					if ( image.hasVideo() )
+					{
+						intent.putExtra( ImageViewer.PARAM_RESOURCE_PATH, image.getVideoUri().toString() );
+					}
+					else
+					{
+						intent.putExtra( ImageViewer.PARAM_RESOURCE_PATH, image.getLink() );
+					}
+
 					v.getContext().startActivity( intent );
 				}
 			} );

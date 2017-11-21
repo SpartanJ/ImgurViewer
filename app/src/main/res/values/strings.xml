@@ -1,12 +1,29 @@
 <resources>
 	<string name="app_name">ImgurViewer</string>
 	<string name="imgur_client_id">912617e18339d56</string>
-	<string name="imgur_client_secret">fbb9a3a40f8a7db79f46012a560f7d962be2a4e1</string>
-	<string name="settings">Settings</string>
+	<string name="flickr_key">2ba8fd93b3d6443c8c8b8f277770bf6e</string>
+	<string name="giphy_api_key">dc6zaTOxFJmzC</string>
 	<string name="proxyHost">Proxy Host</string>
 	<string name="proxyPort">Proxy Port</string>
 	<string name="proxyHostConf">Configure Proxy Host</string>
 	<string name="proxyPortConf">Configure Proxy Port</string>
 	<string name="share">Share</string>
 	<string name="shareUsing">Share using&#8230;</string>
+	<string name="videoRemoved">"Video removed."</string>
+	<string name="videoUrlNotFound">Video url not found.</string>
+	<string name="could_not_resolve_url">Couldn\'t resolve image url.</string>
+	<string name="could_not_resolve_video_url">Couldn\'t resolve video url.</string>
+	<string name="seconds_abbr">s</string>
+	<string name="tutorial">How to use ImgurViewer?</string>
+	<string name="tutorial_open">Tap on any image, imgur album or clip video link from an external application.</string>
+	<string name="tutorial_open_with">Select ImgurViewer to open the link.</string>
+	<string name="tutorial_that_is_it">That\'s it!\nImgurViewer is designed to open image and video links from external applications.\nThat\'s its only purpose.</string>
+	<string name="tutorial_next">Next</string>
+	<string name="tutorial_ended">Enjoy!</string>
+	<string name="unknown_error">Unknown Error</string>
+	<string name="muteVideos">Mute videos</string>
+	<string name="muteVideosConf">Mute videos by default</string>
+	<string name="clearCache">Clear cache</string>
+	<string name="clearCacheConf">Clear application image cache</string>
+	<string name="cacheCleared">Image cache cleared</string>
 </resources>

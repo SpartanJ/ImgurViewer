@@ -16,4 +16,13 @@
 			android:key="proxyPort"
 			android:numeric="integer" />
 
+	<CheckBoxPreference
+		android:key="muteVideos"
+		android:title="@string/muteVideos"
+		android:summary="@string/muteVideosConf" />
+
+	<Preference android:title="@string/clearCache"
+				android:summary="@string/clearCacheConf"
+				android:key="clearCache" />
+
 </PreferenceScreen>

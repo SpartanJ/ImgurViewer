@@ -1,12 +1,15 @@
 package com.ensoft.imgurviewer.view.activity;
 
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.widget.Toast;
 
 import com.ensoft.imgurviewer.App;
-import com.ensoft.restafari.network.service.NetworkPreferencesService;
+import com.ensoft.imgurviewer.service.FrescoService;
+import com.ensoft.imgurviewer.service.PreferencesService;
 import com.imgurviewer.R;
 
 public class SettingsView extends PreferenceActivity
@@ -24,7 +27,7 @@ public class SettingsView extends PreferenceActivity
 		@Override
 		public void onCreate(final Bundle savedInstanceState)
 		{
-			final NetworkPreferencesService preferencesService = App.getInstance().getPreferencesService();
+			final PreferencesService preferencesService = App.getInstance().getPreferencesService();
 			super.onCreate( savedInstanceState );
 			addPreferencesFromResource( R.xml.preferences );
 
@@ -69,6 +72,33 @@ public class SettingsView extends PreferenceActivity
 					return true;
 				}
 			});
+			
+			final CheckBoxPreference muteVideos = (CheckBoxPreference)findPreference( "muteVideos" );
+			muteVideos.setChecked( preferencesService.videosMuted() );
+			muteVideos.setOnPreferenceChangeListener( new Preference.OnPreferenceChangeListener()
+			{
+				@Override
+				public boolean onPreferenceChange( Preference preference, Object newValue )
+				{
+					preferencesService.setMuteVideos( !preferencesService.videosMuted() );
+					muteVideos.setChecked( preferencesService.videosMuted() );
+					
+					return true;
+				}
+			} );
+			
+			Preference clearCache = findPreference( "clearCache" );
+			clearCache.setOnPreferenceClickListener( new Preference.OnPreferenceClickListener()
+			{
+				@Override
+				public boolean onPreferenceClick( Preference preference )
+				{
+					new FrescoService().clearCaches();
+					Toast.makeText( MyPreferenceFragment.this.getActivity(), R.string.cacheCleared, Toast.LENGTH_SHORT ).show();
+					return true;
+				}
+			} );
 		}
+		
 	}
 }

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:orientation="vertical"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent">
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:text="@string/tutorial"
+		android:id="@+id/tutorial_title"
+		android:background="#333"
+		android:layout_gravity="center_horizontal"
+		android:textColor="@android:color/white"
+		android:gravity="center"
+		android:padding="12dp"/>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:background="#222"
+		android:text="@string/tutorial_open"
+		android:id="@+id/tutorial_text"
+		android:layout_gravity="center_horizontal"
+		android:textColor="@android:color/white"
+		android:gravity="center"
+		android:padding="12dp" />
+
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1"
+		android:id="@+id/tutorial_image"
+		android:layout_gravity="center_horizontal"
+		android:scaleType="fitCenter"
+		android:adjustViewBounds="true"
+		android:src="@drawable/tut1" />
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:foreground="?android:attr/selectableItemBackgroundBorderless"
+		android:text="@string/tutorial_next"
+		android:id="@+id/tutorial_next"
+		android:background="#222"
+		android:textColor="@android:color/white"
+		android:gravity="center"
+		android:layout_gravity="center"
+		android:padding="8dp" />
+</LinearLayout>

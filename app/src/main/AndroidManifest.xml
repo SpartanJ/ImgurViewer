@@ -30,31 +30,24 @@
 				<data android:host="i.imgur.com" />
 				<data android:host="m.imgur.com" />
 
-				<data android:scheme="https" />
-				<data android:scheme="http" />
-
-				<data android:pathPattern="/.*" />
-			</intent-filter>
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-				<category android:name="android.intent.category.BROWSABLE" />
-
 				<data android:host="reddituploads.com" />
 				<data android:host="i.reddituploads.com" />
 
-				<data android:scheme="https" />
-				<data android:scheme="http" />
-
-				<data android:pathPattern="/.*" />
-			</intent-filter>
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:host="streamable.com" />
 
 				<data android:host="gyazo.com" />
 
+				<data android:host="gfycat.com" />
+
+				<data android:host="clips.twitch.tv" />
+
+				<data android:host="instagram.com" />
+				<data android:host="www.instagram.com" />
+
+				<data android:host="vid.me" />
+
+				<data android:host="v.redd.it" />
+
 				<data android:scheme="https" />
 				<data android:scheme="http" />
 
@@ -65,12 +58,26 @@
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
 
-				<data android:host="gfycat.com" />
+				<data android:host="flickr.com" />
+				<data android:host="www.flickr.com" />
 
 				<data android:scheme="https" />
 				<data android:scheme="http" />
 
-				<data android:pathPattern="/.*" />
+				<data android:pathPattern="/photos/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="giphy.com" />
+				<data android:host="www.giphy.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/gifs/.*" />
 			</intent-filter>
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
@@ -91,6 +98,30 @@
 				<data android:pathPattern=".*..*.jpg" />
 				<data android:pathPattern=".*.jpg" />
 
+				<data android:pathPattern=".*\\.jpg:large" />
+				<data android:pathPattern=".*..*..*..*..*..*.jpg:large" />
+				<data android:pathPattern=".*..*..*..*..*.jpg:large" />
+				<data android:pathPattern=".*..*..*..*.jpg:large" />
+				<data android:pathPattern=".*..*..*.jpg:large" />
+				<data android:pathPattern=".*..*.jpg:large" />
+				<data android:pathPattern=".*.jpg:large" />
+
+				<data android:pathPattern=".*\\.jpg:medium" />
+				<data android:pathPattern=".*..*..*..*..*..*.jpg:medium" />
+				<data android:pathPattern=".*..*..*..*..*.jpg:medium" />
+				<data android:pathPattern=".*..*..*..*.jpg:medium" />
+				<data android:pathPattern=".*..*..*.jpg:medium" />
+				<data android:pathPattern=".*..*.jpg:medium" />
+				<data android:pathPattern=".*.jpg:medium" />
+
+				<data android:pathPattern=".*\\.jpg:small" />
+				<data android:pathPattern=".*..*..*..*..*..*.jpg:small" />
+				<data android:pathPattern=".*..*..*..*..*.jpg:small" />
+				<data android:pathPattern=".*..*..*..*.jpg:small" />
+				<data android:pathPattern=".*..*..*.jpg:small" />
+				<data android:pathPattern=".*..*.jpg:small" />
+				<data android:pathPattern=".*.jpg:small" />
+
 				<data android:pathPattern=".*\\.jpeg" />
 				<data android:pathPattern=".*..*..*..*..*..*.jpeg" />
 				<data android:pathPattern=".*..*..*..*..*.jpeg" />
@@ -107,6 +138,30 @@
 				<data android:pathPattern=".*..*.png" />
 				<data android:pathPattern=".*.png" />
 
+				<data android:pathPattern=".*\\.png:large" />
+				<data android:pathPattern=".*..*..*..*..*..*.png:large" />
+				<data android:pathPattern=".*..*..*..*..*.png:large" />
+				<data android:pathPattern=".*..*..*..*.png:large" />
+				<data android:pathPattern=".*..*..*.png:large" />
+				<data android:pathPattern=".*..*.png:large" />
+				<data android:pathPattern=".*.png:large" />
+
+				<data android:pathPattern=".*\\.png:medium" />
+				<data android:pathPattern=".*..*..*..*..*..*.png:medium" />
+				<data android:pathPattern=".*..*..*..*..*.png:medium" />
+				<data android:pathPattern=".*..*..*..*.png:medium" />
+				<data android:pathPattern=".*..*..*.png:medium" />
+				<data android:pathPattern=".*..*.png:medium" />
+				<data android:pathPattern=".*.png:medium" />
+
+				<data android:pathPattern=".*\\.png:small" />
+				<data android:pathPattern=".*..*..*..*..*..*.png:small" />
+				<data android:pathPattern=".*..*..*..*..*.png:small" />
+				<data android:pathPattern=".*..*..*..*.png:small" />
+				<data android:pathPattern=".*..*..*.png:small" />
+				<data android:pathPattern=".*..*.png:small" />
+				<data android:pathPattern=".*.png:small" />
+
 				<data android:pathPattern=".*\\.gif" />
 				<data android:pathPattern=".*..*..*..*..*..*.gif" />
 				<data android:pathPattern=".*..*..*..*..*.gif" />
@@ -114,6 +169,30 @@
 				<data android:pathPattern=".*..*..*.gif" />
 				<data android:pathPattern=".*..*.gif" />
 				<data android:pathPattern=".*.gif" />
+
+				<data android:pathPattern=".*\\.gif:large" />
+				<data android:pathPattern=".*..*..*..*..*..*.gif:large" />
+				<data android:pathPattern=".*..*..*..*..*.gif:large" />
+				<data android:pathPattern=".*..*..*..*.gif:large" />
+				<data android:pathPattern=".*..*..*.gif:large" />
+				<data android:pathPattern=".*..*.gif:large" />
+				<data android:pathPattern=".*.gif:large" />
+
+				<data android:pathPattern=".*\\.gif:medium" />
+				<data android:pathPattern=".*..*..*..*..*..*.gif:medium" />
+				<data android:pathPattern=".*..*..*..*..*.gif:medium" />
+				<data android:pathPattern=".*..*..*..*.gif:medium" />
+				<data android:pathPattern=".*..*..*.gif:medium" />
+				<data android:pathPattern=".*..*.gif:medium" />
+				<data android:pathPattern=".*.gif:medium" />
+
+				<data android:pathPattern=".*\\.gif:small" />
+				<data android:pathPattern=".*..*..*..*..*..*.gif:small" />
+				<data android:pathPattern=".*..*..*..*..*.gif:small" />
+				<data android:pathPattern=".*..*..*..*.gif:small" />
+				<data android:pathPattern=".*..*..*.gif:small" />
+				<data android:pathPattern=".*..*.gif:small" />
+				<data android:pathPattern=".*.gif:small" />
 
 				<data android:pathPattern=".*\\.webp" />
 				<data android:pathPattern=".*..*..*..*..*..*.webp" />
@@ -123,6 +202,46 @@
 				<data android:pathPattern=".*..*.webp" />
 				<data android:pathPattern=".*.webp" />
 
+				<data android:pathPattern=".*\\.mp4" />
+				<data android:pathPattern=".*..*..*..*..*..*.mp4" />
+				<data android:pathPattern=".*..*..*..*..*.mp4" />
+				<data android:pathPattern=".*..*..*..*.mp4" />
+				<data android:pathPattern=".*..*..*.mp4" />
+				<data android:pathPattern=".*..*.mp4" />
+				<data android:pathPattern=".*.mp4" />
+
+				<data android:pathPattern=".*\\.avi" />
+				<data android:pathPattern=".*..*..*..*..*..*.avi" />
+				<data android:pathPattern=".*..*..*..*..*.avi" />
+				<data android:pathPattern=".*..*..*..*.avi" />
+				<data android:pathPattern=".*..*..*.avi" />
+				<data android:pathPattern=".*..*.avi" />
+				<data android:pathPattern=".*.avi" />
+
+				<data android:pathPattern=".*\\.flv" />
+				<data android:pathPattern=".*..*..*..*..*..*.flv" />
+				<data android:pathPattern=".*..*..*..*..*.flv" />
+				<data android:pathPattern=".*..*..*..*.flv" />
+				<data android:pathPattern=".*..*..*.flv" />
+				<data android:pathPattern=".*..*.flv" />
+				<data android:pathPattern=".*.flv" />
+				
+				<data android:pathPattern=".*\\.mkv" />
+				<data android:pathPattern=".*..*..*..*..*..*.mkv" />
+				<data android:pathPattern=".*..*..*..*..*.mkv" />
+				<data android:pathPattern=".*..*..*..*.mkv" />
+				<data android:pathPattern=".*..*..*.mkv" />
+				<data android:pathPattern=".*..*.mkv" />
+				<data android:pathPattern=".*.mkv" />
+
+				<data android:pathPattern=".*\\.webm" />
+				<data android:pathPattern=".*..*..*..*..*..*.webm" />
+				<data android:pathPattern=".*..*..*..*..*.webm" />
+				<data android:pathPattern=".*..*..*..*.webm" />
+				<data android:pathPattern=".*..*..*.webm" />
+				<data android:pathPattern=".*..*.webm" />
+				<data android:pathPattern=".*.webm" />
+				
 				<data android:pathPattern=".*\\.JPG" />
 				<data android:pathPattern=".*..*..*..*..*..*.JPG" />
 				<data android:pathPattern=".*..*..*..*..*.JPG" />
@@ -162,8 +281,49 @@
 				<data android:pathPattern=".*..*..*.WEBP" />
 				<data android:pathPattern=".*..*.WEBP" />
 				<data android:pathPattern=".*.WEBP" />
+
+				<data android:pathPattern=".*\\.MP4" />
+				<data android:pathPattern=".*..*..*..*..*..*.MP4" />
+				<data android:pathPattern=".*..*..*..*..*.MP4" />
+				<data android:pathPattern=".*..*..*..*.MP4" />
+				<data android:pathPattern=".*..*..*.MP4" />
+				<data android:pathPattern=".*..*.MP4" />
+				<data android:pathPattern=".*.MP4" />
+				
+				<data android:pathPattern=".*\\.AVI" />
+				<data android:pathPattern=".*..*..*..*..*..*.AVI" />
+				<data android:pathPattern=".*..*..*..*..*.AVI" />
+				<data android:pathPattern=".*..*..*..*.AVI" />
+				<data android:pathPattern=".*..*..*.AVI" />
+				<data android:pathPattern=".*..*.AVI" />
+				<data android:pathPattern=".*.AVI" />
+
+				<data android:pathPattern=".*\\.FLV" />
+				<data android:pathPattern=".*..*..*..*..*..*.FLV" />
+				<data android:pathPattern=".*..*..*..*..*.FLV" />
+				<data android:pathPattern=".*..*..*..*.FLV" />
+				<data android:pathPattern=".*..*..*.FLV" />
+				<data android:pathPattern=".*..*.FLV" />
+				<data android:pathPattern=".*.FLV" />
+
+				<data android:pathPattern=".*\\.MKV" />
+				<data android:pathPattern=".*..*..*..*..*..*.MKV" />
+				<data android:pathPattern=".*..*..*..*..*.MKV" />
+				<data android:pathPattern=".*..*..*..*.MKV" />
+				<data android:pathPattern=".*..*..*.MKV" />
+				<data android:pathPattern=".*..*.MKV" />
+				<data android:pathPattern=".*.MKV" />
+
+				<data android:pathPattern=".*\\.WEBM" />
+				<data android:pathPattern=".*..*..*..*..*..*.WEBM" />
+				<data android:pathPattern=".*..*..*..*..*.WEBM" />
+				<data android:pathPattern=".*..*..*..*.WEBM" />
+				<data android:pathPattern=".*..*..*.WEBM" />
+				<data android:pathPattern=".*..*.WEBM" />
+				<data android:pathPattern=".*.WEBM" />
 			</intent-filter>
         </activity>
+
 		<activity
 			android:name="com.ensoft.imgurviewer.view.activity.ImgurAlbumGalleryViewer"
 			android:configChanges="orientation|keyboardHidden|screenSize"
@@ -175,5 +335,11 @@
 			android:configChanges="orientation|keyboardHidden|screenSize"
 			android:label="@string/app_name"
 			android:theme="@style/AppThemeSettings" />
-    </application>
+
+		<activity
+			android:name="com.ensoft.imgurviewer.view.activity.TutorialActivity"
+			android:configChanges="orientation|keyboardHidden|screenSize"
+			android:label="@string/app_name"
+			android:theme="@style/AppThemeNoActionBar" />
+	</application>
 </manifest>

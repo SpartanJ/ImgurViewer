@@ -32,9 +32,10 @@ public class GenericPathResolverListener extends PathResolverListener
 	}
 
 	@Override
-	public void onPathError( String error )
+	public void onPathError( final String error )
 	{
 		Log.v( TAG, error );
+
 		Toast.makeText( App.getInstance(), error, Toast.LENGTH_SHORT ).show();
 	}
 }

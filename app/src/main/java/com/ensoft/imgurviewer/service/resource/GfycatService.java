@@ -6,7 +6,7 @@ import android.util.Log;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.ensoft.imgurviewer.model.GfycatVideo;
+import com.ensoft.imgurviewer.model.GfycatResource;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
@@ -21,7 +21,23 @@ public class GfycatService extends ImageServiceSolver
 
 	protected String getResourceName( Uri uri )
 	{
-		return uri.getPath().replace( "/", "" );
+		String resourceName = uri.getLastPathSegment();
+		
+		String[] strings = { "-mobile.mp4", "-mobile.jpg", "-poster.jpg", "-360.mp4", "-thumb360.jpg", "-thumb100.jpg",
+							"-size_restricted.gif", "-small.gif", "-mini.mp4", "-mini.jpg", "-max-14mb.gif"
+		};
+		
+		for ( String string : strings )
+		{
+			if ( resourceName.contains( string ) )
+			{
+				resourceName = resourceName.replace( string, "" );
+				
+				break;
+			}
+		}
+		
+		return resourceName;
 	}
 
 	protected String getResourcePath( Uri uri )
@@ -41,17 +57,15 @@ public class GfycatService extends ImageServiceSolver
 				{
 					Log.v( TAG, response.toString() );
 
-					JSONObject item = response.getJSONObject( "gfyItem" );
+					GfycatResource resource = new Gson().fromJson( response.toString(), GfycatResource.class );
 
-					GfycatVideo video = new Gson().fromJson( item.toString(), GfycatVideo.class );
-
-					pathResolverListener.onPathResolved( video.getUri(), null );
+					pathResolverListener.onPathResolved( resource.item.getUri(), null );
 				}
 				catch ( Exception e )
 				{
 					Log.v( TAG, e.getMessage() );
 
-					pathResolverListener.onPathError( e.toString() );;
+					pathResolverListener.onPathError( e.toString() );
 				}
 			}
 		}, new Response.ErrorListener()
