@@ -1,16 +1,17 @@
-package com.ensoft.imgurviewer.view.fragment;
+package com.ensoft.imgurviewer.view.adapter;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
 
 import com.ensoft.imgurviewer.model.ImgurImage;
+import com.ensoft.imgurviewer.view.fragment.ImageViewerFragment;
 
-public class ImageAlbumPager extends FragmentPagerAdapter
+public class ImagesAlbumPagerAdapter extends FragmentPagerAdapter
 {
 	private ImgurImage[] images;
 	
-	public ImageAlbumPager( FragmentManager fragmentManager, ImgurImage[] images )
+	public ImagesAlbumPagerAdapter( FragmentManager fragmentManager, ImgurImage[] images )
 	{
 		super( fragmentManager );
 		
