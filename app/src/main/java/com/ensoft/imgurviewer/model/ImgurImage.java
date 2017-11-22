@@ -7,9 +7,7 @@ import android.os.Parcelable;
 import com.ensoft.imgurviewer.service.resource.ImgurService;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
-
-public class ImgurImage implements Serializable, Parcelable
+public class ImgurImage implements Parcelable
 {
 	@SerializedName( "id" )
 	protected String id;

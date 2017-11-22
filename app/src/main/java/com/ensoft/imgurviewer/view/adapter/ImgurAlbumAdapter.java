@@ -14,7 +14,7 @@ import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.service.FrescoService;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
-import com.ensoft.imgurviewer.view.activity.ImageViewer;
+import com.ensoft.imgurviewer.view.activity.AlbumPagerActivity;
 import com.ensoft.imgurviewer.view.helper.MetricsHelper;
 import com.ensoft.imgurviewer.view.widget.ImageViewForcedHeight;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -27,8 +27,8 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 {
 	public static final String TAG = ImgurAlbumAdapter.class.getCanonicalName();
 	protected int resourceId;
-	ImgurImage[] dataSet;
-	boolean isLandscape = false;
+	protected ImgurImage[] dataSet;
+	private boolean isLandscape = false;
 
 	public ImgurAlbumAdapter( int resource, ImgurImage[] objects )
 	{
@@ -51,7 +51,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 	@Override
 	public void onBindViewHolder( AlbumImageHolder holder, int position )
 	{
-		holder.setData( dataSet[position], position, getItemCount(), isLandscape );
+		holder.setData( dataSet, dataSet[position], position, getItemCount(), isLandscape );
 	}
 
 	@Override
@@ -80,13 +80,13 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 				.build();
 
 			imageView.setHierarchy( hierarchy );
-			imageView.setOnClickListener( v -> ImageViewer.newInstance( v.getContext(), image.hasVideo() ? image.getVideoUri().toString() : image.getLink() ) );
 		}
 
-		private void setData( ImgurImage img, int position, int count, boolean isLandscape )
+		private void setData( ImgurImage[] dataSet, ImgurImage img, int position, int count, boolean isLandscape )
 		{
 			image = img;
-
+			imageView.setOnClickListener( v -> AlbumPagerActivity.newInstance( v.getContext(), dataSet, position ) );
+			
 			Log.v( TAG, "Loading album image: " + image.getLink() );
 
 			progressBar.setVisibility( View.VISIBLE );
