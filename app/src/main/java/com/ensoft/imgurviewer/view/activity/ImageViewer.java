@@ -1,12 +1,11 @@
 package com.ensoft.imgurviewer.view.activity;
 
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+
 import com.ensoft.imgurviewer.view.fragment.ImageViewerFragment;
 import com.imgurviewer.R;
 
@@ -17,13 +16,6 @@ public class ImageViewer extends AppActivity
 	
 	protected ImageViewerFragment imageViewer;
 	
-	public static void newInstance( Context context, String uriPath )
-	{
-		Intent intent = new Intent( context, ImageViewer.class );
-		intent.putExtra( ImageViewer.PARAM_RESOURCE_PATH, uriPath );
-		context.startActivity( intent );
-	}
-
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
 	{
