@@ -28,8 +28,6 @@ public class AlbumPagerActivity extends AppActivity
 	}
 	
 	private ViewPager pager;
-	private ImgurImage[] images;
-	private int initialPosition;
 	
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -54,9 +52,9 @@ public class AlbumPagerActivity extends AppActivity
 			{
 				Parcelable[] imagesParceable = bundle.getParcelableArray( PARAM_IMAGES );
 				
-				images = Arrays.copyOf( imagesParceable, imagesParceable.length, ImgurImage[].class );
+				ImgurImage[] images = Arrays.copyOf( imagesParceable, imagesParceable.length, ImgurImage[].class );
 				
-				initialPosition = bundle.getInt( PARAM_IMAGES_CUR_POSITION );
+				int initialPosition = bundle.getInt( PARAM_IMAGES_CUR_POSITION );
 				
 				pager.setAdapter( new ImagesAlbumPagerAdapter( getFragmentManager(), images ) );
 				pager.setCurrentItem( initialPosition );
