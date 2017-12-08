@@ -37,28 +37,28 @@ import com.imgurviewer.R;
 public class ImgurAlbumGalleryViewer extends AppActivity
 {
 	public static final String TAG = ImgurAlbumGalleryViewer.class.getCanonicalName();
-
+	
 	protected LinearLayout floatingMenu;
 	protected ImgurAlbumAdapter albumAdapter;
 	protected ProgressBar progressBar;
 	protected RecyclerView recyclerView;
 	protected Uri albumData;
 	protected ImgurImage[] images;
-
+	
 	@Override
 	public void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
-
+		
 		setContentView( R.layout.activity_albumviewer );
-
+		
 		floatingMenu = findViewById( R.id.floating_menu );
-
+		
 		if ( null != getResources() && null != getResources().getConfiguration() )
 		{
 			setFloatingMenuOrientation( getResources().getConfiguration().orientation );
 		}
-
+		
 		if ( null != getIntent().getExtras() && null != getIntent().getExtras().getString( ALBUM_DATA ) )
 		{
 			albumData = Uri.parse( getIntent().getExtras().getString( ALBUM_DATA ) );
@@ -67,18 +67,18 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		{
 			albumData = getIntent().getData();
 		}
-
+		
 		if ( null == albumData )
 		{
 			finish();
-
+			
 			Log.v( TAG, "Data not found." );
-
+			
 			return;
 		}
-
+		
 		Log.v( TAG, "Data is: " + albumData.toString() );
-
+		
 		progressBar = findViewById( R.id.albumViewer_progressBar );
 		findViewById( R.id.settings ).setOnClickListener( this::showSettings );
 		findViewById( R.id.download ).setOnClickListener( this::downloadImage );
@@ -93,7 +93,7 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 				{
 					create( album.getImages() );
 				}
-
+				
 				@Override
 				public void onError( String error )
 				{
@@ -110,15 +110,15 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 				{
 					create( album.getImages() );
 				}
-
+				
 				@Override
 				public void onImageResolved( ImgurImage image )
 				{
-					ImgurImage[] images = new ImgurImage[1];
-					images[0] = image;
+					ImgurImage[] images = new ImgurImage[ 1 ];
+					images[ 0 ] = image;
 					create( images );
 				}
-
+				
 				@Override
 				public void onError( String error )
 				{
@@ -132,50 +132,86 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		}
 		else if ( new InstagramService().isInstagramProfile( albumData ) )
 		{
-			new InstagramProfileService().getProfile( albumData, new InstagramProfileResolverListener()
-			{
-				@Override
-				public void onProfileResolved( InstagramProfileModel profile )
-				{
-					if ( profile.getStatus().equals( "ok" ) && profile.hasItems() )
-					{
-						create( profile.getImages() );
-					}
-				}
-
-				@Override
-				public void onError( String error )
-				{
-					Toast.makeText( ImgurAlbumGalleryViewer.this, error, Toast.LENGTH_SHORT ).show();
-				}
-			} );
+			loadInstagramProfile( "" );
 		}
 	}
-
+	
+	protected void loadInstagramProfile( String maxId )
+	{
+		new InstagramProfileService().getProfile( albumData, maxId, new InstagramProfileResolverListener()
+		{
+			@Override
+			public void onProfileResolved( InstagramProfileModel profile )
+			{
+				if ( profile.hasItems() )
+				{
+					ImgurImage[] images = profile.getImages();
+					create( images );
+					
+					if ( null != images && images.length > 0 )
+					{
+						loadInstagramProfile( images[ images.length - 1 ].getId() );
+					}
+				}
+			}
+			
+			@Override
+			public void onError( String error )
+			{
+				Toast.makeText( ImgurAlbumGalleryViewer.this, error, Toast.LENGTH_SHORT ).show();
+			}
+		} );
+	}
+	
 	protected void create( ImgurImage[] images )
 	{
-		this.images = images;
-		progressBar.setVisibility( View.INVISIBLE );
-		albumAdapter = new ImgurAlbumAdapter( R.layout.item_album_photo, images );
-		albumAdapter.setOrientationLandscape( new DeviceService().isLandscapeOrientation( this ) );
-
-		recyclerView = findViewById( R.id.albumViewer_listView );
-		recyclerView.setLayoutManager( new LinearLayoutManager( this ) );
-		recyclerView.setAdapter( albumAdapter );
+		if ( null == albumAdapter )
+		{
+			this.images = images;
+			progressBar.setVisibility( View.INVISIBLE );
+			albumAdapter = new ImgurAlbumAdapter( R.layout.item_album_photo, images );
+			albumAdapter.setOrientationLandscape( new DeviceService().isLandscapeOrientation( this ) );
+			
+			recyclerView = findViewById( R.id.albumViewer_listView );
+			recyclerView.setLayoutManager( new LinearLayoutManager( this ) );
+			recyclerView.setAdapter( albumAdapter );
+		}
+		else
+		{
+			ImgurImage[] newImages = new ImgurImage[ this.images.length + images.length ];
+			
+			int i = 0;
+			
+			for ( ImgurImage img : this.images )
+			{
+				newImages[i] = img;
+				i++;
+			}
+			
+			for ( ImgurImage img : images )
+			{
+				newImages[i] = img;
+				i++;
+			}
+			
+			this.images = newImages;
+			
+			albumAdapter.appendImages( images );
+		}
 	}
-
+	
 	@Override
 	public void onConfigurationChanged( Configuration newConfig )
 	{
 		super.onConfigurationChanged( newConfig );
-
+		
 		setFloatingMenuOrientation( newConfig.orientation );
-
+		
 		if ( null == albumAdapter )
 		{
 			return;
 		}
-
+		
 		if ( newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE )
 		{
 			albumAdapter.setOrientationLandscape( true );
@@ -187,7 +223,7 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 			albumAdapter.notifyDataSetChanged();
 		}
 	}
-
+	
 	public void showSettings( View v )
 	{
 		startActivity( new Intent( this, SettingsView.class ) );
@@ -222,7 +258,7 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 			download();
 		}
 	}
-
+	
 	public void shareImage( View v )
 	{
 		if ( albumData != null )
@@ -230,7 +266,7 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 			IntentUtils.shareMessage( this, getString( R.string.share ), albumData.toString(), getString( R.string.shareUsing ) );
 		}
 	}
-
+	
 	protected void setFloatingMenuOrientation( int orientation )
 	{
 		if ( null != floatingMenu )

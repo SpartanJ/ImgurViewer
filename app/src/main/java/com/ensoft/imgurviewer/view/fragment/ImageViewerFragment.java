@@ -103,7 +103,7 @@ public class ImageViewerFragment extends Fragment
 		progressBarDrawable.setColor( getResources().getColor( R.color.imgur_color ) );
 		progressBarDrawable.setBarWidth( MetricsHelper.dpToPx( context, 4 ) );
 		
-		GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(getResources())
+		GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder( getResources() )
 			.setActualImageScaleType( ScalingUtils.ScaleType.FIT_CENTER )
 			.setProgressBarImage( progressBarDrawable )
 			.build();
@@ -152,7 +152,7 @@ public class ImageViewerFragment extends Fragment
 	protected OnViewTapListener touchListener = new OnViewTapListener()
 	{
 		@Override
-		public void onViewTap(View view, float x, float y)
+		public void onViewTap( View view, float x, float y )
 		{
 			if ( !( System.currentTimeMillis() - lastClickTime <= UI_ANIMATION_DELAY ) )
 			{
@@ -226,9 +226,9 @@ public class ImageViewerFragment extends Fragment
 		
 		mediaPlayerFragment.setOnPreparedListener( mp ->
 		{
-				mp.setLooping( true );
-				
-				progressBar.setVisibility( View.INVISIBLE );
+			mp.setLooping( true );
+			
+			progressBar.setVisibility( View.INVISIBLE );
 		} );
 		
 		delayedHide();
@@ -371,7 +371,7 @@ public class ImageViewerFragment extends Fragment
 	}
 	
 	@Override
-	public void onConfigurationChanged(Configuration newConfig)
+	public void onConfigurationChanged( Configuration newConfig )
 	{
 		super.onConfigurationChanged( newConfig );
 		

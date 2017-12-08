@@ -12,13 +12,13 @@ public class DeviceService
 	{
 		WindowManager windowManager = (WindowManager) context.getSystemService( Context.WINDOW_SERVICE );
 		Display display = windowManager.getDefaultDisplay();
-
+		
 		Point size = new Point();
 		display.getSize( size );
-
+		
 		int orientation;
-
-		if( size.x <= size.y )
+		
+		if ( size.x <= size.y )
 		{
 			orientation = Configuration.ORIENTATION_PORTRAIT;
 		}
@@ -26,10 +26,10 @@ public class DeviceService
 		{
 			orientation = Configuration.ORIENTATION_LANDSCAPE;
 		}
-
+		
 		return orientation;
 	}
-
+	
 	public boolean isLandscapeOrientation( Context context )
 	{
 		return getScreenOrientation( context ) == Configuration.ORIENTATION_LANDSCAPE;

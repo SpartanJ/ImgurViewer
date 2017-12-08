@@ -4,6 +4,6 @@ public class StringUtils
 {
 	public static int countMatches( String haystack, String needle )
 	{
-		return haystack.length() - haystack.replace(needle, "").length();
+		return haystack.length() - haystack.replace( needle, "" ).length();
 	}
 }

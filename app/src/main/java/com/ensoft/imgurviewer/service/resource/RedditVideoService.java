@@ -47,20 +47,13 @@ public class RedditVideoService extends ImageServiceSolver
 		
 		try
 		{
-			System.setProperty("http.keepAlive", "false");
+			System.setProperty( "http.keepAlive", "false" );
 			URL url = new URL( video );
 			urlConnection = (HttpURLConnection) url.openConnection();
 			urlConnection.setRequestMethod( "HEAD" );
 			urlConnection.getInputStream().close();
 			
-			if ( urlConnection.getResponseCode() == HttpStatus.OK_200.getCode() )
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return urlConnection.getResponseCode() == HttpStatus.OK_200.getCode();
 		}
 		catch ( Exception e )
 		{
@@ -69,30 +62,20 @@ public class RedditVideoService extends ImageServiceSolver
 		finally
 		{
 			if ( null != urlConnection )
+			{
 				urlConnection.disconnect();
+			}
 		}
 	}
 	
 	protected void sendPathResolved( final String video, final PathResolverListener pathResolverListener )
 	{
-		new Handler( Looper.getMainLooper() ).post( new Runnable()
-		{
-			public void run()
-			{
-				pathResolverListener.onPathResolved( Uri.parse( video ), null );
-			}
-		});
+		new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( Uri.parse( video ), null ) );
 	}
 	
 	protected void sendPathNotFound( final PathResolverListener pathResolverListener )
 	{
-		new Handler( Looper.getMainLooper() ).post( new Runnable()
-		{
-			public void run()
-			{
-				pathResolverListener.onPathError( App.getInstance().getString( R.string.could_not_resolve_video_url ) );
-			}
-		} );
+		new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( App.getInstance().getString( R.string.could_not_resolve_video_url ) ) );
 	}
 	
 	@Override
@@ -104,12 +87,18 @@ public class RedditVideoService extends ImageServiceSolver
 		{
 			try
 			{
-				new Thread( new Runnable()
+				new Thread( () ->
 				{
-					@Override
-					public void run()
+					String video = String.format( V_REDD_IT_VIDEO_URL_M38U, id );
+					
+					if ( videoExists( video ) )
 					{
-						String video = String.format( V_REDD_IT_VIDEO_URL_M38U, id );
+						sendPathResolved( video, pathResolverListener );
+						return;
+					}
+					else
+					{
+						video = String.format( V_REDD_IT_VIDEO_URL, id );
 						
 						if ( videoExists( video ) )
 						{
@@ -118,27 +107,17 @@ public class RedditVideoService extends ImageServiceSolver
 						}
 						else
 						{
-							video = String.format( V_REDD_IT_VIDEO_URL, id );
+							video = String.format( V_REDD_IT_VIDEO_URL_2, id );
 							
 							if ( videoExists( video ) )
 							{
 								sendPathResolved( video, pathResolverListener );
 								return;
 							}
-							else
-							{
-								video = String.format( V_REDD_IT_VIDEO_URL_2, id );
-								
-								if ( videoExists( video ) )
-								{
-									sendPathResolved( video, pathResolverListener );
-									return;
-								}
-							}
 						}
-						
-						sendPathNotFound( pathResolverListener );
 					}
+					
+					sendPathNotFound( pathResolverListener );
 				} ).start();
 			}
 			catch ( Exception e )

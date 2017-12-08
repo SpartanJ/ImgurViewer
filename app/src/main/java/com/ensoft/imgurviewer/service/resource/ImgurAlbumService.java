@@ -23,83 +23,75 @@ public class ImgurAlbumService
 {
 	public static final String TAG = ImgurAlbumService.class.getCanonicalName();
 	public static final String IMGUR_ALBUM_API_URL = ImgurService.IMGUR_API_URL + "/album/";
-
+	
 	public String getAlbumId( Uri uri )
 	{
 		return getAlbumId( uri.toString() );
 	}
-
+	
 	public String getAlbumId( String uri )
 	{
 		String endPart = null;
-
+		
 		if ( uri.contains( "/a/" ) )
 		{
 			endPart = uri.substring( uri.lastIndexOf( "/a/" ) + 3 );
 		}
-
+		
 		if ( null != endPart )
 		{
 			int slash = endPart.indexOf( "/" );
-
+			
 			if ( -1 != slash )
 			{
 				endPart = endPart.substring( 0, slash );
 			}
 		}
-
+		
 		return endPart;
 	}
-
+	
 	public boolean isImgurAlbum( Uri uri )
 	{
 		return new ImgurService().isServicePath( uri ) && ( uri.toString().contains( "/a/" ) );
 	}
-
+	
 	public void getAlbum( Uri uri, final ImgurAlbumResolverListener imgurAlbumResolverListener )
 	{
 		String albumUrl = IMGUR_ALBUM_API_URL + getAlbumId( uri );
-
-		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( albumUrl, null, new Response.Listener<JSONObject>()
+		
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( albumUrl, null, response ->
 		{
-			@Override
-			public void onResponse(JSONObject response)
+			try
 			{
-				try
-				{
-					Log.v( TAG, response.toString() );
-
-					ImgurAlbumResource album = new Gson().fromJson( response.toString(), ImgurAlbumResource.class );
-
-					imgurAlbumResolverListener.onAlbumResolved( album.data );
-				}
-				catch ( Exception e )
-				{
-					Log.v( TAG, e.getMessage() );
-
-					imgurAlbumResolverListener.onError( e.toString() );
-				}
+				Log.v( TAG, response.toString() );
+				
+				ImgurAlbumResource album = new Gson().fromJson( response.toString(), ImgurAlbumResource.class );
+				
+				imgurAlbumResolverListener.onAlbumResolved( album.data );
 			}
-		}, new Response.ErrorListener()
+			catch ( Exception e )
+			{
+				Log.v( TAG, e.getMessage() );
+				
+				imgurAlbumResolverListener.onError( e.toString() );
+			}
+		}, error ->
 		{
-			@Override
-			public void onErrorResponse(VolleyError error)
-			{
-				Log.v( TAG, error.toString() );
-
-				imgurAlbumResolverListener.onError( error.toString() );
-			}
-		})
+			Log.v( TAG, error.toString() );
+			
+			imgurAlbumResolverListener.onError( error.toString() );
+		} )
 		{
 			@Override
 			public Map<String, String> getHeaders() throws AuthFailureError
 			{
-				Map<String, String>  params = new HashMap<>();
-				params.put("Authorization", "Client-ID " + App.getInstance().getString( R.string.imgur_client_id ) );
+				Map<String, String> params = new HashMap<>();
+				params.put( "Authorization", "Client-ID " + App.getInstance().getString( R.string.imgur_client_id ) );
 				return params;
 			}
 		};
-
+		
 		RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
 	}
 }

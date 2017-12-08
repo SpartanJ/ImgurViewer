@@ -32,11 +32,11 @@ public class AlbumPagerActivity extends AppActivity
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
 	{
-		super.onCreate(savedInstanceState);
+		super.onCreate( savedInstanceState );
 		
-		setContentView( R.layout.activity_albumpager);
+		setContentView( R.layout.activity_albumpager );
 		
-		pager = findViewById(R.id.view_pager);
+		pager = findViewById( R.id.view_pager );
 	}
 	
 	@Override

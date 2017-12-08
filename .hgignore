@@ -13,3 +13,4 @@ build
 gradle
 *.apk
 imgurviewer.jks
+app/release/output.json

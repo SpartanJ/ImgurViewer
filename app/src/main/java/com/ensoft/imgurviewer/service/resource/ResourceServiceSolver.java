@@ -10,14 +10,14 @@ public class ResourceServiceSolver
 	ImageServiceSolver serviceSolver;
 	ResourceLoadListener resourceLoadListener;
 	Class<?> galleryViewClass;
-
+	
 	public ResourceServiceSolver( ImageServiceSolver serviceSolver, ResourceLoadListener resourceLoadListener, Class<?> galleryViewClass )
 	{
 		this.serviceSolver = serviceSolver;
 		this.resourceLoadListener = resourceLoadListener;
 		this.galleryViewClass = galleryViewClass;
 	}
-
+	
 	public boolean solve( Uri uri )
 	{
 		if ( serviceSolver.isServicePath( uri ) )
@@ -33,10 +33,10 @@ public class ResourceServiceSolver
 			{
 				serviceSolver.getPath( uri, new GenericPathResolverListener( serviceSolver, resourceLoadListener ) );
 			}
-
+			
 			return true;
 		}
-
+		
 		return false;
 	}
 }
