@@ -15,90 +15,73 @@ import com.imgurviewer.R;
 public class SettingsView extends PreferenceActivity
 {
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
+	protected void onCreate( Bundle savedInstanceState )
 	{
-		super.onCreate(savedInstanceState);
-
-		getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
+		super.onCreate( savedInstanceState );
+		
+		getFragmentManager().beginTransaction().replace( android.R.id.content, new MyPreferenceFragment() ).commit();
 	}
-
+	
 	public static class MyPreferenceFragment extends PreferenceFragment
 	{
 		@Override
-		public void onCreate(final Bundle savedInstanceState)
+		public void onCreate( final Bundle savedInstanceState )
 		{
 			final PreferencesService preferencesService = App.getInstance().getPreferencesService();
 			super.onCreate( savedInstanceState );
 			addPreferencesFromResource( R.xml.preferences );
-
-			Preference proxyHost = findPreference("proxyHost");
-
+			
+			Preference proxyHost = findPreference( "proxyHost" );
+			
 			proxyHost.setDefaultValue( preferencesService.getProxyHost() );
-			proxyHost.setOnPreferenceChangeListener( new Preference.OnPreferenceChangeListener()
+			proxyHost.setOnPreferenceChangeListener( ( preference, newValue ) ->
 			{
-				@Override
-				public boolean onPreferenceChange(Preference preference, Object newValue)
-				{
-					preferencesService.setProxyHost( (String)newValue );
-					return true;
-				}
-			});
-
+				preferencesService.setProxyHost( (String) newValue );
+				return true;
+			} );
+			
 			Preference proxyPort = findPreference( "proxyPort" );
 			proxyPort.setDefaultValue( Integer.toString( preferencesService.getProxyPort() ) );
-			proxyPort.setOnPreferenceChangeListener( new Preference.OnPreferenceChangeListener()
+			proxyPort.setOnPreferenceChangeListener( ( preference, newValue ) ->
 			{
-				@Override
-				public boolean onPreferenceChange(Preference preference, Object newValue)
+				if ( newValue != null && !( (String) newValue ).isEmpty() )
 				{
-					if ( newValue != null && !((String)newValue).isEmpty() )
+					try
 					{
-						try
-						{
-							int intValue = Integer.valueOf( (String) newValue );
-
-							preferencesService.setProxyPort( intValue );
-						}
-						catch ( Exception e )
-						{
-							return false;
-						}
+						int intValue = Integer.valueOf( (String) newValue );
+						
+						preferencesService.setProxyPort( intValue );
 					}
-					else
+					catch ( Exception e )
 					{
 						return false;
 					}
-
-					return true;
 				}
-			});
-			
-			final CheckBoxPreference muteVideos = (CheckBoxPreference)findPreference( "muteVideos" );
-			muteVideos.setChecked( preferencesService.videosMuted() );
-			muteVideos.setOnPreferenceChangeListener( new Preference.OnPreferenceChangeListener()
-			{
-				@Override
-				public boolean onPreferenceChange( Preference preference, Object newValue )
+				else
 				{
-					preferencesService.setMuteVideos( !preferencesService.videosMuted() );
-					muteVideos.setChecked( preferencesService.videosMuted() );
-					
-					return true;
+					return false;
 				}
+				
+				return true;
+			} );
+			
+			final CheckBoxPreference muteVideos = (CheckBoxPreference) findPreference( "muteVideos" );
+			muteVideos.setChecked( preferencesService.videosMuted() );
+			muteVideos.setOnPreferenceChangeListener( ( preference, newValue ) ->
+			{
+				preferencesService.setMuteVideos( !preferencesService.videosMuted() );
+				muteVideos.setChecked( preferencesService.videosMuted() );
+				
+				return true;
 			} );
 			
 			Preference clearCache = findPreference( "clearCache" );
-			clearCache.setOnPreferenceClickListener( new Preference.OnPreferenceClickListener()
+			clearCache.setOnPreferenceClickListener( ( preference ) ->
 			{
-				@Override
-				public boolean onPreferenceClick( Preference preference )
-				{
-					new FrescoService().clearCaches();
-					Toast.makeText( MyPreferenceFragment.this.getActivity(), R.string.cacheCleared, Toast.LENGTH_SHORT ).show();
-					return true;
-				}
+				new FrescoService().clearCaches();
+				Toast.makeText( MyPreferenceFragment.this.getActivity(), R.string.cacheCleared, Toast.LENGTH_SHORT ).show();
+				return true;
 			} );
 		}
-		
 	}
 }

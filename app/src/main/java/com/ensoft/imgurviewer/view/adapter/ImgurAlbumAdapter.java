@@ -1,6 +1,5 @@
 package com.ensoft.imgurviewer.view.adapter;
 
-import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +14,7 @@ import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.service.FrescoService;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
-import com.ensoft.imgurviewer.view.activity.ImageViewer;
+import com.ensoft.imgurviewer.view.activity.AlbumPagerActivity;
 import com.ensoft.imgurviewer.view.helper.MetricsHelper;
 import com.ensoft.imgurviewer.view.widget.ImageViewForcedHeight;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -24,92 +23,86 @@ import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.imgurviewer.R;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.AlbumImageHolder>
 {
 	public static final String TAG = ImgurAlbumAdapter.class.getCanonicalName();
 	protected int resourceId;
-	ImgurImage[] dataSet;
-	boolean isLandscape = false;
-
+	protected List<ImgurImage> dataSet = new ArrayList<>();
+	private boolean isLandscape = false;
+	
 	public ImgurAlbumAdapter( int resource, ImgurImage[] objects )
 	{
 		resourceId = resource;
-		dataSet = objects;
+		
+		appendImages( objects );
 	}
-
+	
+	public void appendImages( ImgurImage[] images )
+	{
+		dataSet.addAll( Arrays.asList( images ) );
+		
+		notifyDataSetChanged();
+	}
+	
 	public void setOrientationLandscape( boolean landscape )
 	{
 		isLandscape = landscape;
 	}
-
+	
 	@Override
 	public AlbumImageHolder onCreateViewHolder( ViewGroup parent, int viewType )
 	{
-		View v = LayoutInflater.from(parent.getContext()).inflate( resourceId, parent, false );
+		View v = LayoutInflater.from( parent.getContext() ).inflate( resourceId, parent, false );
 		return new AlbumImageHolder( v );
 	}
-
+	
 	@Override
 	public void onBindViewHolder( AlbumImageHolder holder, int position )
 	{
-		holder.setData( dataSet[position], position, getItemCount(), isLandscape );
+		holder.setData( dataSet, dataSet.get( position ), position, getItemCount(), isLandscape );
 	}
-
+	
 	@Override
 	public int getItemCount()
 	{
-		return dataSet.length;
+		return dataSet.size();
 	}
-
+	
 	static class AlbumImageHolder extends RecyclerView.ViewHolder
 	{
 		ImgurImage image;
 		ImageViewForcedHeight imageView;
 		TextView title;
 		ProgressBar progressBar;
-
-		public AlbumImageHolder( final View view )
+		
+		private AlbumImageHolder( final View view )
 		{
 			super( view );
-
-			imageView = (ImageViewForcedHeight)view.findViewById( R.id.albumPhoto_photo );
-			progressBar = (ProgressBar)view.findViewById( R.id.albumPhoto_progressBar );
-			title = (TextView)view.findViewById( R.id.albumPhoto_title );
-
+			
+			imageView = view.findViewById( R.id.albumPhoto_photo );
+			progressBar = view.findViewById( R.id.albumPhoto_progressBar );
+			title = view.findViewById( R.id.albumPhoto_title );
+			
 			GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder( view.getResources() )
 				.setActualImageScaleType( ScalingUtils.ScaleType.CENTER_CROP )
 				.build();
-
+			
 			imageView.setHierarchy( hierarchy );
-			imageView.setOnClickListener( new View.OnClickListener()
-			{
-				@Override
-				public void onClick( View v )
-				{
-					Intent intent = new Intent( v.getContext(), ImageViewer.class );
-
-					if ( image.hasVideo() )
-					{
-						intent.putExtra( ImageViewer.PARAM_RESOURCE_PATH, image.getVideoUri().toString() );
-					}
-					else
-					{
-						intent.putExtra( ImageViewer.PARAM_RESOURCE_PATH, image.getLink() );
-					}
-
-					v.getContext().startActivity( intent );
-				}
-			} );
 		}
-
-		public void setData( ImgurImage img, int position, int count, boolean isLandscape )
+		
+		private void setData( List<ImgurImage> dataSet, ImgurImage img, int position, int count, boolean isLandscape )
 		{
 			image = img;
-
+			imageView.setOnClickListener( v -> AlbumPagerActivity.newInstance( v.getContext(), dataSet.toArray( new ImgurImage[ dataSet.size() ] ), position ) );
+			
 			Log.v( TAG, "Loading album image: " + image.getLink() );
-
+			
 			progressBar.setVisibility( View.VISIBLE );
-
+			
 			if ( null != image.getTitle() )
 			{
 				title.setVisibility( View.VISIBLE );
@@ -119,7 +112,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 			{
 				title.setVisibility( View.GONE );
 			}
-
+			
 			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT )
 			{
 				if ( position == 0 )
@@ -142,7 +135,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 					imageView.setPadding( 0, 0, 0, 0 );
 				}
 			}
-
+			
 			new FrescoService().loadImage( img.getLinkUri(), img.getThumbnailLinkUri(), imageView, new ControllerImageInfoListener()
 			{
 				@Override
@@ -150,7 +143,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 				{
 					progressBar.setVisibility( View.INVISIBLE );
 				}
-
+				
 				@Override
 				public void onFailure( String id, Throwable throwable )
 				{

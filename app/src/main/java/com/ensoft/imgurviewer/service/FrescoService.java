@@ -18,31 +18,31 @@ public class FrescoService
 	public void loadImage( Uri uri, Uri thumbnail, DraweeView view, ControllerImageInfoListener controllerListener )
 	{
 		ImageRequestBuilder imageRequestBuilder = ImageRequestBuilder.newBuilderWithSource( uri );
-
+		
 		if ( !UriUtil.isNetworkUri( uri ) )
 		{
-			imageRequestBuilder.setResizeOptions( new ResizeOptions( view.getLayoutParams().width, view.getLayoutParams().height) );
+			imageRequestBuilder.setResizeOptions( new ResizeOptions( view.getLayoutParams().width, view.getLayoutParams().height ) );
 		}
-
+		
 		imageRequestBuilder.setRotationOptions( RotationOptions.autoRotate() );
-
+		
 		PipelineDraweeControllerBuilder draweeControllerBuilder = Fresco.newDraweeControllerBuilder()
 			.setTapToRetryEnabled( true )
 			.setControllerListener( controllerListener )
 			.setImageRequest( imageRequestBuilder.build() )
 			.setOldController( view.getController() )
 			.setAutoPlayAnimations( true );
-
+		
 		if ( null != thumbnail )
 		{
 			draweeControllerBuilder.setLowResImageRequest( ImageRequest.fromUri( thumbnail ) );
 		}
-
+		
 		DraweeController draweeController = draweeControllerBuilder.build();
-
+		
 		view.setController( draweeController );
 	}
-
+	
 	public void loadImage( Uri uri, DraweeView view, ControllerImageInfoListener controllerListener )
 	{
 		loadImage( uri, null, view, controllerListener );

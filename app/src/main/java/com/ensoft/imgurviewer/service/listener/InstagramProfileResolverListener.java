@@ -5,6 +5,6 @@ import com.ensoft.imgurviewer.model.InstagramProfileModel;
 public interface InstagramProfileResolverListener
 {
 	void onProfileResolved( InstagramProfileModel profile );
-
+	
 	void onError( String error );
 }

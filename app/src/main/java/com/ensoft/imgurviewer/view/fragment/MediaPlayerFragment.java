@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,8 @@ import com.imgurviewer.R;
 
 public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, MediaPlayer.OnPreparedListener
 {
+	private static final String TAG = MediaPlayerFragment.class.getCanonicalName();
+	
 	protected VideoView videoView;
 	protected ImageView playPauseView;
 	protected ImageView audioOnOffView;
@@ -37,7 +40,7 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 	protected boolean initialized = false;
 	protected MediaPlayer mediaPlayer;
 	protected boolean isMuted = false;
-
+	
 	protected void updatePlayPauseState()
 	{
 		if ( null != videoView )
@@ -71,89 +74,75 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 			}
 		}
 	}
-
-	protected View.OnClickListener playPauseOnClickListener = new View.OnClickListener()
-	{
-		@Override
-		public void onClick( View v )
-		{
-			updatePlayPauseState();
-		}
-	};
 	
-	protected View.OnClickListener audioOnOffListener = new View.OnClickListener()
-	{
-		@Override
-		public void onClick( View v )
-		{
-			updateAudioOnOffState();
-		}
-	};
-
+	protected View.OnClickListener playPauseOnClickListener = v -> updatePlayPauseState();
+	
+	protected View.OnClickListener audioOnOffListener = v -> updateAudioOnOffState();
+	
 	@Nullable
 	@Override
 	public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
 	{
 		return inflater.inflate( R.layout.mediaplayer, container, false );
 	}
-
+	
 	@Override
 	public void onViewCreated( View view, @Nullable Bundle savedInstanceState )
 	{
 		super.onViewCreated( view, savedInstanceState );
-
+		
 		if ( null != getResources() && null != getResources().getConfiguration() )
 		{
 			setOrientationMargins( getResources().getConfiguration().orientation );
 		}
-
-		playPauseView = (ImageView)view.findViewById( R.id.mediaPlayer_playPause );
+		
+		playPauseView = view.findViewById( R.id.mediaPlayer_playPause );
 		playPauseView.setOnClickListener( playPauseOnClickListener );
 		
-		audioOnOffView = (ImageView)view.findViewById( R.id.mediaPlayer_audioOnOff );
+		audioOnOffView = view.findViewById( R.id.mediaPlayer_audioOnOff );
 		audioOnOffView.setOnClickListener( audioOnOffListener );
-
-		timeTextView = (TextView)view.findViewById( R.id.mediaPlayer_time );
-
-		seekBarView = (SeekBar)view.findViewById( R.id.mediaPlayer_seekBar );
+		
+		timeTextView = view.findViewById( R.id.mediaPlayer_time );
+		
+		seekBarView = view.findViewById( R.id.mediaPlayer_seekBar );
 		seekBarView.setOnSeekBarChangeListener( this );
-
+		
 		PorterDuffColorFilter colorFilter = new PorterDuffColorFilter( getResources().getColor( R.color.imgur_color ), PorterDuff.Mode.SRC_IN );
-
+		
 		seekBarView.getProgressDrawable().setColorFilter( colorFilter );
-
+		
 		if ( Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN )
 		{
 			seekBarView.getThumb().setColorFilter( colorFilter );
 		}
-
+		
 		if ( null != videoView )
 		{
 			init();
 		}
 	}
-
+	
 	public void setOnPreparedListener( MediaPlayer.OnPreparedListener onPreparedListener )
 	{
 		userOnPreparedListener = onPreparedListener;
 	}
-
+	
 	public void setVideoView( VideoView videoView )
 	{
 		this.videoView = videoView;
 		this.videoView.setOnPreparedListener( this );
-
+		
 		if ( null != playPauseView )
 		{
 			init();
 		}
 	}
-
+	
 	public void updateProgressBar()
 	{
 		seekBarHandler.postDelayed( seekBarRunnable, 100 );
 	}
-
+	
 	private Runnable seekBarRunnable = new Runnable()
 	{
 		public void run()
@@ -169,45 +158,49 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 					
 					seekBarView.setProgress( videoView.getCurrentPosition() );
 				}
-			} catch ( Exception e ) {}
+			}
+			catch ( Exception e )
+			{
+				Log.e( TAG, e.getMessage() );
+			}
 			
 			seekBarHandler.postDelayed( this, 100 );
 		}
 	};
-
+	
 	protected void init()
 	{
 		if ( null != seekBarView && null != videoView )
 		{
 			seekBarView.setMax( videoView.getDuration() );
-
+			
 			updateProgressBar();
-
+			
 			initialized = true;
 		}
 	}
-
+	
 	@Override
 	public void onProgressChanged( SeekBar seekBar, int progress, boolean fromUser )
 	{
 	}
-
+	
 	@Override
 	public void onStartTrackingTouch( SeekBar seekBar )
 	{
 		seekBarHandler.removeCallbacks( seekBarRunnable );
 	}
-
+	
 	@Override
 	public void onStopTrackingTouch( SeekBar seekBar )
 	{
 		seekBarHandler.removeCallbacks( seekBarRunnable );
-
+		
 		videoView.seekTo( seekBar.getProgress() );
-
+		
 		updateProgressBar();
 	}
-
+	
 	@Override
 	public void onPrepared( MediaPlayer mp )
 	{
@@ -223,15 +216,15 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 		
 		updateAudioOnOffState();
 	}
-
-	public void setVisibility(int visibility)
+	
+	public void setVisibility( int visibility )
 	{
 		if ( null != getView() )
 		{
 			getView().setVisibility( visibility );
 		}
 	}
-
+	
 	public void startAnimation( Animation animation )
 	{
 		if ( null != getView() )
@@ -239,11 +232,11 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 			getView().startAnimation( animation );
 		}
 	}
-
+	
 	public void setMargins( int left, int top, int right, int bottom )
 	{
 		View v = getView();
-
+		
 		if ( null != v )
 		{
 			ViewHelper.setMargins( v, left, top, right, bottom );
@@ -253,7 +246,7 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 			margins = new Rect( left, top, right, bottom );
 		}
 	}
-
+	
 	public void setOrientationMargins( int orientation )
 	{
 		if ( orientation == Configuration.ORIENTATION_LANDSCAPE )
@@ -263,27 +256,27 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 		else if ( orientation == Configuration.ORIENTATION_PORTRAIT )
 		{
 			setMargins( 0, 0, 0, MetricsHelper.getNavigationBarHeight( getActivity() ) +
-									( ViewHelper.hasImmersive( getActivity() ) ? MetricsHelper.dpToPx( getActivity(), 8 ) : 0 )
+				( ViewHelper.hasImmersive( getActivity() ) ? MetricsHelper.dpToPx( getActivity(), 8 ) : 0 )
 			);
 		}
 	}
-
+	
 	@Override
 	public void onPause()
 	{
 		super.onPause();
-
+		
 		if ( initialized )
 		{
 			seekBarHandler.removeCallbacks( seekBarRunnable );
 		}
 	}
-
+	
 	@Override
 	public void onResume()
 	{
 		super.onResume();
-
+		
 		if ( initialized )
 		{
 			updateProgressBar();
@@ -292,17 +285,17 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 	
 	public void mute()
 	{
-		setVolume(0);
+		setVolume( 0 );
 		isMuted = true;
 	}
 	
 	public void unmute()
 	{
-		setVolume(100);
+		setVolume( 100 );
 		isMuted = false;
 	}
 	
-	public void setVolume(int amount)
+	public void setVolume( int amount )
 	{
 		try
 		{
@@ -314,6 +307,9 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 				mediaPlayer.setVolume( volume, volume );
 			}
 		}
-		catch ( Exception e ) {}
+		catch ( Exception e )
+		{
+			Log.e( TAG, e.getMessage() );
+		}
 	}
 }

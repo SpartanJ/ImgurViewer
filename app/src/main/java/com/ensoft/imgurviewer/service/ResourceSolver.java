@@ -24,14 +24,14 @@ public class ResourceSolver
 {
 	private ResourceLoadListener resourceLoadListener;
 	private ArrayList<ResourceServiceSolver> resourceServiceSolvers = new ArrayList<>();
-
+	
 	public ResourceSolver( ResourceLoadListener resourceLoadListener )
 	{
 		this.resourceLoadListener = resourceLoadListener;
-
+		
 		loadServices();
 	}
-
+	
 	protected void loadServices()
 	{
 		resourceServiceSolvers.add( new ResourceServiceSolver( new ImgurService(), resourceLoadListener, ImgurAlbumGalleryViewer.class ) );
@@ -46,7 +46,7 @@ public class ResourceSolver
 		resourceServiceSolvers.add( new ResourceServiceSolver( new GiphyService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new RedditVideoService(), resourceLoadListener, null ) );
 	}
-
+	
 	public void solve( Uri uri )
 	{
 		for ( ResourceServiceSolver resourceServiceSolver : resourceServiceSolvers )
@@ -56,7 +56,7 @@ public class ResourceSolver
 				return;
 			}
 		}
-
+		
 		if ( ImageServiceSolver.isVideoUrl( uri ) )
 		{
 			resourceLoadListener.loadVideo( uri );
