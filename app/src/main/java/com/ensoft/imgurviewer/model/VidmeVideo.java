@@ -8,20 +8,20 @@ public class VidmeVideo
 {
 	@SerializedName( "complete_url" )
 	protected String url;
-
+	
 	@SerializedName( "formats" )
 	protected VidmeVideoFormat[] formats;
-
+	
 	public String getUrl()
 	{
 		return url;
 	}
-
+	
 	public VidmeVideoFormat[] getFormats()
 	{
 		return formats;
 	}
-
+	
 	public Uri getVideoUri()
 	{
 		if ( null != formats )
@@ -33,7 +33,7 @@ public class VidmeVideo
 					return Uri.parse( video.getUri() );
 				}
 			}
-
+			
 			for ( VidmeVideoFormat video : formats )
 			{
 				if ( "720p".equals( video.getUri() ) )
@@ -42,7 +42,7 @@ public class VidmeVideo
 				}
 			}
 		}
-
+		
 		return Uri.parse( getUrl() );
 	}
 }

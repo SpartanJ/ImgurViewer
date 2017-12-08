@@ -16,54 +16,48 @@ import org.json.JSONObject;
 public class InstagramProfileService
 {
 	public static final String TAG = InstagramProfileService.class.getCanonicalName();
-
-	protected String getProfileMediaUrl( Uri uri )
+	
+	protected String getProfileMediaUrl( Uri uri, String maxId )
 	{
 		String profileUrl = uri.toString();
-
+		
 		if ( !profileUrl.endsWith( "/" ) )
 		{
 			profileUrl += "/";
 		}
-
-		return profileUrl + "media/";
+		
+		return profileUrl + "?__a=1&max_id=" + maxId;
 	}
-
-	public void getProfile( Uri uri, final InstagramProfileResolverListener instagramProfileResolverListener )
+	
+	public void getProfile( Uri uri, String maxId, final InstagramProfileResolverListener instagramProfileResolverListener )
 	{
-		String profileMediaUrl = getProfileMediaUrl( uri );
-
-		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( profileMediaUrl, null, new Response.Listener<JSONObject>()
+		String profileMediaUrl = getProfileMediaUrl( uri, maxId );
+		
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( profileMediaUrl, null, response ->
 		{
-			@Override
-			public void onResponse(JSONObject response)
+			try
 			{
-				try
-				{
-					Log.v( TAG, response.toString() );
-
-					InstagramProfileModel profile = new Gson().fromJson( response.toString(), InstagramProfileModel.class );
-
-					instagramProfileResolverListener.onProfileResolved( profile );
-				}
-				catch ( Exception e )
-				{
-					Log.v( TAG, e.getMessage() );
-
-					instagramProfileResolverListener.onError( e.toString() );
-				}
+				Log.v( TAG, response.toString() );
+				
+				InstagramProfileModel profile = new Gson().fromJson( response.getJSONObject( "user" ).getJSONObject( "media" ).toString(), InstagramProfileModel.class );
+				
+				instagramProfileResolverListener.onProfileResolved( profile );
 			}
-		}, new Response.ErrorListener()
+			catch ( Exception e )
+			{
+				Log.v( TAG, e.getMessage() );
+				
+				instagramProfileResolverListener.onError( e.toString() );
+			}
+		}, error ->
 		{
-			@Override
-			public void onErrorResponse(VolleyError error)
-			{
-				Log.v( TAG, error.toString() );
-
-				instagramProfileResolverListener.onError( error.toString() );
-			}
-		}) {};
-
+			Log.v( TAG, error.toString() );
+			
+			instagramProfileResolverListener.onError( error.toString() );
+		} )
+		{
+		};
+		
 		RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
 	}
 }

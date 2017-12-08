@@ -10,31 +10,31 @@ public class GiphyData
 {
 	@SerializedName( "id" )
 	protected String id;
-
+	
 	@SerializedName( "images" )
 	protected Map<String, GiphyVideo> videos;
-
+	
 	public String getId()
 	{
 		return id;
 	}
-
+	
 	public Map<String, GiphyVideo> getVideos()
 	{
 		return videos;
 	}
-
+	
 	public Uri getUri()
 	{
 		if ( videos.containsKey( "original" ) )
 		{
-			return videos.get("original").getUri();
+			return videos.get( "original" ).getUri();
 		}
 		else if ( videos.containsKey( "downsized_large" ) )
 		{
-			return videos.get("downsized_large").getUri();
+			return videos.get( "downsized_large" ).getUri();
 		}
-
+		
 		if ( videos.size() > 0 )
 		{
 			for ( Map.Entry<String, GiphyVideo> video : videos.entrySet() )
@@ -42,7 +42,7 @@ public class GiphyData
 				return video.getValue().getUri();
 			}
 		}
-
+		
 		return null;
 	}
 }

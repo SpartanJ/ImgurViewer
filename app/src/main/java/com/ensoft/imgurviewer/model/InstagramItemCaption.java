@@ -6,7 +6,7 @@ public class InstagramItemCaption
 {
 	@SerializedName( "text" )
 	protected String text;
-
+	
 	public String getText()
 	{
 		return text;

@@ -26,4 +26,5 @@
 	<string name="clearCache">Clear cache</string>
 	<string name="clearCacheConf">Clear application image cache</string>
 	<string name="cacheCleared">Image cache cleared</string>
+	<string name="errorLoadingAlbum">Error loading album</string>
 </resources>

@@ -2,6 +2,7 @@ package com.ensoft.imgurviewer.service;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -30,4 +31,17 @@ public class PermissionService
 		return false;
 	}
 	
+	public boolean askExternalStorageAccess( Fragment fragment )
+	{
+		if ( !isExternalStorageAccess( fragment.getActivity() ) )
+		{
+			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M )
+			{
+				fragment.requestPermissions( new String[]{ android.Manifest.permission.WRITE_EXTERNAL_STORAGE }, REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION );
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }
