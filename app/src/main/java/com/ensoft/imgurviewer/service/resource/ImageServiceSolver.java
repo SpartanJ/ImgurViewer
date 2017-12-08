@@ -13,11 +13,11 @@ public abstract class ImageServiceSolver
 		if ( null != uri )
 		{
 			List<String> pathSegments = uri.getPathSegments();
-
+			
 			if ( null != pathSegments && pathSegments.size() > 0 )
 			{
 				String lastPathSegment = pathSegments.get( pathSegments.size() - 1 );
-
+				
 				return lastPathSegment.endsWith( ".gifv" ) ||
 					lastPathSegment.endsWith( ".mp4" ) ||
 					lastPathSegment.endsWith( ".avi" ) ||
@@ -27,28 +27,28 @@ public abstract class ImageServiceSolver
 					( lastPathSegment.endsWith( ".gif" ) && uri.toString().contains( "fm=mp4" ) );
 			}
 		}
-
+		
 		return false;
 	}
-
+	
 	public static boolean isVideoUrl( String uri )
 	{
 		return isVideoUrl( Uri.parse( uri ) );
 	}
-
+	
 	public abstract void getPath( Uri uri, final PathResolverListener pathResolverListener );
-
+	
 	public abstract boolean isServicePath( Uri uri );
-
+	
 	public boolean isVideo( Uri uri )
 	{
 		return isVideoUrl( uri );
 	}
-
+	
 	public boolean isVideo( String uri )
 	{
 		return isVideoUrl( uri );
 	}
-
+	
 	public abstract boolean isGallery( Uri uri );
 }

@@ -18,38 +18,38 @@ public class TutorialActivity extends Activity implements View.OnClickListener
 	protected TextView tutorialNext;
 	protected ImageView tutorialImage;
 	protected int step = 0;
-
+	
 	public static void newInstance( Context context )
 	{
 		Intent intent = new Intent( context, TutorialActivity.class );
-
+		
 		context.startActivity( intent );
 	}
-
+	
 	@Override
 	public void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
-
+		
 		setContentView( R.layout.activity_tutorial );
 	}
-
+	
 	public void onPostCreate( Bundle savedInstanceState )
 	{
 		super.onPostCreate( savedInstanceState );
-
+		
 		tutorialText = findViewById( R.id.tutorial_text );
 		tutorialNext = findViewById( R.id.tutorial_next );
 		tutorialImage = findViewById( R.id.tutorial_image );
-
+		
 		tutorialNext.setOnClickListener( this );
 	}
-
+	
 	@Override
 	public void onClick( View v )
 	{
 		step++;
-
+		
 		if ( 1 == step )
 		{
 			tutorialText.setText( getString( R.string.tutorial_open_with ) );
@@ -64,9 +64,9 @@ public class TutorialActivity extends Activity implements View.OnClickListener
 		else
 		{
 			RotateAnimation rotate = new RotateAnimation( 0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f );
-			rotate.setDuration(250);
-			rotate.setRepeatCount(1);
-			tutorialImage.startAnimation(rotate);
+			rotate.setDuration( 250 );
+			rotate.setRepeatCount( 1 );
+			tutorialImage.startAnimation( rotate );
 		}
 	}
 }

@@ -18,13 +18,13 @@ public class GfycatService extends ImageServiceSolver
 	public static final String TAG = GyazoService.class.getCanonicalName();
 	public static final String GFYCAT_DOMAIN = "gfycat.com";
 	public static final String GFYCAT_INFO_URL = "https://gfycat.com/cajax/get/";
-
+	
 	protected String getResourceName( Uri uri )
 	{
 		String resourceName = uri.getLastPathSegment();
 		
 		String[] strings = { "-mobile.mp4", "-mobile.jpg", "-poster.jpg", "-360.mp4", "-thumb360.jpg", "-thumb100.jpg",
-							"-size_restricted.gif", "-small.gif", "-mini.mp4", "-mini.jpg", "-max-14mb.gif"
+			"-size_restricted.gif", "-small.gif", "-mini.mp4", "-mini.jpg", "-max-14mb.gif"
 		};
 		
 		for ( String string : strings )
@@ -39,55 +39,47 @@ public class GfycatService extends ImageServiceSolver
 		
 		return resourceName;
 	}
-
+	
 	protected String getResourcePath( Uri uri )
 	{
 		return GFYCAT_INFO_URL + getResourceName( uri );
 	}
-
+	
 	@Override
 	public void getPath( Uri uri, final PathResolverListener pathResolverListener )
 	{
-		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( getResourcePath( uri ), null, new Response.Listener<JSONObject>()
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( getResourcePath( uri ), null, response ->
 		{
-			@Override
-			public void onResponse(JSONObject response)
+			try
 			{
-				try
-				{
-					Log.v( TAG, response.toString() );
-
-					GfycatResource resource = new Gson().fromJson( response.toString(), GfycatResource.class );
-
-					pathResolverListener.onPathResolved( resource.item.getUri(), null );
-				}
-				catch ( Exception e )
-				{
-					Log.v( TAG, e.getMessage() );
-
-					pathResolverListener.onPathError( e.toString() );
-				}
+				Log.v( TAG, response.toString() );
+				
+				GfycatResource resource = new Gson().fromJson( response.toString(), GfycatResource.class );
+				
+				pathResolverListener.onPathResolved( resource.item.getUri(), null );
 			}
-		}, new Response.ErrorListener()
+			catch ( Exception e )
+			{
+				Log.v( TAG, e.getMessage() );
+				
+				pathResolverListener.onPathError( e.toString() );
+			}
+		}, error ->
 		{
-			@Override
-			public void onErrorResponse(VolleyError error)
-			{
-				Log.v( TAG, error.toString() );
-
-				pathResolverListener.onPathError( error.toString() );
-			}
-		});
-
+			Log.v( TAG, error.toString() );
+			
+			pathResolverListener.onPathError( error.toString() );
+		} );
+		
 		RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
 	}
-
+	
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
 		return uri.toString().contains( GFYCAT_DOMAIN );
 	}
-
+	
 	@Override
 	public boolean isGallery( Uri uri )
 	{

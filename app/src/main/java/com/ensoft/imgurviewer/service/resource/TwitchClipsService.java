@@ -18,29 +18,29 @@ public class TwitchClipsService extends ImageServiceSolver
 {
 	public static final String TAG = TwitchClipsService.class.getCanonicalName();
 	protected static final String TWITCH_CLIPS_DOMAIN = "clips.twitch.tv";
-
+	
 	protected Uri getVideoUrlFromResponse( String response )
 	{
 		String qualityOptions = "quality_options:";
-
+		
 		int pos = response.lastIndexOf( qualityOptions );
-
+		
 		if ( -1 != pos )
 		{
 			int endPos = response.indexOf( "]", pos );
-
+			
 			if ( -1 != endPos )
 			{
 				String json = "{" + response.substring( pos, endPos + 1 ) + "}";
-
+				
 				try
 				{
 					TwitchClips twitchClips = new Gson().fromJson( json, TwitchClips.class );
-
+					
 					if ( null != twitchClips && null != twitchClips.getClips() )
 					{
 						TwitchClip[] clips = twitchClips.getClips();
-
+						
 						for ( TwitchClip clip : clips )
 						{
 							if ( clip.is720p() )
@@ -48,10 +48,10 @@ public class TwitchClipsService extends ImageServiceSolver
 								return Uri.parse( clip.getSource() );
 							}
 						}
-
+						
 						if ( clips.length > 0 )
 						{
-							return Uri.parse( clips[0].getSource() );
+							return Uri.parse( clips[ 0 ].getSource() );
 						}
 					}
 				}
@@ -61,50 +61,42 @@ public class TwitchClipsService extends ImageServiceSolver
 				}
 			}
 		}
-
+		
 		return null;
 	}
-
+	
 	@Override
 	public void getPath( Uri uri, final PathResolverListener pathResolverListener )
 	{
-		StringRequest stringRequest = new StringRequest( uri.toString(), new Response.Listener<String>()
+		StringRequest stringRequest = new StringRequest( uri.toString(), response ->
 		{
-			@Override
-			public void onResponse( String response )
+			Uri videoUrl = getVideoUrlFromResponse( response );
+			
+			if ( videoUrl != null )
 			{
-				Uri videoUrl = getVideoUrlFromResponse( response );
-
-				if ( videoUrl != null )
-				{
-					pathResolverListener.onPathResolved( videoUrl, null );
-				}
-				else
-				{
-					pathResolverListener.onPathError( App.getInstance().getString( R.string.videoUrlNotFound ) );
-				}
+				pathResolverListener.onPathResolved( videoUrl, null );
 			}
-		}, new Response.ErrorListener()
+			else
+			{
+				pathResolverListener.onPathError( App.getInstance().getString( R.string.videoUrlNotFound ) );
+			}
+		}, error ->
 		{
-			@Override
-			public void onErrorResponse( VolleyError error )
-			{
-				Log.v( TAG, error.toString() );
-
-				pathResolverListener.onPathError( error.toString() );
-			}
+			Log.v( TAG, error.toString() );
+			
+			pathResolverListener.onPathError( error.toString() );
 		} );
-
+		
 		RequestService.getInstance().addToRequestQueue( stringRequest );
 	}
-
+	
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
 		String uriStr = uri.toString();
 		return ( uriStr.startsWith( "https://" + TWITCH_CLIPS_DOMAIN ) || uriStr.startsWith( "http://" + TWITCH_CLIPS_DOMAIN ) );
 	}
-
+	
 	@Override
 	public boolean isGallery( Uri uri )
 	{

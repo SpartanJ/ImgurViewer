@@ -6,7 +6,7 @@ public class TwitchClips
 {
 	@SerializedName( "quality_options" )
 	protected TwitchClip[] clips;
-
+	
 	public TwitchClip[] getClips()
 	{
 		return clips;

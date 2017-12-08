@@ -21,61 +21,53 @@ public class VidmeService extends ImageServiceSolver
 	public static final String VIDME_DOMAIN = "vid.me";
 	public static final String VIDME_API_URL = "https://api.vid.me";
 	public static final String VIDME_GET_IMAGE_URL = VIDME_API_URL + "/videoByUrl?url=";
-
+	
 	@Override
 	public void getPath( Uri uri, final PathResolverListener pathResolverListener )
 	{
 		String oEmbedUrl = VIDME_GET_IMAGE_URL + uri.toString();
-
-		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( oEmbedUrl, null, new Response.Listener<JSONObject>()
+		
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( oEmbedUrl, null, response ->
 		{
-			@Override
-			public void onResponse(JSONObject response)
+			try
 			{
-				try
+				Log.v( TAG, response.toString() );
+				
+				VidmeResource vidmeResource = new Gson().fromJson( response.toString(), VidmeResource.class );
+				
+				if ( null != vidmeResource && null != vidmeResource.getVideo() )
 				{
-					Log.v( TAG, response.toString() );
-
-					VidmeResource vidmeResource = new Gson().fromJson( response.toString(), VidmeResource.class );
-
-					if ( null != vidmeResource && null != vidmeResource.getVideo() )
-					{
-						pathResolverListener.onPathResolved( vidmeResource.getVideo().getVideoUri(), null );
-					}
-					else
-					{
-						pathResolverListener.onPathError( App.getInstance().getString( R.string.unknown_error ) );
-					}
+					pathResolverListener.onPathResolved( vidmeResource.getVideo().getVideoUri(), null );
 				}
-				catch ( Exception e )
+				else
 				{
-					Log.v( TAG, e.getMessage() );
-
-					pathResolverListener.onPathError( e.toString() );
+					pathResolverListener.onPathError( App.getInstance().getString( R.string.unknown_error ) );
 				}
 			}
-		}, new Response.ErrorListener()
-		{
-			@Override
-			public void onErrorResponse(VolleyError error)
+			catch ( Exception e )
 			{
-				Log.v( TAG, error.toString() );
-
-				pathResolverListener.onPathError( error.toString() );
+				Log.v( TAG, e.getMessage() );
+				
+				pathResolverListener.onPathError( e.toString() );
 			}
-		});
-
+		}, error ->
+		{
+			Log.v( TAG, error.toString() );
+			
+			pathResolverListener.onPathError( error.toString() );
+		} );
+		
 		RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
 	}
-
+	
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
 		String uriStr = uri.toString();
-
+		
 		return ( uriStr.startsWith( "https://" + VIDME_DOMAIN ) || uriStr.startsWith( "http://" + VIDME_DOMAIN ) );
 	}
-
+	
 	@Override
 	public boolean isGallery( Uri uri )
 	{
@@ -87,7 +79,7 @@ public class VidmeService extends ImageServiceSolver
 	{
 		return true;
 	}
-
+	
 	@Override
 	public boolean isVideo( String uri )
 	{

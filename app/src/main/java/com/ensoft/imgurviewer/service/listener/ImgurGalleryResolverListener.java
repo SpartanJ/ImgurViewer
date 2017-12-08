@@ -6,8 +6,8 @@ import com.ensoft.imgurviewer.model.ImgurImage;
 public interface ImgurGalleryResolverListener
 {
 	void onAlbumResolved( ImgurAlbum album );
-
+	
 	void onImageResolved( ImgurImage image );
-
+	
 	void onError( String error );
 }

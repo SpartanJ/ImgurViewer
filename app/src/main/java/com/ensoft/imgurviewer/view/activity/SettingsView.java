@@ -15,41 +15,41 @@ import com.imgurviewer.R;
 public class SettingsView extends PreferenceActivity
 {
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
+	protected void onCreate( Bundle savedInstanceState )
 	{
-		super.onCreate(savedInstanceState);
-
-		getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
+		super.onCreate( savedInstanceState );
+		
+		getFragmentManager().beginTransaction().replace( android.R.id.content, new MyPreferenceFragment() ).commit();
 	}
-
+	
 	public static class MyPreferenceFragment extends PreferenceFragment
 	{
 		@Override
-		public void onCreate(final Bundle savedInstanceState)
+		public void onCreate( final Bundle savedInstanceState )
 		{
 			final PreferencesService preferencesService = App.getInstance().getPreferencesService();
 			super.onCreate( savedInstanceState );
 			addPreferencesFromResource( R.xml.preferences );
-
-			Preference proxyHost = findPreference("proxyHost");
-
+			
+			Preference proxyHost = findPreference( "proxyHost" );
+			
 			proxyHost.setDefaultValue( preferencesService.getProxyHost() );
-			proxyHost.setOnPreferenceChangeListener( (preference, newValue) ->
+			proxyHost.setOnPreferenceChangeListener( ( preference, newValue ) ->
 			{
-				preferencesService.setProxyHost( (String)newValue );
+				preferencesService.setProxyHost( (String) newValue );
 				return true;
 			} );
-
+			
 			Preference proxyPort = findPreference( "proxyPort" );
 			proxyPort.setDefaultValue( Integer.toString( preferencesService.getProxyPort() ) );
-			proxyPort.setOnPreferenceChangeListener( (preference, newValue) ->
+			proxyPort.setOnPreferenceChangeListener( ( preference, newValue ) ->
 			{
-				if ( newValue != null && !((String)newValue).isEmpty() )
+				if ( newValue != null && !( (String) newValue ).isEmpty() )
 				{
 					try
 					{
 						int intValue = Integer.valueOf( (String) newValue );
-
+						
 						preferencesService.setProxyPort( intValue );
 					}
 					catch ( Exception e )
@@ -61,13 +61,13 @@ public class SettingsView extends PreferenceActivity
 				{
 					return false;
 				}
-
+				
 				return true;
 			} );
 			
-			final CheckBoxPreference muteVideos = (CheckBoxPreference)findPreference( "muteVideos" );
+			final CheckBoxPreference muteVideos = (CheckBoxPreference) findPreference( "muteVideos" );
 			muteVideos.setChecked( preferencesService.videosMuted() );
-			muteVideos.setOnPreferenceChangeListener( (preference, newValue) ->
+			muteVideos.setOnPreferenceChangeListener( ( preference, newValue ) ->
 			{
 				preferencesService.setMuteVideos( !preferencesService.videosMuted() );
 				muteVideos.setChecked( preferencesService.videosMuted() );

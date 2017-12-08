@@ -19,51 +19,43 @@ public class GyazoService extends ImageServiceSolver
 	public static final String GYAZO_DOMAIN = "gyazo.com";
 	public static final String GYAZO_API_URL = "https://api.gyazo.com/api";
 	public static final String GYAZO_GET_IMAGE_URL = GYAZO_API_URL + "/oembed?url=";
-
+	
 	public void getPath( Uri uri, final PathResolverListener pathResolverListener )
 	{
 		String oEmbedUrl = GYAZO_GET_IMAGE_URL + uri.toString();
-
-		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( oEmbedUrl, null, new Response.Listener<JSONObject>()
+		
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( oEmbedUrl, null, response ->
 		{
-			@Override
-			public void onResponse(JSONObject response)
+			try
 			{
-				try
-				{
-					Log.v( TAG, response.toString() );
-
-					GyazoOEmbed oEmbed = new Gson().fromJson( response.toString(), GyazoOEmbed.class );
-
-					pathResolverListener.onPathResolved( oEmbed.getUri(), null );
-				}
-				catch ( Exception e )
-				{
-					Log.v( TAG, e.getMessage() );
-
-					pathResolverListener.onPathError( e.toString() );
-				}
+				Log.v( TAG, response.toString() );
+				
+				GyazoOEmbed oEmbed = new Gson().fromJson( response.toString(), GyazoOEmbed.class );
+				
+				pathResolverListener.onPathResolved( oEmbed.getUri(), null );
 			}
-		}, new Response.ErrorListener()
+			catch ( Exception e )
+			{
+				Log.v( TAG, e.getMessage() );
+				
+				pathResolverListener.onPathError( e.toString() );
+			}
+		}, error ->
 		{
-			@Override
-			public void onErrorResponse(VolleyError error)
-			{
-				Log.v( TAG, error.toString() );
-
-				pathResolverListener.onPathError( error.toString() );
-			}
-		});
-
+			Log.v( TAG, error.toString() );
+			
+			pathResolverListener.onPathError( error.toString() );
+		} );
+		
 		RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
 	}
-
+	
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
 		return uri.toString().contains( GYAZO_DOMAIN );
 	}
-
+	
 	@Override
 	public boolean isGallery( Uri uri )
 	{
