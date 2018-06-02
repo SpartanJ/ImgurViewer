@@ -19,11 +19,6 @@ public class FrescoService
 	{
 		ImageRequestBuilder imageRequestBuilder = ImageRequestBuilder.newBuilderWithSource( uri );
 		
-		if ( !UriUtil.isNetworkUri( uri ) )
-		{
-			imageRequestBuilder.setResizeOptions( new ResizeOptions( view.getLayoutParams().width, view.getLayoutParams().height ) );
-		}
-		
 		imageRequestBuilder.setRotationOptions( RotationOptions.autoRotate() );
 		
 		PipelineDraweeControllerBuilder draweeControllerBuilder = Fresco.newDraweeControllerBuilder()

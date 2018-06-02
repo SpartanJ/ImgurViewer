@@ -35,6 +35,7 @@ public class Attacher implements IAttacher, View.OnTouchListener, OnScaleDragGes
     private float mMinScale = IAttacher.DEFAULT_MIN_SCALE;
     private float mMidScale = IAttacher.DEFAULT_MID_SCALE;
     private float mMaxScale = IAttacher.DEFAULT_MAX_SCALE;
+    private float mMaxAllowedScale = IAttacher.DEFAULT_MAX_ALLOWED_SCALE;
     private long mZoomDuration = IAttacher.ZOOM_DURATION;
 
     private ScaleDragDetector mScaleDragDetector;
@@ -134,7 +135,7 @@ public class Attacher implements IAttacher, View.OnTouchListener, OnScaleDragGes
     @Override public void setScale(float scale, float focalX, float focalY, boolean animate) {
         DraweeView<GenericDraweeHierarchy> draweeView = getDraweeView();
 
-        if (draweeView == null || scale < mMinScale || scale > mMaxScale) {
+        if (draweeView == null || scale < mMinScale || scale > mMaxAllowedScale) {
             return;
         }
 
@@ -324,7 +325,7 @@ public class Attacher implements IAttacher, View.OnTouchListener, OnScaleDragGes
     }
 
     @Override public void onScale(float scaleFactor, float focusX, float focusY) {
-        if (getScale() < mMaxScale || scaleFactor < 1.0F) {
+        if (getScale() < mMaxAllowedScale || scaleFactor < 1.0F) {
 
             if (mScaleChangeListener != null) {
                 mScaleChangeListener.onScaleChange(scaleFactor, focusX, focusY);
