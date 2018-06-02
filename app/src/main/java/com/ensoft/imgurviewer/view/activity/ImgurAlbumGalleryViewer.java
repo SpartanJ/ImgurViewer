@@ -164,7 +164,7 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		{
 			this.images = images;
 			progressBar.setVisibility( View.INVISIBLE );
-			albumAdapter = new ImgurAlbumAdapter( R.layout.item_album_photo, images );
+			albumAdapter = new ImgurAlbumAdapter( R.layout.item_album_photo, images, floatingMenu.getMeasuredHeight() );
 			albumAdapter.setOrientationLandscape( new DeviceService().isLandscapeOrientation( this ) );
 			
 			recyclerView = findViewById( R.id.albumViewer_listView );
