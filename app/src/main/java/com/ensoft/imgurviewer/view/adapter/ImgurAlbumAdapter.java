@@ -33,10 +33,12 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 	protected int resourceId;
 	protected List<ImgurImage> dataSet = new ArrayList<>();
 	private boolean isLandscape = false;
+	protected int floatingMenuHeight;
 	
-	public ImgurAlbumAdapter( int resource, ImgurImage[] objects )
+	public ImgurAlbumAdapter( int resource, ImgurImage[] objects, int floatingMenuHeight )
 	{
 		resourceId = resource;
+		this.floatingMenuHeight = floatingMenuHeight;
 		
 		appendImages( objects );
 	}
@@ -63,7 +65,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 	@Override
 	public void onBindViewHolder( AlbumImageHolder holder, int position )
 	{
-		holder.setData( dataSet, dataSet.get( position ), position, getItemCount(), isLandscape );
+		holder.setData( dataSet, dataSet.get( position ), position, getItemCount(), isLandscape, floatingMenuHeight );
 	}
 	
 	@Override
@@ -77,6 +79,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 		ImgurImage image;
 		ImageViewForcedHeight imageView;
 		TextView title;
+		TextView description;
 		ProgressBar progressBar;
 		
 		private AlbumImageHolder( final View view )
@@ -86,6 +89,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 			imageView = view.findViewById( R.id.albumPhoto_photo );
 			progressBar = view.findViewById( R.id.albumPhoto_progressBar );
 			title = view.findViewById( R.id.albumPhoto_title );
+			description = view.findViewById( R.id.albumPhoto_description );
 			
 			GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder( view.getResources() )
 				.setActualImageScaleType( ScalingUtils.ScaleType.CENTER_CROP )
@@ -94,7 +98,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 			imageView.setHierarchy( hierarchy );
 		}
 		
-		private void setData( List<ImgurImage> dataSet, ImgurImage img, int position, int count, boolean isLandscape )
+		private void setData( List<ImgurImage> dataSet, ImgurImage img, int position, int count, boolean isLandscape, int floatingMenuHeight )
 		{
 			image = img;
 			imageView.setOnClickListener( v -> AlbumPagerActivity.newInstance( v.getContext(), dataSet.toArray( new ImgurImage[ dataSet.size() ] ), position ) );
@@ -113,17 +117,28 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 				title.setVisibility( View.GONE );
 			}
 			
+			if ( null != image.getDescription() )
+			{
+				description.setVisibility( View.VISIBLE );
+				
+				description.setText( image.getDescription() );
+			}
+			else
+			{
+				description.setText( description.getText() );
+			}
+			
 			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT )
 			{
 				if ( position == 0 )
 				{
 					if ( null != image.getTitle() )
 					{
-						title.setPadding( 0, MetricsHelper.getStatusBarHeight( App.getInstance() ), 0, 0 );
+						title.setPadding( 0, MetricsHelper.getStatusBarHeight( App.getInstance() ) + floatingMenuHeight, 0, 0 );
 					}
 					else
 					{
-						imageView.setPadding( 0, MetricsHelper.getStatusBarHeight( App.getInstance() ), 0, 0 );
+						imageView.setPadding( 0, MetricsHelper.getStatusBarHeight( App.getInstance() ) + floatingMenuHeight, 0, 0 );
 					}
 				}
 				else if ( position == count - 1 && !isLandscape )
