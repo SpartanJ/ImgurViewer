@@ -3,9 +3,7 @@ package com.ensoft.imgurviewer.service.resource;
 import android.net.Uri;
 import android.util.Log;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.TwitchClip;
 import com.ensoft.imgurviewer.model.TwitchClips;
@@ -14,52 +12,52 @@ import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
 import com.imgurviewer.R;
 
+import org.json.JSONObject;
+
 public class TwitchClipsService extends ImageServiceSolver
 {
 	public static final String TAG = TwitchClipsService.class.getCanonicalName();
 	protected static final String TWITCH_CLIPS_DOMAIN = "clips.twitch.tv";
+	protected static final String TWITCH_CLIPS_STATUS = "https://clips.twitch.tv/api/v2/clips/{id}/status";
 	
-	protected Uri getVideoUrlFromResponse( String response )
+	protected String getVideoStatusUrl( Uri uri )
 	{
-		String qualityOptions = "quality_options:";
+		String lastPath = uri.toString().substring( uri.toString().lastIndexOf( "/" ) + 1 );
 		
-		int pos = response.lastIndexOf( qualityOptions );
-		
-		if ( -1 != pos )
+		return TWITCH_CLIPS_STATUS.replace( "{id}", lastPath );
+	}
+	
+	protected Uri getVideoUrlFromResponse( JSONObject response )
+	{
+		try
 		{
-			int endPos = response.indexOf( "]", pos );
+			TwitchClips twitchClips = new Gson().fromJson( response.toString(), TwitchClips.class );
 			
-			if ( -1 != endPos )
+			if ( null != twitchClips && null != twitchClips.getClips() )
 			{
-				String json = "{" + response.substring( pos, endPos + 1 ) + "}";
+				TwitchClip[] clips = twitchClips.getClips();
 				
-				try
+				for ( TwitchClip clip : clips )
 				{
-					TwitchClips twitchClips = new Gson().fromJson( json, TwitchClips.class );
-					
-					if ( null != twitchClips && null != twitchClips.getClips() )
+					if ( clip.is1080p() )
 					{
-						TwitchClip[] clips = twitchClips.getClips();
-						
-						for ( TwitchClip clip : clips )
-						{
-							if ( clip.is720p() )
-							{
-								return Uri.parse( clip.getSource() );
-							}
-						}
-						
-						if ( clips.length > 0 )
-						{
-							return Uri.parse( clips[ 0 ].getSource() );
-						}
+						return Uri.parse( clip.getSource() );
+					}
+					
+					if ( clip.is720p() )
+					{
+						return Uri.parse( clip.getSource() );
 					}
 				}
-				catch ( Exception e )
+				
+				if ( clips.length > 0 )
 				{
-					return null;
+					return Uri.parse( clips[ 0 ].getSource() );
 				}
 			}
+		}
+		catch ( Exception e )
+		{
 		}
 		
 		return null;
@@ -68,7 +66,7 @@ public class TwitchClipsService extends ImageServiceSolver
 	@Override
 	public void getPath( Uri uri, final PathResolverListener pathResolverListener )
 	{
-		StringRequest stringRequest = new StringRequest( uri.toString(), response ->
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( getVideoStatusUrl( uri ), response ->
 		{
 			Uri videoUrl = getVideoUrlFromResponse( response );
 			
@@ -87,7 +85,7 @@ public class TwitchClipsService extends ImageServiceSolver
 			pathResolverListener.onPathError( error.toString() );
 		} );
 		
-		RequestService.getInstance().addToRequestQueue( stringRequest );
+		RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
 	}
 	
 	@Override

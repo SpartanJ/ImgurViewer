@@ -1,37 +1,55 @@
 package com.ensoft.imgurviewer.model;
 
-import com.google.gson.annotations.SerializedName;
+import android.net.Uri;
+
+import com.ensoft.imgurviewer.model.instagram.Edge;
+import com.ensoft.imgurviewer.model.instagram.InstagramProfileBaseModel;
+import com.ensoft.imgurviewer.model.instagram.Node;
+
+import java.util.List;
 
 public class InstagramProfileModel
 {
-	@SerializedName( "nodes" )
-	protected InstagramItem[] items;
+	protected List<Edge> items;
 	
-	public InstagramItem[] getItems()
+	public List<Edge> getItems()
 	{
 		return items;
 	}
 	
+	public InstagramProfileModel( InstagramProfileBaseModel instagramProfileBaseModel )
+	{
+		try
+		{
+			this.items = instagramProfileBaseModel.entryData.profilePage.get( 0 ).graphql.user.edgeOwnerToTimelineMedia.edges;
+		}
+		catch ( Exception e )
+		{}
+	}
+	
 	public boolean hasItems()
 	{
-		return null != items && items.length > 0;
+		return null != items && items.size() > 0;
 	}
 	
 	public ImgurImage[] getImages()
 	{
-		InstagramItem[] items = getItems();
-		ImgurImage[] images = new ImgurImage[ getItems().length ];
+		List<Edge> items = getItems();
+		ImgurImage[] images = new ImgurImage[ getItems().size() ];
 		int c = 0;
 		
-		for ( InstagramItem item : items )
+		for ( Edge itemEdge : items )
 		{
-			if ( item.isVideo() )
+			Node item = itemEdge.node;
+			String caption = ( null != item.edgeMediaToCaption && null != item.edgeMediaToCaption.edges && item.edgeMediaToCaption.edges.size() > 0 ) ? item.edgeMediaToCaption.edges.get( 0 ).node.text : "";
+			
+			if ( item.isVideo )
 			{
-				images[ c ] = new ImgurImage( item.getId(), item.getImage().toString(), item.getThumbnail(), null, item.getTitle() );
+				images[ c ] = new ImgurImage( item.id, item.displayUrl, Uri.parse( item.thumbnailSrc ), null, caption );
 			}
 			else
 			{
-				images[ c ] = new ImgurImage( item.getId(), item.getImage().toString(), item.getThumbnail(), item.getTitle() );
+				images[ c ] = new ImgurImage( item.id, item.displayUrl, Uri.parse( item.thumbnailSrc ), caption );
 			}
 			
 			c++;

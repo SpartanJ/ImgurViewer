@@ -20,6 +20,12 @@ public class TwitchClip
 		return source;
 	}
 	
+	
+	public boolean is1080p()
+	{
+		return "1080".equals( quality );
+	}
+	
 	public boolean is720p()
 	{
 		return "720".equals( quality );

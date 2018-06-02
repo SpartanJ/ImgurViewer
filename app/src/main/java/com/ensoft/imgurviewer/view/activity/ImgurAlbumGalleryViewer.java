@@ -132,13 +132,13 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		}
 		else if ( new InstagramService().isInstagramProfile( albumData ) )
 		{
-			loadInstagramProfile( "" );
+			loadInstagramProfile();
 		}
 	}
 	
-	protected void loadInstagramProfile( String maxId )
+	protected void loadInstagramProfile()
 	{
-		new InstagramProfileService().getProfile( albumData, maxId, new InstagramProfileResolverListener()
+		new InstagramProfileService().getProfile( albumData, new InstagramProfileResolverListener()
 		{
 			@Override
 			public void onProfileResolved( InstagramProfileModel profile )
@@ -147,11 +147,6 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 				{
 					ImgurImage[] images = profile.getImages();
 					create( images );
-					
-					if ( null != images && images.length > 0 )
-					{
-						loadInstagramProfile( images[ images.length - 1 ].getId() );
-					}
 				}
 			}
 			
