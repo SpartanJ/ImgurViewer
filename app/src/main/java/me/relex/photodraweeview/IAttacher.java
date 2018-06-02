@@ -22,7 +22,7 @@ import android.view.View;
  */
 
 public interface IAttacher {
-
+    public static final float DEFAULT_MAX_ALLOWED_SCALE = 25.0f;
     public static final float DEFAULT_MAX_SCALE = 3.0f;
     public static final float DEFAULT_MID_SCALE = 1.75f;
     public static final float DEFAULT_MIN_SCALE = 1.0f;
