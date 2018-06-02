@@ -54,7 +54,6 @@ public class App extends Application
 		if ( 0 == activityCount )
 		{
 			ImagePipelineConfig config = ImagePipelineConfig.newBuilder( this )
-				.setDownsampleEnabled( true )
 				.build();
 			
 			Fresco.initialize( this, config );

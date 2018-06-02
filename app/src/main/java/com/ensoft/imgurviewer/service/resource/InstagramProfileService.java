@@ -6,42 +6,59 @@ import android.util.Log;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.InstagramProfileModel;
+import com.ensoft.imgurviewer.model.instagram.InstagramProfileBaseModel;
 import com.ensoft.imgurviewer.service.listener.InstagramProfileResolverListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
+import com.imgurviewer.R;
 
 import org.json.JSONObject;
 
 public class InstagramProfileService
 {
 	public static final String TAG = InstagramProfileService.class.getCanonicalName();
+	private static final String startStr = "<script type=\"text/javascript\">window._sharedData = ";
+	private static final String endStr = ";</script>";
 	
-	protected String getProfileMediaUrl( Uri uri, String maxId )
+	protected InstagramProfileModel getProfileJson( String response )
 	{
-		String profileUrl = uri.toString();
-		
-		if ( !profileUrl.endsWith( "/" ) )
+		try
 		{
-			profileUrl += "/";
+			int start = response.indexOf( startStr );
+			int end = response.indexOf( endStr, start );
+			String json = response.substring( start + startStr.length(), end );
+			InstagramProfileBaseModel instagramProfileBaseModel = new Gson().fromJson( json, InstagramProfileBaseModel.class );
+			
+			return new InstagramProfileModel( instagramProfileBaseModel );
 		}
+		catch ( Exception e ) {}
 		
-		return profileUrl + "?__a=1&max_id=" + maxId;
+		return null;
 	}
 	
-	public void getProfile( Uri uri, String maxId, final InstagramProfileResolverListener instagramProfileResolverListener )
+	public void getProfile( Uri uri, final InstagramProfileResolverListener instagramProfileResolverListener )
 	{
-		String profileMediaUrl = getProfileMediaUrl( uri, maxId );
+		String profileMediaUrl = uri.toString();
 		
-		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( profileMediaUrl, null, response ->
+		StringRequest jsonObjectRequest = new StringRequest( profileMediaUrl, response ->
 		{
 			try
 			{
-				Log.v( TAG, response.toString() );
+				Log.v( TAG, response );
 				
-				InstagramProfileModel profile = new Gson().fromJson( response.getJSONObject( "user" ).getJSONObject( "media" ).toString(), InstagramProfileModel.class );
+				InstagramProfileModel profile = getProfileJson( response );
 				
-				instagramProfileResolverListener.onProfileResolved( profile );
+				if ( null != profile )
+				{
+					instagramProfileResolverListener.onProfileResolved( profile );
+				}
+				else
+				{
+					instagramProfileResolverListener.onError( App.getInstance().getString( R.string.failedFetchProfile ) );
+				}
 			}
 			catch ( Exception e )
 			{

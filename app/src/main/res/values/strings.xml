@@ -27,4 +27,5 @@
 	<string name="clearCacheConf">Clear application image cache</string>
 	<string name="cacheCleared">Image cache cleared</string>
 	<string name="errorLoadingAlbum">Error loading album</string>
+	<string name="failedFetchProfile">Failed to fetch profile</string>
 </resources>
