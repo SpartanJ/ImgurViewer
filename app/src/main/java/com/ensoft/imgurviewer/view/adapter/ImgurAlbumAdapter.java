@@ -125,7 +125,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 			}
 			else
 			{
-				description.setText( description.getText() );
+				description.setVisibility( View.GONE );
 			}
 			
 			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT )
