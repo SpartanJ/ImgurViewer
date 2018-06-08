@@ -3,9 +3,6 @@ package com.ensoft.imgurviewer.service.resource;
 import android.net.Uri;
 import android.util.Log;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.InstagramProfileModel;
@@ -14,8 +11,6 @@ import com.ensoft.imgurviewer.service.listener.InstagramProfileResolverListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
 import com.imgurviewer.R;
-
-import org.json.JSONObject;
 
 public class InstagramProfileService
 {

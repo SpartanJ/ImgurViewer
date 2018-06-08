@@ -5,8 +5,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.StreamableVideo;
@@ -15,8 +13,6 @@ import com.ensoft.restafari.network.rest.response.HttpStatus;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
 import com.imgurviewer.R;
-
-import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
 import java.net.URL;

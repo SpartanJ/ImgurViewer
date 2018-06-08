@@ -3,8 +3,6 @@ package com.ensoft.imgurviewer.service.resource;
 import android.net.Uri;
 import android.util.Log;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.service.StringUtils;
