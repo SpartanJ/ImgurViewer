@@ -33,6 +33,9 @@ import com.ensoft.imgurviewer.view.adapter.ImgurAlbumAdapter;
 import com.ensoft.imgurviewer.view.helper.MetricsHelper;
 import com.ensoft.imgurviewer.view.helper.ViewHelper;
 import com.imgurviewer.R;
+import com.r0adkll.slidr.Slidr;
+import com.r0adkll.slidr.model.SlidrConfig;
+import com.r0adkll.slidr.model.SlidrPosition;
 
 public class ImgurAlbumGalleryViewer extends AppActivity
 {
@@ -51,6 +54,8 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		super.onCreate( savedInstanceState );
 		
 		setContentView( R.layout.activity_albumviewer );
+		
+		Slidr.attach(this, new SlidrConfig.Builder().position( SlidrPosition.HORIZONTAL ).build() );
 		
 		floatingMenu = findViewById( R.id.floating_menu );
 		
