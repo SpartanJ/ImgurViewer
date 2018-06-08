@@ -42,7 +42,10 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.imgurviewer.R;
+import com.r0adkll.slidr.Slidr;
+import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrInterface;
+import com.r0adkll.slidr.model.SlidrPosition;
 
 import me.relex.photodraweeview.OnScaleChangeListener;
 import me.relex.photodraweeview.OnViewTapListener;
@@ -55,6 +58,7 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 	private static final int UI_ANIMATION_DELAY = 300;
 	
 	private Context context;
+	private View contentContainer;
 	private View contentView;
 	private ProgressBar progressBar;
 	private PhotoDraweeView imageView;
@@ -75,12 +79,6 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 		return imageViewerFragment;
 	}
 	
-	public ImageViewerFragment setSlidrInterface( SlidrInterface slidrInterface )
-	{
-		this.slidrInterface = slidrInterface;
-		return this;
-	}
-	
 	@Nullable
 	@Override
 	public View onCreateView( LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
@@ -95,6 +93,7 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 		
 		context = getActivity();
 		visible = true;
+		contentContainer = view.findViewById( R.id.content_container );
 		contentView = view.findViewById( R.id.fullscreen_content );
 		imageView = view.findViewById( R.id.imageView );
 		videoView = view.findViewById( R.id.videoView );
@@ -158,6 +157,15 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 				getActivity().finish();
 			}
 		} ).solve( uri );
+	}
+	
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		
+		if ( null == slidrInterface )
+			slidrInterface = Slidr.replace( contentContainer, new SlidrConfig.Builder().position( SlidrPosition.VERTICAL ).build() );
 	}
 	
 	protected OnViewTapListener touchListener = new OnViewTapListener()
