@@ -1,56 +1,64 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-				xmlns:fresco="http://schemas.android.com/apk/res-auto"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:background="@android:color/black"
-				android:fitsSystemWindows="true">
+<FrameLayout
+	android:id="@+id/main_container"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
 
-	<RelativeLayout
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:id="@+id/fullscreen_content">
+	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					xmlns:fresco="http://schemas.android.com/apk/res-auto"
+					android:id="@+id/content_container"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:background="@android:color/black"
+					android:fitsSystemWindows="true">
 
-		<FrameLayout android:layout_width="fill_parent"
-					 android:layout_height="fill_parent">
-			<VideoView
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:id="@+id/videoView"
-				android:layout_gravity="center"
-				android:visibility="invisible"
-				android:background="@android:color/black" />
-
-			<FrameLayout
-				android:id="@+id/player"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center_horizontal|bottom">
-			</FrameLayout>
-
-		</FrameLayout>
-
-		<me.relex.photodraweeview.PhotoDraweeView
+		<RelativeLayout
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:id="@+id/imageView"
-			android:layout_alignParentTop="true"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
-			fresco:actualImageScaleType="fitCenter"/>
+			android:id="@+id/fullscreen_content">
 
-		<ProgressBar
-			style="?android:attr/progressBarStyleLarge"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/progressBar"
-			android:indeterminate="true"
-			android:indeterminateTintMode="src_in"
-			android:indeterminateTint="@color/imgur_color"
-			android:layout_gravity="center"
-			android:layout_centerVertical="true"
-			android:layout_centerHorizontal="true"/>
+			<FrameLayout android:layout_width="fill_parent"
+						 android:layout_height="fill_parent">
+				<VideoView
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:id="@+id/videoView"
+					android:layout_gravity="center"
+					android:visibility="invisible"
+					android:background="@android:color/black" />
+
+				<FrameLayout
+					android:id="@+id/player"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_horizontal|bottom">
+				</FrameLayout>
+
+			</FrameLayout>
+
+			<me.relex.photodraweeview.PhotoDraweeView
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:id="@+id/imageView"
+				android:layout_alignParentTop="true"
+				android:layout_alignParentLeft="true"
+				android:layout_alignParentStart="true"
+				fresco:actualImageScaleType="fitCenter"/>
+
+			<ProgressBar
+				style="?android:attr/progressBarStyleLarge"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/progressBar"
+				android:indeterminate="true"
+				android:indeterminateTintMode="src_in"
+				android:indeterminateTint="@color/imgur_color"
+				android:layout_gravity="center"
+				android:layout_centerVertical="true"
+				android:layout_centerHorizontal="true"/>
+		</RelativeLayout>
+
+		<include layout="@layout/toolbar" />
+
 	</RelativeLayout>
-
-	<include layout="@layout/toolbar" />
-
-</RelativeLayout>
+</FrameLayout>
