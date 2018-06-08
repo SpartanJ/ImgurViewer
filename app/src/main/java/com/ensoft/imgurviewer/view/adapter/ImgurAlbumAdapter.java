@@ -132,13 +132,19 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 			{
 				if ( position == 0 )
 				{
+					int top = MetricsHelper.getStatusBarHeight( App.getInstance() ) + floatingMenuHeight;
+					
 					if ( null != image.getTitle() )
 					{
-						title.setPadding( 0, MetricsHelper.getStatusBarHeight( App.getInstance() ) + floatingMenuHeight, 0, 0 );
+						title.setPadding( 0, top, 0, 0 );
+					}
+					else if ( null != image.getDescription() )
+					{
+						description.setPadding( 0, top, 0, 0 );
 					}
 					else
 					{
-						imageView.setPadding( 0, MetricsHelper.getStatusBarHeight( App.getInstance() ) + floatingMenuHeight, 0, 0 );
+						imageView.setPadding( 0, top, 0, 0 );
 					}
 				}
 				else if ( position == count - 1 && !isLandscape )

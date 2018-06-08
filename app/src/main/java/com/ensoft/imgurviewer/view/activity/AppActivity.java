@@ -1,13 +1,13 @@
 package com.ensoft.imgurviewer.view.activity;
 
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.WindowManager;
 
 import com.ensoft.imgurviewer.App;
 
-public class AppActivity extends Activity
+public class AppActivity extends FragmentActivity
 {
 	public static final String ALBUM_DATA = "albumData";
 	
