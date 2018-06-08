@@ -8,6 +8,10 @@ import android.util.Log;
 
 import com.ensoft.imgurviewer.view.fragment.ImageViewerFragment;
 import com.imgurviewer.R;
+import com.r0adkll.slidr.Slidr;
+import com.r0adkll.slidr.model.SlidrConfig;
+import com.r0adkll.slidr.model.SlidrInterface;
+import com.r0adkll.slidr.model.SlidrPosition;
 
 public class ImageViewer extends AppActivity
 {
@@ -15,6 +19,7 @@ public class ImageViewer extends AppActivity
 	public static final String PARAM_RESOURCE_PATH = "resourcePath";
 	
 	protected ImageViewerFragment imageViewer;
+	protected SlidrInterface slidrInterface;
 	
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -22,6 +27,8 @@ public class ImageViewer extends AppActivity
 		super.onCreate( savedInstanceState );
 		
 		setContentView( R.layout.activity_imageviewer );
+		
+		slidrInterface = Slidr.attach(this, new SlidrConfig.Builder().position( SlidrPosition.VERTICAL ).build() );
 	}
 	
 	@Override
@@ -35,7 +42,7 @@ public class ImageViewer extends AppActivity
 	protected void loadFragment( Uri uri )
 	{
 		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-		fragmentTransaction.replace( R.id.image_viewer, imageViewer = ImageViewerFragment.newInstance( uri.toString() ) );
+		fragmentTransaction.replace( R.id.image_viewer, imageViewer = ImageViewerFragment.newInstance( uri.toString() ).setSlidrInterface( slidrInterface ) );
 		fragmentTransaction.commitAllowingStateLoss();
 	}
 	

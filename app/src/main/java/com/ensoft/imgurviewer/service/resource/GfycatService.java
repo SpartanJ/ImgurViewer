@@ -3,15 +3,11 @@ package com.ensoft.imgurviewer.service.resource;
 import android.net.Uri;
 import android.util.Log;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.model.GfycatResource;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
-
-import org.json.JSONObject;
 
 public class GfycatService extends ImageServiceSolver
 {

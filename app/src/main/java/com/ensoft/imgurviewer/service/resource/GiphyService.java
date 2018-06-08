@@ -3,8 +3,6 @@ package com.ensoft.imgurviewer.service.resource;
 import android.net.Uri;
 import android.util.Log;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.GiphyResource;
@@ -12,8 +10,6 @@ import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
 import com.imgurviewer.R;
-
-import org.json.JSONObject;
 
 public class GiphyService extends ImageServiceSolver
 {

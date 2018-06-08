@@ -18,7 +18,7 @@
 				android:id="@+id/videoView"
 				android:layout_gravity="center"
 				android:visibility="invisible"
-				android:background="@android:color/transparent" />
+				android:background="@android:color/black" />
 
 			<FrameLayout
 				android:id="@+id/player"

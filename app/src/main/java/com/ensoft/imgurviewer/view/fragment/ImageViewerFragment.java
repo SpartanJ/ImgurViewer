@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -41,11 +42,13 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.imgurviewer.R;
+import com.r0adkll.slidr.model.SlidrInterface;
 
+import me.relex.photodraweeview.OnScaleChangeListener;
 import me.relex.photodraweeview.OnViewTapListener;
 import me.relex.photodraweeview.PhotoDraweeView;
 
-public class ImageViewerFragment extends Fragment
+public class ImageViewerFragment extends Fragment implements OnScaleChangeListener
 {
 	public static final String TAG = ImageViewerFragment.class.getCanonicalName();
 	public static final String PARAM_RESOURCE_PATH = "resourcePath";
@@ -60,6 +63,8 @@ public class ImageViewerFragment extends Fragment
 	private long lastClickTime;
 	private LinearLayout floatingMenu;
 	private Uri currentResource;
+	private SlidrInterface slidrInterface;
+	private float originalScale = 1.f;
 	
 	public static ImageViewerFragment newInstance( String resource )
 	{
@@ -68,6 +73,12 @@ public class ImageViewerFragment extends Fragment
 		args.putString( PARAM_RESOURCE_PATH, resource );
 		imageViewerFragment.setArguments( args );
 		return imageViewerFragment;
+	}
+	
+	public ImageViewerFragment setSlidrInterface( SlidrInterface slidrInterface )
+	{
+		this.slidrInterface = slidrInterface;
+		return this;
 	}
 	
 	@Nullable
@@ -196,6 +207,8 @@ public class ImageViewerFragment extends Fragment
 				progressBar.setVisibility( View.INVISIBLE );
 				
 				imageView.update( imageInfo.getWidth(), imageInfo.getHeight() );
+				
+				originalScale = imageView.getScale();
 			}
 			
 			@Override
@@ -206,6 +219,7 @@ public class ImageViewerFragment extends Fragment
 		} );
 		
 		imageView.setOnViewTapListener( touchListener );
+		imageView.setOnScaleChangeListener( this );
 		
 		delayedHide();
 	}
@@ -229,6 +243,8 @@ public class ImageViewerFragment extends Fragment
 			mp.setLooping( true );
 			
 			progressBar.setVisibility( View.INVISIBLE );
+			
+			videoView.setBackgroundColor( Color.TRANSPARENT );
 		} );
 		
 		delayedHide();
@@ -396,6 +412,24 @@ public class ImageViewerFragment extends Fragment
 			{
 				floatingMenu.setPadding( 0, MetricsHelper.dpToPx( context, 8 ), 0, 0 );
 				ViewHelper.setMargins( floatingMenu, 0, MetricsHelper.getStatusBarHeight( context ), MetricsHelper.getNavigationBarWidth( context ), 0 );
+			}
+		}
+	}
+	
+	@Override
+	public void onScaleChange( float scaleFactor, float focusX, float focusY )
+	{
+		if ( null != slidrInterface )
+		{
+			float scale =  imageView.getScale();
+			
+			if ( scale != originalScale )
+			{
+				slidrInterface.lock();
+			}
+			else
+			{
+				slidrInterface.unlock();
 			}
 		}
 	}

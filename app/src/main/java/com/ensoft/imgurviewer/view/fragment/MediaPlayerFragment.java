@@ -105,15 +105,19 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 		timeTextView = view.findViewById( R.id.mediaPlayer_time );
 		
 		seekBarView = view.findViewById( R.id.mediaPlayer_seekBar );
-		seekBarView.setOnSeekBarChangeListener( this );
 		
-		PorterDuffColorFilter colorFilter = new PorterDuffColorFilter( getResources().getColor( R.color.imgur_color ), PorterDuff.Mode.SRC_IN );
-		
-		seekBarView.getProgressDrawable().setColorFilter( colorFilter );
-		
-		if ( Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN )
+		if ( null != seekBarView )
 		{
-			seekBarView.getThumb().setColorFilter( colorFilter );
+			seekBarView.setOnSeekBarChangeListener( this );
+			
+			PorterDuffColorFilter colorFilter = new PorterDuffColorFilter( getResources().getColor( R.color.imgur_color ), PorterDuff.Mode.SRC_IN );
+			
+			seekBarView.getProgressDrawable().setColorFilter( colorFilter );
+			
+			if ( Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN )
+			{
+				seekBarView.getThumb().setColorFilter( colorFilter );
+			}
 		}
 		
 		if ( null != videoView )
@@ -154,7 +158,10 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 					long timeLeft = ( videoView.getDuration() - videoView.getCurrentPosition() ) / 1000L;
 					String timeLeftStr = String.valueOf( timeLeft ) + getString( R.string.seconds_abbr );
 					
-					timeTextView.setText( timeLeftStr );
+					if ( isVisible() && !timeTextView.getText().equals( timeLeftStr ) )
+					{
+						timeTextView.setText( timeLeftStr );
+					}
 					
 					seekBarView.setProgress( videoView.getCurrentPosition() );
 				}
