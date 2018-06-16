@@ -48,6 +48,20 @@
 
 				<data android:host="v.redd.it" />
 
+				<data android:host="streamja.com" />
+				<data android:host="vimeo.com" />
+
+				<data android:host="pornhub.com" />
+				<data android:host="www.pornhub.com" />
+
+				<data android:host="xvideos.com" />
+				<data android:host="www.xvideos.com" />
+
+				<data android:host="spankbang.com" />
+				<data android:host="www.spankbang.com" />
+				<data android:host="la.spankbang.com" />
+				<data android:host="*.spankbang.com" />
+
 				<data android:scheme="https" />
 				<data android:scheme="http" />
 

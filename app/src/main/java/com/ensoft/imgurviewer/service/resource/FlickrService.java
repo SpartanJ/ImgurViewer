@@ -6,6 +6,7 @@ import android.util.Log;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.FlickrImage;
+import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
@@ -69,12 +70,7 @@ public class FlickrService extends ImageServiceSolver
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
-		String uriStr = uri.toString();
-		
-		return ( uriStr.startsWith( "https://" + FLICKR_DOMAIN ) ||
-			uriStr.startsWith( "http://" + FLICKR_DOMAIN ) ||
-			uriStr.startsWith( "https://www." + FLICKR_DOMAIN ) ||
-			uriStr.startsWith( "http://www." + FLICKR_DOMAIN ) );
+		return UriUtils.uriMatchesDomain( uri, FLICKR_DOMAIN );
 	}
 	
 	@Override

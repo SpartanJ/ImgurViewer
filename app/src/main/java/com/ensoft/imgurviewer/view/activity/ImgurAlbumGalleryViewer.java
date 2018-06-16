@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.URLUtil;
@@ -165,6 +166,15 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 	
 	protected void create( ImgurImage[] images )
 	{
+		if ( null != images && images.length == 1 && TextUtils.isEmpty( images[0].getTitle() ) && TextUtils.isEmpty( images[0].getDescription() ) )
+		{
+			Intent intent = new Intent( this, ImageViewer.class );
+			intent.putExtra( ImageViewer.PARAM_RESOURCE_PATH, images[0].getLink() );
+			startActivity( intent );
+			finish();
+			return;
+		}
+		
 		if ( null == albumAdapter )
 		{
 			this.images = images;

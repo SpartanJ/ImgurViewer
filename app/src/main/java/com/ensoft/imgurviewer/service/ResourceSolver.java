@@ -10,12 +10,17 @@ import com.ensoft.imgurviewer.service.resource.GyazoService;
 import com.ensoft.imgurviewer.service.resource.ImageServiceSolver;
 import com.ensoft.imgurviewer.service.resource.ImgurService;
 import com.ensoft.imgurviewer.service.resource.InstagramService;
+import com.ensoft.imgurviewer.service.resource.PornHubService;
 import com.ensoft.imgurviewer.service.resource.RedditUploadsService;
 import com.ensoft.imgurviewer.service.resource.RedditVideoService;
 import com.ensoft.imgurviewer.service.resource.ResourceServiceSolver;
+import com.ensoft.imgurviewer.service.resource.SpankBangService;
 import com.ensoft.imgurviewer.service.resource.StreamableService;
+import com.ensoft.imgurviewer.service.resource.StreamjaService;
 import com.ensoft.imgurviewer.service.resource.TwitchClipsService;
 import com.ensoft.imgurviewer.service.resource.VidmeService;
+import com.ensoft.imgurviewer.service.resource.VimeoService;
+import com.ensoft.imgurviewer.service.resource.XVideosService;
 import com.ensoft.imgurviewer.view.activity.ImgurAlbumGalleryViewer;
 
 import java.util.ArrayList;
@@ -45,6 +50,11 @@ public class ResourceSolver
 		resourceServiceSolvers.add( new ResourceServiceSolver( new FlickrService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new GiphyService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new RedditVideoService(), resourceLoadListener, null ) );
+		resourceServiceSolvers.add( new ResourceServiceSolver( new StreamjaService(), resourceLoadListener, null ) );
+		resourceServiceSolvers.add( new ResourceServiceSolver( new VimeoService(), resourceLoadListener, null ) );
+		resourceServiceSolvers.add( new ResourceServiceSolver( new PornHubService(), resourceLoadListener, null ) );
+		resourceServiceSolvers.add( new ResourceServiceSolver( new XVideosService(), resourceLoadListener, null ) );
+		resourceServiceSolvers.add( new ResourceServiceSolver( new SpankBangService(), resourceLoadListener, null ) );
 	}
 	
 	public void solve( Uri uri )
