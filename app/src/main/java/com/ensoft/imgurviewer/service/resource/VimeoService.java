@@ -5,27 +5,49 @@ import android.util.Log;
 
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.App;
-import com.ensoft.imgurviewer.model.GiphyResource;
+import com.ensoft.imgurviewer.model.VimeoVideo;
 import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
 import com.imgurviewer.R;
 
-public class GiphyService extends ImageServiceSolver
+public class VimeoService extends ImageServiceSolver
 {
-	public static final String TAG = GiphyService.class.getCanonicalName();
-	public static final String GIPHY_DOMAIN = "giphy.com";
-	public static final String GIPHY_API_URL = "https://api.giphy.com/v1/gifs/%s?api_key=%s";
+	public static final String TAG = VimeoService.class.getCanonicalName();
+	public static final String VIMEO_DOMAIN = "vimeo.com";
+	public static final String VIMEO_API_URL = "https://player.vimeo.com/video/%s/config";
 	
 	protected String getId( Uri uri )
 	{
 		String url = uri.toString();
-		String[] split = url.split( "-" );
+		String[] split = url.split( "/" );
 		
 		if ( split.length > 0 )
 		{
 			return split[ split.length - 1 ];
+		}
+		
+		return null;
+	}
+	
+	protected Uri getVideo( VimeoVideo[] videos )
+	{
+		if ( null != videos && videos.length > 0 )
+		{
+			for ( VimeoVideo video : videos )
+			{
+				if ( video.getHeight() == 1920 )
+					return video.getUri();
+			}
+			
+			for ( VimeoVideo video : videos )
+			{
+				if ( video.getHeight() == 720 )
+					return video.getUri();
+			}
+			
+			return videos[0].getUri();
 		}
 		
 		return null;
@@ -40,7 +62,7 @@ public class GiphyService extends ImageServiceSolver
 			
 			if ( null != id )
 			{
-				String apiUrl = String.format( GIPHY_API_URL, id, App.getInstance().getString( R.string.giphy_api_key ) );
+				String apiUrl = String.format( VIMEO_API_URL, id );
 				
 				JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( apiUrl, null, response ->
 				{
@@ -48,15 +70,15 @@ public class GiphyService extends ImageServiceSolver
 					{
 						Log.v( TAG, response.toString() );
 						
-						GiphyResource giphyResource = new Gson().fromJson( response.toString(), GiphyResource.class );
+						Uri video = getVideo( new Gson().fromJson( response.getJSONObject( "request" ).getJSONObject( "files" ).getJSONArray( "progressive" ).toString(), VimeoVideo[].class ) );
 						
-						if ( 200 == giphyResource.getStatus() )
+						if ( null != video )
 						{
-							pathResolverListener.onPathResolved( giphyResource.getData().getUri(), null );
+							pathResolverListener.onPathResolved( video, null );
 						}
 						else
 						{
-							pathResolverListener.onPathError( App.getInstance().getString( R.string.unknown_error ) );
+							pathResolverListener.onPathError( App.getInstance().getString( R.string.could_not_resolve_video_url ) );
 						}
 					}
 					catch ( Exception e )
@@ -86,12 +108,24 @@ public class GiphyService extends ImageServiceSolver
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
-		return UriUtils.uriMatchesDomain( uri, GIPHY_DOMAIN );
+		return UriUtils.uriMatchesDomain( uri, VIMEO_DOMAIN );
 	}
 	
 	@Override
 	public boolean isGallery( Uri uri )
 	{
 		return false;
+	}
+	
+	@Override
+	public boolean isVideo( Uri uri )
+	{
+		return true;
+	}
+	
+	@Override
+	public boolean isVideo( String uri )
+	{
+		return true;
 	}
 }

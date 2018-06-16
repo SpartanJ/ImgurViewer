@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.ensoft.imgurviewer.App;
+import com.ensoft.imgurviewer.service.TimeService;
 import com.ensoft.imgurviewer.view.helper.MetricsHelper;
 import com.ensoft.imgurviewer.view.helper.ViewHelper;
 import com.imgurviewer.R;
@@ -155,8 +156,7 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 			{
 				if ( isAdded() )
 				{
-					long timeLeft = ( videoView.getDuration() - videoView.getCurrentPosition() ) / 1000L;
-					String timeLeftStr = String.valueOf( timeLeft ) + getString( R.string.seconds_abbr );
+					String timeLeftStr = new TimeService( getActivity() ).timeLeftFormatter( videoView.getDuration(), videoView.getCurrentPosition() );
 					
 					if ( isVisible() && !timeTextView.getText().equals( timeLeftStr ) )
 					{

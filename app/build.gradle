@@ -8,8 +8,8 @@ android {
         applicationId "com.ensoft.imgurviewer"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 1508
-        versionName "1.5.8"
+        versionCode 1600
+        versionName "1.6.0"
     }
     buildTypes {
         release {
@@ -33,6 +33,6 @@ dependencies {
     compile 'com.facebook.fresco:animated-webp:1.9.0'
     compile 'com.facebook.fresco:webpsupport:1.9.0'
     compile 'ch.acra:acra:4.9.2'
-    compile 'com.ensoft-dev.restafari:restafari:0.3.1'
+    compile 'com.ensoft-dev.restafari:restafari:0.3.14'
     compile 'com.r0adkll:slidableactivity:2.0.6'
 }

@@ -6,6 +6,7 @@ import android.util.Log;
 import com.android.volley.toolbox.StringRequest;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.service.StringUtils;
+import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.imgurviewer.R;
@@ -44,23 +45,7 @@ public class InstagramService extends ImageServiceSolver
 	
 	protected Uri getVideoUrlFromResponse( String response )
 	{
-		String videoSecureUrl = "og:video:secure_url\" content=\"";
-		
-		int pos = response.lastIndexOf( videoSecureUrl );
-		
-		if ( -1 != pos )
-		{
-			int endPos = response.indexOf( "\"", pos + videoSecureUrl.length() );
-			
-			if ( -1 != endPos )
-			{
-				String videoUrl = response.substring( pos + videoSecureUrl.length(), endPos );
-				
-				return Uri.parse( videoUrl );
-			}
-		}
-		
-		return null;
+		return UriUtils.getUriMatch( response, "og:video:secure_url\" content=\"", "\"" );
 	}
 	
 	@Override
@@ -100,12 +85,7 @@ public class InstagramService extends ImageServiceSolver
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
-		String uriStr = uri.toString();
-		
-		return ( uriStr.startsWith( "https://" + INSTAGRAM_DOMAIN ) ||
-			uriStr.startsWith( "http://" + INSTAGRAM_DOMAIN ) ||
-			uriStr.startsWith( "https://www." + INSTAGRAM_DOMAIN ) ||
-			uriStr.startsWith( "http://www." + INSTAGRAM_DOMAIN ) );
+		return UriUtils.uriMatchesDomain( uri, INSTAGRAM_DOMAIN );
 	}
 	
 	@Override
