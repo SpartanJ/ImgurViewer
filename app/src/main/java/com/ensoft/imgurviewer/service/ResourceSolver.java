@@ -3,6 +3,7 @@ package com.ensoft.imgurviewer.service;
 import android.net.Uri;
 
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
+import com.ensoft.imgurviewer.service.resource.ClippitUserService;
 import com.ensoft.imgurviewer.service.resource.FlickrService;
 import com.ensoft.imgurviewer.service.resource.GfycatService;
 import com.ensoft.imgurviewer.service.resource.GiphyService;
@@ -52,6 +53,7 @@ public class ResourceSolver
 		resourceServiceSolvers.add( new ResourceServiceSolver( new RedditVideoService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new StreamjaService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new VimeoService(), resourceLoadListener, null ) );
+		resourceServiceSolvers.add( new ResourceServiceSolver( new ClippitUserService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new PornHubService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new XVideosService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new SpankBangService(), resourceLoadListener, null ) );
