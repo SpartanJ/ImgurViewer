@@ -6,12 +6,13 @@ import android.util.Log;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.VidmeResource;
+import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
 import com.imgurviewer.R;
 
-public class VidmeService extends ImageServiceSolver
+public class VidmeService extends MediaServiceSolver
 {
 	public static final String TAG = VidmeService.class.getCanonicalName();
 	public static final String VIDME_DOMAIN = "vid.me";
@@ -33,7 +34,7 @@ public class VidmeService extends ImageServiceSolver
 				
 				if ( null != vidmeResource && null != vidmeResource.getVideo() )
 				{
-					pathResolverListener.onPathResolved( vidmeResource.getVideo().getVideoUri(), null );
+					pathResolverListener.onPathResolved( vidmeResource.getVideo().getVideoUri(), UriUtils.guessMediaTypeFromUri( vidmeResource.getVideo().getVideoUri() ), uri );
 				}
 				else
 				{

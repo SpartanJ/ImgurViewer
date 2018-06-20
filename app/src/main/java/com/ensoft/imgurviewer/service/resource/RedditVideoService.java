@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.ensoft.imgurviewer.App;
+import com.ensoft.imgurviewer.model.MediaType;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.rest.response.HttpStatus;
 import com.imgurviewer.R;
@@ -13,7 +14,7 @@ import com.imgurviewer.R;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class RedditVideoService extends ImageServiceSolver
+public class RedditVideoService extends MediaServiceSolver
 {
 	public static final String TAG = RedditVideoService.class.getCanonicalName();
 	public static final String V_REDD_IT_DOMAIN = "v.redd.it";
@@ -68,9 +69,9 @@ public class RedditVideoService extends ImageServiceSolver
 		}
 	}
 	
-	protected void sendPathResolved( final String video, final PathResolverListener pathResolverListener )
+	protected void sendPathResolved( final String video, final MediaType mediaType, final Uri referer, final PathResolverListener pathResolverListener )
 	{
-		new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( Uri.parse( video ), null ) );
+		new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( Uri.parse( video ), mediaType, referer ) );
 	}
 	
 	protected void sendPathNotFound( final PathResolverListener pathResolverListener )
@@ -93,7 +94,7 @@ public class RedditVideoService extends ImageServiceSolver
 					
 					if ( videoExists( video ) )
 					{
-						sendPathResolved( video, pathResolverListener );
+						sendPathResolved( video, MediaType.STREAM_HLS, uri, pathResolverListener );
 						return;
 					}
 					else
@@ -102,7 +103,7 @@ public class RedditVideoService extends ImageServiceSolver
 						
 						if ( videoExists( video ) )
 						{
-							sendPathResolved( video, pathResolverListener );
+							sendPathResolved( video, MediaType.STREAM_DASH, uri, pathResolverListener );
 							return;
 						}
 						else
@@ -111,7 +112,7 @@ public class RedditVideoService extends ImageServiceSolver
 							
 							if ( videoExists( video ) )
 							{
-								sendPathResolved( video, pathResolverListener );
+								sendPathResolved( video, MediaType.STREAM_DASH, uri, pathResolverListener );
 								return;
 							}
 						}

@@ -5,11 +5,12 @@ import android.util.Log;
 
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.model.GyazoOEmbed;
+import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
 
-public class GyazoService extends ImageServiceSolver
+public class GyazoService extends MediaServiceSolver
 {
 	public static final String TAG = GyazoService.class.getCanonicalName();
 	public static final String GYAZO_DOMAIN = "gyazo.com";
@@ -28,7 +29,7 @@ public class GyazoService extends ImageServiceSolver
 				
 				GyazoOEmbed oEmbed = new Gson().fromJson( response.toString(), GyazoOEmbed.class );
 				
-				pathResolverListener.onPathResolved( oEmbed.getUri(), null );
+				pathResolverListener.onPathResolved( oEmbed.getUri(), UriUtils.guessMediaTypeFromUri( oEmbed.getUri() ), uri );
 			}
 			catch ( Exception e )
 			{

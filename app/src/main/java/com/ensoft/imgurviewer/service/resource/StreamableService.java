@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.App;
+import com.ensoft.imgurviewer.model.MediaType;
 import com.ensoft.imgurviewer.model.StreamableVideo;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.rest.response.HttpStatus;
@@ -17,7 +18,7 @@ import com.imgurviewer.R;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class StreamableService extends ImageServiceSolver
+public class StreamableService extends MediaServiceSolver
 {
 	public static final String TAG = StreamableService.class.getCanonicalName();
 	public static final String STREAMABLE_DOMAIN = "streamable.com";
@@ -57,7 +58,7 @@ public class StreamableService extends ImageServiceSolver
 						
 						if ( urlConnection.getResponseCode() == HttpStatus.OK_200.getCode() )
 						{
-							new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( video.getUri(), null ) );
+							new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( video.getUri(), MediaType.VIDEO_MP4, uri ) );
 						}
 						else
 						{

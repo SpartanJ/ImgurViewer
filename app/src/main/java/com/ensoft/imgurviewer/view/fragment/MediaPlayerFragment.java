@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
-import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,15 +17,16 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.VideoView;
 
+import com.devbrackets.android.exomedia.listener.OnPreparedListener;
+import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.service.TimeService;
 import com.ensoft.imgurviewer.view.helper.MetricsHelper;
 import com.ensoft.imgurviewer.view.helper.ViewHelper;
 import com.imgurviewer.R;
 
-public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, MediaPlayer.OnPreparedListener
+public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, OnPreparedListener
 {
 	private static final String TAG = MediaPlayerFragment.class.getCanonicalName();
 	
@@ -35,11 +35,10 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 	protected ImageView audioOnOffView;
 	protected TextView timeTextView;
 	protected SeekBar seekBarView;
-	protected MediaPlayer.OnPreparedListener userOnPreparedListener;
+	protected OnPreparedListener userOnPreparedListener;
 	protected Handler seekBarHandler = new Handler();
 	protected Rect margins = new Rect( 0, 0, 0, 0 );
 	protected boolean initialized = false;
-	protected MediaPlayer mediaPlayer;
 	protected boolean isMuted = false;
 	
 	protected void updatePlayPauseState()
@@ -61,7 +60,7 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 	
 	protected void updateAudioOnOffState()
 	{
-		if ( null != videoView && null != mediaPlayer )
+		if ( null != videoView )
 		{
 			if ( isMuted )
 			{
@@ -127,7 +126,7 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 		}
 	}
 	
-	public void setOnPreparedListener( MediaPlayer.OnPreparedListener onPreparedListener )
+	public void setOnPreparedListener( OnPreparedListener onPreparedListener )
 	{
 		userOnPreparedListener = onPreparedListener;
 	}
@@ -163,7 +162,7 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 						timeTextView.setText( timeLeftStr );
 					}
 					
-					seekBarView.setProgress( videoView.getCurrentPosition() );
+					seekBarView.setProgress( (int)videoView.getCurrentPosition() );
 				}
 			}
 			catch ( Exception e )
@@ -179,7 +178,7 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 	{
 		if ( null != seekBarView && null != videoView )
 		{
-			seekBarView.setMax( videoView.getDuration() );
+			seekBarView.setMax( (int)videoView.getDuration() );
 			
 			updateProgressBar();
 			
@@ -209,17 +208,15 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 	}
 	
 	@Override
-	public void onPrepared( MediaPlayer mp )
+	public void onPrepared()
 	{
 		init();
 		
-		updatePlayPauseState();
-		
-		mediaPlayer = mp;
-		
-		userOnPreparedListener.onPrepared( mp );
+		userOnPreparedListener.onPrepared();
 		
 		isMuted = !App.getInstance().getPreferencesService().videosMuted();
+		
+		updatePlayPauseState();
 		
 		updateAudioOnOffState();
 	}
@@ -306,13 +303,10 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 	{
 		try
 		{
-			if ( null != mediaPlayer )
-			{
-				final int max = 100;
-				final double numerator = max - amount > 0 ? Math.log( max - amount ) : 0;
-				final float volume = (float) ( 1 - ( numerator / Math.log( max ) ) );
-				mediaPlayer.setVolume( volume, volume );
-			}
+			final int max = 100;
+			final double numerator = max - amount > 0 ? Math.log( max - amount ) : 0;
+			final float volume = (float) ( 1 - ( numerator / Math.log( max ) ) );
+			videoView.setVolume( volume );
 		}
 		catch ( Exception e )
 		{

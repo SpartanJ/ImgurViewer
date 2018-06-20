@@ -11,7 +11,7 @@ import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.imgurviewer.R;
 
-public class InstagramService extends ImageServiceSolver
+public class InstagramService extends MediaServiceSolver
 {
 	public static final String TAG = InstagramService.class.getCanonicalName();
 	protected static final String INSTAGRAM_DOMAIN = "instagram.com";
@@ -57,7 +57,7 @@ public class InstagramService extends ImageServiceSolver
 			
 			if ( videoUrl != null )
 			{
-				pathResolverListener.onPathResolved( videoUrl, null );
+				pathResolverListener.onPathResolved( videoUrl,  UriUtils.guessMediaTypeFromUri( videoUrl ), uri );
 			}
 			else
 			{
@@ -65,7 +65,7 @@ public class InstagramService extends ImageServiceSolver
 				
 				if ( mediaUrl != null )
 				{
-					pathResolverListener.onPathResolved( Uri.parse( mediaUrl + "?size=l" ), Uri.parse( mediaUrl + "?size=t" ) );
+					pathResolverListener.onPathResolved( Uri.parse( mediaUrl + "?size=l" ), UriUtils.guessMediaTypeFromUri( Uri.parse( mediaUrl ) ), Uri.parse( mediaUrl + "?size=t" ) );
 				}
 				else
 				{

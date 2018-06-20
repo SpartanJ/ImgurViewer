@@ -8,7 +8,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -23,8 +22,9 @@ import android.webkit.URLUtil;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.VideoView;
 
+import com.devbrackets.android.exomedia.ui.widget.VideoView;
+import com.ensoft.imgurviewer.model.MediaType;
 import com.ensoft.imgurviewer.service.DownloadService;
 import com.ensoft.imgurviewer.service.FrescoService;
 import com.ensoft.imgurviewer.service.IntentUtils;
@@ -41,6 +41,16 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.LoopingMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.dash.DashMediaSource;
+import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
+import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource;
+import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.imgurviewer.R;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
@@ -141,9 +151,9 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 		new ResourceSolver( new ResourceLoadListener()
 		{
 			@Override
-			public void loadVideo( Uri uri, Uri referer )
+			public void loadVideo( Uri uri, MediaType mediaType, Uri referer )
 			{
-				ImageViewerFragment.this.loadVideo( uri, referer );
+				ImageViewerFragment.this.loadVideo( uri, mediaType, referer );
 			}
 			
 			@Override
@@ -236,52 +246,44 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 		delayedHide();
 	}
 	
-	protected Map<String, String> getVideoHeaders( Uri referer )
+	private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
+	private static final DefaultHttpDataSourceFactory DATA_SOURCE_FACTORY = new DefaultHttpDataSourceFactory("Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0 (Chrome)", BANDWIDTH_METER );
+	
+	private static MediaSource buildMediaSource( Uri uri, MediaType mediaType )
 	{
-		HashMap<String, String> headers = new HashMap<>();
+		if ( MediaType.STREAM_SS == mediaType )
+			return new SsMediaSource.Factory( new DefaultSsChunkSource.Factory( DATA_SOURCE_FACTORY ), DATA_SOURCE_FACTORY ).createMediaSource(uri);
 		
-		if ( null != referer )
-		{
-			headers.put( "Origin", referer.getScheme() + "://" + referer.getHost() );
-			headers.put( "Referer", referer.toString() );
-		}
+		if ( MediaType.STREAM_DASH == mediaType )
+			return new DashMediaSource.Factory( new DefaultDashChunkSource.Factory( DATA_SOURCE_FACTORY ), DATA_SOURCE_FACTORY ).createMediaSource(uri);
 		
-		headers.put( "Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7" );
-		headers.put( "Accept-Language", "en-us,en;q=0.5" );
-		headers.put( "Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" );
-		headers.put( "User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0 (Chrome)" );
+		if ( MediaType.STREAM_HLS == mediaType )
+			return new HlsMediaSource.Factory( DATA_SOURCE_FACTORY ).createMediaSource(uri);
 		
-		return headers;
+		return new ExtractorMediaSource.Factory( DATA_SOURCE_FACTORY ).createMediaSource(uri);
 	}
 	
-	public void loadVideo( Uri uri, Uri referer )
+	public void loadVideo( Uri uri, MediaType mediaType, Uri referer )
 	{
 		currentResource = uri;
 		
 		Log.v( TAG, "Loading video: " + uri.toString() );
 		
 		imageView.setVisibility( View.GONE );
-		videoView.setVisibility( View.VISIBLE );
+		
 		videoView.setOnClickListener( v -> toggle() );
 		
-		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP )
-		{
-			videoView.setVideoURI( uri, getVideoHeaders( referer ) );
-		}
-		else
-		{
-			videoView.setVideoURI( uri );
-		}
+		LoopingMediaSource loopingMediaSource = new LoopingMediaSource( buildMediaSource( uri, mediaType ) );
 		
-		videoView.start();
+		videoView.setVideoURI( uri, loopingMediaSource );
 		
 		createMediaPlayer();
 		
-		mediaPlayerFragment.setOnPreparedListener( mp ->
+		mediaPlayerFragment.setOnPreparedListener( () ->
 		{
-			mp.setLooping( true );
-			
 			progressBar.setVisibility( View.INVISIBLE );
+			
+			videoView.setVisibility( View.VISIBLE );
 			
 			videoView.setBackgroundColor( Color.TRANSPARENT );
 		} );

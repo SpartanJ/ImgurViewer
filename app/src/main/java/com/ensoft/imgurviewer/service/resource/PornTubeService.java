@@ -10,6 +10,7 @@ import android.util.Log;
 import com.android.volley.Request;
 import com.ensoft.imgurviewer.model.PornTubeVideos;
 import com.ensoft.imgurviewer.service.StringUtils;
+import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.processor.ResponseListener;
 import com.ensoft.restafari.network.service.RequestService;
@@ -88,7 +89,7 @@ public class PornTubeService extends BasicVideoServiceSolver
 								{
 									final Uri videoUri = Uri.parse( videoUrl );
 									
-									new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( videoUri, referer ) );
+									new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( videoUri, UriUtils.guessMediaTypeFromUri( videoUri ), referer ) );
 								}
 								else
 								{

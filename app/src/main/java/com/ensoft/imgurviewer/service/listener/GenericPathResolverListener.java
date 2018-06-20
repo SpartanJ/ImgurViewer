@@ -5,25 +5,26 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.ensoft.imgurviewer.App;
-import com.ensoft.imgurviewer.service.resource.ImageServiceSolver;
+import com.ensoft.imgurviewer.model.MediaType;
+import com.ensoft.imgurviewer.service.resource.MediaServiceSolver;
 
 public class GenericPathResolverListener extends PathResolverListener
 {
 	public static final String TAG = GenericPathResolverListener.class.getCanonicalName();
 	private ResourceLoadListener resourceLoadListener;
 
-	public GenericPathResolverListener( ImageServiceSolver serviceSolver, ResourceLoadListener resourceLoadListener )
+	public GenericPathResolverListener( MediaServiceSolver serviceSolver, ResourceLoadListener resourceLoadListener )
 	{
 		super( serviceSolver );
 		this.resourceLoadListener = resourceLoadListener;
 	}
 
 	@Override
-	public void onPathResolved( Uri url, Uri thumbnailOrReferer )
+	public void onPathResolved( Uri url, MediaType mediaType, Uri thumbnailOrReferer )
 	{
 		if ( serviceSolver.isVideo( url ) )
 		{
-			resourceLoadListener.loadVideo( url, thumbnailOrReferer );
+			resourceLoadListener.loadVideo( url, mediaType, thumbnailOrReferer );
 		}
 		else
 		{

@@ -4,11 +4,12 @@ import android.net.Uri;
 
 import com.ensoft.imgurviewer.model.ImgurAlbum;
 import com.ensoft.imgurviewer.model.ImgurImage;
+import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
 import com.ensoft.imgurviewer.service.listener.ImgurGalleryResolverListener;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 
-public class ImgurService extends ImageServiceSolver
+public class ImgurService extends MediaServiceSolver
 {
 	public static final String IMGUR_DOMAIN = "imgur.com";
 	public static final String IMGUR_IMAGE_DOMAIN = "i.imgur.com";
@@ -24,7 +25,7 @@ public class ImgurService extends ImageServiceSolver
 			{
 				Uri uri = Uri.parse( album.getImage( 0 ).getLink() );
 				
-				pathResolverListener.onPathResolved( uri, getThumbnailPath( uri ) );
+				pathResolverListener.onPathResolved( uri, UriUtils.guessMediaTypeFromUri( uri ), isVideo( uri ) ? uri : getThumbnailPath( uri ) );
 			}
 			
 			@Override
@@ -44,7 +45,7 @@ public class ImgurService extends ImageServiceSolver
 			{
 				Uri uri = Uri.parse( album.getImage( 0 ).getLink() );
 				
-				pathResolverListener.onPathResolved( uri, getThumbnailPath( uri ) );
+				pathResolverListener.onPathResolved( uri, UriUtils.guessMediaTypeFromUri( uri ), isVideo( uri ) ? url : getThumbnailPath( uri ) );
 			}
 			
 			@Override
@@ -52,7 +53,7 @@ public class ImgurService extends ImageServiceSolver
 			{
 				Uri uri = image.getLinkUri();
 				
-				pathResolverListener.onPathResolved( uri, getThumbnailPath( uri ) );
+				pathResolverListener.onPathResolved( uri, UriUtils.guessMediaTypeFromUri( uri ), isVideo( uri ) ? url : getThumbnailPath( uri ) );
 			}
 			
 			@Override
@@ -125,7 +126,7 @@ public class ImgurService extends ImageServiceSolver
 		{
 			Uri fixedUri = processPath( uri );
 			
-			pathResolverListener.onPathResolved( fixedUri, getThumbnailPath( fixedUri ) );
+			pathResolverListener.onPathResolved( fixedUri, UriUtils.guessMediaTypeFromUri( uri ), isVideo( uri ) ? uri : getThumbnailPath( fixedUri ) );
 		}
 	}
 	
