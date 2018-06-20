@@ -12,7 +12,7 @@ import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
 import com.imgurviewer.R;
 
-public class VimeoService extends ImageServiceSolver
+public class VimeoService extends MediaServiceSolver
 {
 	public static final String TAG = VimeoService.class.getCanonicalName();
 	public static final String VIMEO_DOMAIN = "vimeo.com";
@@ -74,7 +74,7 @@ public class VimeoService extends ImageServiceSolver
 						
 						if ( null != video )
 						{
-							pathResolverListener.onPathResolved( video, null );
+							pathResolverListener.onPathResolved( video, UriUtils.guessMediaTypeFromUri( video ), uri );
 						}
 						else
 						{

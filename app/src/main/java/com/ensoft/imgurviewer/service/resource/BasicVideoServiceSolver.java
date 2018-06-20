@@ -20,7 +20,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class BasicVideoServiceSolver extends ImageServiceSolver
+public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 {
 	protected Uri referer;
 	
@@ -86,7 +86,7 @@ public abstract class BasicVideoServiceSolver extends ImageServiceSolver
 				
 				if ( videoUrl != null )
 				{
-					new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( videoUrl, referer ) );
+					new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( videoUrl, UriUtils.guessMediaTypeFromUri( videoUrl ), referer ) );
 				}
 				else
 				{

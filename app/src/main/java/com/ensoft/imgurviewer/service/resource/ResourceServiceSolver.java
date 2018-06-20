@@ -7,11 +7,11 @@ import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
 
 public class ResourceServiceSolver
 {
-	ImageServiceSolver serviceSolver;
+	MediaServiceSolver serviceSolver;
 	ResourceLoadListener resourceLoadListener;
 	Class<?> galleryViewClass;
 	
-	public ResourceServiceSolver( ImageServiceSolver serviceSolver, ResourceLoadListener resourceLoadListener, Class<?> galleryViewClass )
+	public ResourceServiceSolver( MediaServiceSolver serviceSolver, ResourceLoadListener resourceLoadListener, Class<?> galleryViewClass )
 	{
 		this.serviceSolver = serviceSolver;
 		this.resourceLoadListener = resourceLoadListener;

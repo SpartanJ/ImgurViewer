@@ -6,6 +6,7 @@ import android.util.Log;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.FlickrImage;
+import com.ensoft.imgurviewer.model.MediaType;
 import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.service.RequestService;
@@ -14,7 +15,7 @@ import com.imgurviewer.R;
 
 import java.util.List;
 
-public class FlickrService extends ImageServiceSolver
+public class FlickrService extends MediaServiceSolver
 {
 	public static final String TAG = FlickrService.class.getCanonicalName();
 	protected static final String FLICKR_DOMAIN = "flickr.com";
@@ -39,7 +40,7 @@ public class FlickrService extends ImageServiceSolver
 					
 					if ( "ok".equals( flickrImage.getStat() ) )
 					{
-						pathResolverListener.onPathResolved( flickrImage.getUri(), flickrImage.getThumbnailUri() );
+						pathResolverListener.onPathResolved( flickrImage.getUri(), MediaType.IMAGE, flickrImage.getThumbnailUri() );
 					}
 					else
 					{

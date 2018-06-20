@@ -5,11 +5,12 @@ import android.util.Log;
 
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.model.GfycatResource;
+import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
 
-public class GfycatService extends ImageServiceSolver
+public class GfycatService extends MediaServiceSolver
 {
 	public static final String TAG = GyazoService.class.getCanonicalName();
 	public static final String GFYCAT_DOMAIN = "gfycat.com";
@@ -52,7 +53,7 @@ public class GfycatService extends ImageServiceSolver
 				
 				GfycatResource resource = new Gson().fromJson( response.toString(), GfycatResource.class );
 				
-				pathResolverListener.onPathResolved( resource.item.getUri(), null );
+				pathResolverListener.onPathResolved( resource.item.getUri(), UriUtils.guessMediaTypeFromUri( resource.item.getUri() ), uri );
 			}
 			catch ( Exception e )
 			{

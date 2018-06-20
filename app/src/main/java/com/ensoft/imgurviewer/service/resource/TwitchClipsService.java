@@ -7,6 +7,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.TwitchClip;
 import com.ensoft.imgurviewer.model.TwitchClips;
+import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
@@ -14,7 +15,7 @@ import com.imgurviewer.R;
 
 import org.json.JSONObject;
 
-public class TwitchClipsService extends ImageServiceSolver
+public class TwitchClipsService extends MediaServiceSolver
 {
 	public static final String TAG = TwitchClipsService.class.getCanonicalName();
 	protected static final String TWITCH_CLIPS_DOMAIN = "clips.twitch.tv";
@@ -72,7 +73,7 @@ public class TwitchClipsService extends ImageServiceSolver
 			
 			if ( videoUrl != null )
 			{
-				pathResolverListener.onPathResolved( videoUrl, null );
+				pathResolverListener.onPathResolved( videoUrl, UriUtils.guessMediaTypeFromUri( videoUrl ), uri );
 			}
 			else
 			{

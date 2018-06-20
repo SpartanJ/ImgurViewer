@@ -8,7 +8,7 @@ import com.ensoft.imgurviewer.service.resource.FlickrService;
 import com.ensoft.imgurviewer.service.resource.GfycatService;
 import com.ensoft.imgurviewer.service.resource.GiphyService;
 import com.ensoft.imgurviewer.service.resource.GyazoService;
-import com.ensoft.imgurviewer.service.resource.ImageServiceSolver;
+import com.ensoft.imgurviewer.service.resource.MediaServiceSolver;
 import com.ensoft.imgurviewer.service.resource.ImgurService;
 import com.ensoft.imgurviewer.service.resource.InstagramService;
 import com.ensoft.imgurviewer.service.resource.PornHubService;
@@ -42,29 +42,39 @@ public class ResourceSolver
 		loadServices();
 	}
 	
+	protected void addSolver( MediaServiceSolver serviceSolver )
+	{
+		addSolver( serviceSolver, null );
+	}
+	
+	protected void addSolver( MediaServiceSolver serviceSolver, Class<?> galleryViewClass )
+	{
+		resourceServiceSolvers.add( new ResourceServiceSolver( serviceSolver, resourceLoadListener, galleryViewClass ) );
+	}
+	
 	protected void loadServices()
 	{
-		resourceServiceSolvers.add( new ResourceServiceSolver( new ImgurService(), resourceLoadListener, ImgurAlbumGalleryViewer.class ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new GyazoService(), resourceLoadListener, null ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new GfycatService(), resourceLoadListener, null ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new RedditUploadsService(), resourceLoadListener, null ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new StreamableService(), resourceLoadListener, null ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new TwitchClipsService(), resourceLoadListener, null ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new InstagramService(), resourceLoadListener, ImgurAlbumGalleryViewer.class ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new VidmeService(), resourceLoadListener, null ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new FlickrService(), resourceLoadListener, null ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new GiphyService(), resourceLoadListener, null ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new RedditVideoService(), resourceLoadListener, null ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new StreamjaService(), resourceLoadListener, null ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new VimeoService(), resourceLoadListener, null ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new ClippitUserService(), resourceLoadListener, null ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new PornHubService(), resourceLoadListener, null ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new XVideosService(), resourceLoadListener, null ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new SpankBangService(), resourceLoadListener, null ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new YouPornService(), resourceLoadListener, null ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new RedTubeService(), resourceLoadListener, null ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new Tube8Service(), resourceLoadListener, null ) );
-		resourceServiceSolvers.add( new ResourceServiceSolver( new PornTubeService(), resourceLoadListener, null ) );
+		addSolver( new ImgurService(), ImgurAlbumGalleryViewer.class );
+		addSolver( new GyazoService() );
+		addSolver( new GfycatService() );
+		addSolver( new RedditUploadsService() );
+		addSolver( new StreamableService() );
+		addSolver( new TwitchClipsService() );
+		addSolver( new InstagramService(), ImgurAlbumGalleryViewer.class );
+		addSolver( new VidmeService() );
+		addSolver( new FlickrService() );
+		addSolver( new GiphyService() );
+		addSolver( new RedditVideoService() );
+		addSolver( new StreamjaService() );
+		addSolver( new VimeoService() );
+		addSolver( new ClippitUserService() );
+		addSolver( new PornHubService() );
+		addSolver( new XVideosService() );
+		addSolver( new SpankBangService() );
+		addSolver( new YouPornService() );
+		addSolver( new RedTubeService() );
+		addSolver( new Tube8Service() );
+		addSolver( new PornTubeService() );
 	}
 	
 	public void solve( Uri uri )
@@ -77,9 +87,9 @@ public class ResourceSolver
 			}
 		}
 		
-		if ( ImageServiceSolver.isVideoUrl( uri ) )
+		if ( UriUtils.isVideoUrl( uri ) )
 		{
-			resourceLoadListener.loadVideo( uri, uri );
+			resourceLoadListener.loadVideo( uri, UriUtils.guessMediaTypeFromUri( uri ), uri );
 		}
 		else
 		{

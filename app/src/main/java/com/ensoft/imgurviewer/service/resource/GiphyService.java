@@ -12,7 +12,7 @@ import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
 import com.imgurviewer.R;
 
-public class GiphyService extends ImageServiceSolver
+public class GiphyService extends MediaServiceSolver
 {
 	public static final String TAG = GiphyService.class.getCanonicalName();
 	public static final String GIPHY_DOMAIN = "giphy.com";
@@ -52,7 +52,7 @@ public class GiphyService extends ImageServiceSolver
 						
 						if ( 200 == giphyResource.getStatus() )
 						{
-							pathResolverListener.onPathResolved( giphyResource.getData().getUri(), null );
+							pathResolverListener.onPathResolved( giphyResource.getData().getUri(), UriUtils.guessMediaTypeFromUri( giphyResource.getData().getUri() ), uri );
 						}
 						else
 						{

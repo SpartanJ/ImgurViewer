@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+def versionMajor = 1
+def versionMinor = 7
+def versionPatch = 0
+
 android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
@@ -8,8 +12,8 @@ android {
         applicationId "com.ensoft.imgurviewer"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 1620
-        versionName "1.6.2"
+        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
     }
     buildTypes {
         release {
@@ -36,4 +40,5 @@ dependencies {
     implementation 'com.ensoft-dev.restafari:restafari:0.3.16'
     implementation 'com.r0adkll:slidableactivity:2.0.6'
     implementation 'com.readystatesoftware.systembartint:systembartint:1.0.3'
+    implementation 'com.devbrackets.android:exomedia:4.2.1'
 }
