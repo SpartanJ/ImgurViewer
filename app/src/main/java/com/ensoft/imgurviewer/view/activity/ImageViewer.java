@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.ensoft.imgurviewer.view.fragment.ImageViewerFragment;
 import com.imgurviewer.R;
+
 public class ImageViewer extends AppActivity
 {
 	public static final String TAG = ImageViewer.class.getCanonicalName();

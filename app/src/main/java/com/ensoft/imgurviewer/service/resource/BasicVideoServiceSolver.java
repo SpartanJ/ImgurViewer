@@ -15,8 +15,15 @@ import com.ensoft.restafari.network.processor.ResponseListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.imgurviewer.R;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class BasicVideoServiceSolver extends ImageServiceSolver
 {
+	protected Uri referer;
+	
 	public abstract String getDomain();
 	
 	public abstract String[] getNeedleStart();
@@ -26,6 +33,24 @@ public abstract class BasicVideoServiceSolver extends ImageServiceSolver
 	protected String parseUrlString( String urlString )
 	{
 		return urlString;
+	}
+	
+	protected String parseReferer( Uri referer )
+	{
+		return referer.toString();
+	}
+	
+	protected JSONObject getParameters()
+	{
+		return new JSONObject();
+	}
+	
+	protected Map<String, String> getHeaders( Uri referer )
+	{
+		HashMap<String,String> headers = new HashMap<>();
+		headers.put( "Origin", referer.getScheme() + "://" + referer.getHost() );
+		headers.put( "Referer", referer.toString() );
+		return headers;
 	}
 	
 	protected Uri getVideoUrlFromResponse( String response )
@@ -46,10 +71,9 @@ public abstract class BasicVideoServiceSolver extends ImageServiceSolver
 		return null;
 	}
 	
-	@Override
-	public void getPath( Uri uri, PathResolverListener pathResolverListener )
+	protected ResponseListener<String> getResponseListener( PathResolverListener pathResolverListener )
 	{
-		RequestService.getInstance().makeStringRequest( Request.Method.GET, uri.toString(), new ResponseListener<String>()
+		return new ResponseListener<String>()
 		{
 			@Override
 			public void onRequestSuccess( Context context, String response )
@@ -73,7 +97,20 @@ public abstract class BasicVideoServiceSolver extends ImageServiceSolver
 				
 				new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( errorMessage ) );
 			}
-		} );
+		};
+	}
+	
+	protected int getRequestMethod()
+	{
+		return Request.Method.GET;
+	}
+	
+	@Override
+	public void getPath( Uri uri, PathResolverListener pathResolverListener )
+	{
+		referer = uri;
+		
+		RequestService.getInstance().makeStringRequest( getRequestMethod(), parseReferer( uri ), getResponseListener( pathResolverListener ), getParameters(), getHeaders( uri ) );
 	}
 	
 	public String getDomainPath()

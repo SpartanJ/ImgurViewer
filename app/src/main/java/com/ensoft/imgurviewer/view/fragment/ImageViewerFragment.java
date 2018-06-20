@@ -3,12 +3,12 @@ package com.ensoft.imgurviewer.view.fragment;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -47,6 +47,9 @@ import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrInterface;
 import com.r0adkll.slidr.model.SlidrPosition;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import me.relex.photodraweeview.OnScaleChangeListener;
 import me.relex.photodraweeview.OnViewTapListener;
 import me.relex.photodraweeview.PhotoDraweeView;
@@ -57,7 +60,7 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 	public static final String PARAM_RESOURCE_PATH = "resourcePath";
 	private static final int UI_ANIMATION_DELAY = 300;
 	
-	private Context context;
+	private AppActivity context;
 	private View contentContainer;
 	private View contentView;
 	private ProgressBar progressBar;
@@ -91,7 +94,8 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 	{
 		super.onViewCreated( view, savedInstanceState );
 		
-		context = getActivity();
+		context = (AppActivity)getActivity();
+		context.statusBarTint();
 		visible = true;
 		contentContainer = view.findViewById( R.id.content_container );
 		contentView = view.findViewById( R.id.fullscreen_content );
@@ -137,9 +141,9 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 		new ResourceSolver( new ResourceLoadListener()
 		{
 			@Override
-			public void loadVideo( Uri uri )
+			public void loadVideo( Uri uri, Uri referer )
 			{
-				ImageViewerFragment.this.loadVideo( uri );
+				ImageViewerFragment.this.loadVideo( uri, referer );
 			}
 			
 			@Override
@@ -232,7 +236,20 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 		delayedHide();
 	}
 	
-	public void loadVideo( Uri uri )
+	protected Map<String, String> getVideoHeaders( Uri referer )
+	{
+		if ( null != referer )
+		{
+			HashMap<String, String> headers = new HashMap<>();
+			headers.put( "Origin", referer.getScheme() + "://" + referer.getHost() );
+			headers.put( "Referer", referer.toString() );
+			return headers;
+		}
+		
+		return null;
+	}
+	
+	public void loadVideo( Uri uri, Uri referer )
 	{
 		currentResource = uri;
 		
@@ -241,7 +258,16 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 		imageView.setVisibility( View.GONE );
 		videoView.setVisibility( View.VISIBLE );
 		videoView.setOnClickListener( v -> toggle() );
-		videoView.setVideoURI( uri );
+		
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP )
+		{
+			videoView.setVideoURI( uri, getVideoHeaders( referer ) );
+		}
+		else
+		{
+			videoView.setVideoURI( uri );
+		}
+		
 		videoView.start();
 		
 		createMediaPlayer();
@@ -345,6 +371,8 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 				{
 					floatingMenu.setVisibility( View.INVISIBLE );
 					
+					context.statusBarUntint();
+					
 					if ( null != mediaPlayerFragment )
 					{
 						mediaPlayerFragment.setVisibility( View.INVISIBLE );
@@ -383,6 +411,8 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 			mediaPlayerFragment.setVisibility( View.VISIBLE );
 			mediaPlayerFragment.startAnimation( alphaAnimation );
 		}
+		
+		context.statusBarTint();
 	}
 	
 	private final Handler hideHandler = new Handler();

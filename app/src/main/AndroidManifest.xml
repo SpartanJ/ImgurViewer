@@ -56,14 +56,24 @@
 
 				<data android:host="pornhub.com" />
 				<data android:host="www.pornhub.com" />
+				<data android:host="m.pornhub.com" />
 
 				<data android:host="xvideos.com" />
 				<data android:host="www.xvideos.com" />
+				<data android:host="m.xvideos.com" />
 
 				<data android:host="spankbang.com" />
 				<data android:host="www.spankbang.com" />
 				<data android:host="la.spankbang.com" />
 				<data android:host="*.spankbang.com" />
+
+				<data android:host="youporn.com" />
+				<data android:host="www.youporn.com" />
+				<data android:host="m.youporn.com" />
+
+				<data android:host="redtube.com" />
+				<data android:host="www.redtube.com" />
+				<data android:host="m.redtube.com" />
 
 				<data android:scheme="https" />
 				<data android:scheme="http" />

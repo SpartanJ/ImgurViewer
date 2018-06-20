@@ -8,8 +8,8 @@ android {
         applicationId "com.ensoft.imgurviewer"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 1610
-        versionName "1.6.1"
+        versionCode 1620
+        versionName "1.6.2"
     }
     buildTypes {
         release {
@@ -24,15 +24,16 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-	compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
-    compile 'com.android.support:recyclerview-v7:27.1.1'
-    compile 'com.android.support:support-v13:27.1.1'
-    compile 'com.facebook.fresco:fresco:1.9.0'
-    compile 'com.facebook.fresco:animated-gif:1.9.0'
-    compile 'com.facebook.fresco:animated-webp:1.9.0'
-    compile 'com.facebook.fresco:webpsupport:1.9.0'
-    compile 'ch.acra:acra:4.9.2'
-    compile 'com.ensoft-dev.restafari:restafari:0.3.16'
-    compile 'com.r0adkll:slidableactivity:2.0.6'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+	implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:support-v13:27.1.1'
+    implementation 'com.facebook.fresco:fresco:1.9.0'
+    implementation 'com.facebook.fresco:animated-gif:1.9.0'
+    implementation 'com.facebook.fresco:animated-webp:1.9.0'
+    implementation 'com.facebook.fresco:webpsupport:1.9.0'
+    implementation 'ch.acra:acra:4.9.2'
+    implementation 'com.ensoft-dev.restafari:restafari:0.3.16'
+    implementation 'com.r0adkll:slidableactivity:2.0.6'
+    implementation 'com.readystatesoftware.systembartint:systembartint:1.0.3'
 }

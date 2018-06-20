@@ -23,4 +23,21 @@ public class StringUtils
 		
 		return null;
 	}
+	
+	public static String getFirstStringMatch( String haystack, String needleStart, String needleEnds )
+	{
+		int pos = haystack.indexOf( needleStart );
+		
+		if ( -1 != pos )
+		{
+			int endPos = haystack.indexOf( needleEnds, pos + needleStart.length() );
+			
+			if ( -1 != endPos )
+			{
+				return haystack.substring( pos + needleStart.length(), endPos );
+			}
+		}
+		
+		return null;
+	}
 }

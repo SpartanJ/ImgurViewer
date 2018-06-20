@@ -12,6 +12,7 @@ import com.ensoft.imgurviewer.service.resource.ImageServiceSolver;
 import com.ensoft.imgurviewer.service.resource.ImgurService;
 import com.ensoft.imgurviewer.service.resource.InstagramService;
 import com.ensoft.imgurviewer.service.resource.PornHubService;
+import com.ensoft.imgurviewer.service.resource.RedTubeService;
 import com.ensoft.imgurviewer.service.resource.RedditUploadsService;
 import com.ensoft.imgurviewer.service.resource.RedditVideoService;
 import com.ensoft.imgurviewer.service.resource.ResourceServiceSolver;
@@ -22,6 +23,7 @@ import com.ensoft.imgurviewer.service.resource.TwitchClipsService;
 import com.ensoft.imgurviewer.service.resource.VidmeService;
 import com.ensoft.imgurviewer.service.resource.VimeoService;
 import com.ensoft.imgurviewer.service.resource.XVideosService;
+import com.ensoft.imgurviewer.service.resource.YouPornService;
 import com.ensoft.imgurviewer.view.activity.ImgurAlbumGalleryViewer;
 
 import java.util.ArrayList;
@@ -57,6 +59,8 @@ public class ResourceSolver
 		resourceServiceSolvers.add( new ResourceServiceSolver( new PornHubService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new XVideosService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new SpankBangService(), resourceLoadListener, null ) );
+		resourceServiceSolvers.add( new ResourceServiceSolver( new YouPornService(), resourceLoadListener, null ) );
+		resourceServiceSolvers.add( new ResourceServiceSolver( new RedTubeService(), resourceLoadListener, null ) );
 	}
 	
 	public void solve( Uri uri )
@@ -71,7 +75,7 @@ public class ResourceSolver
 		
 		if ( ImageServiceSolver.isVideoUrl( uri ) )
 		{
-			resourceLoadListener.loadVideo( uri );
+			resourceLoadListener.loadVideo( uri, uri );
 		}
 		else
 		{
