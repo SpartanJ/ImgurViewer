@@ -238,15 +238,20 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 	
 	protected Map<String, String> getVideoHeaders( Uri referer )
 	{
+		HashMap<String, String> headers = new HashMap<>();
+		
 		if ( null != referer )
 		{
-			HashMap<String, String> headers = new HashMap<>();
 			headers.put( "Origin", referer.getScheme() + "://" + referer.getHost() );
 			headers.put( "Referer", referer.toString() );
-			return headers;
 		}
 		
-		return null;
+		headers.put( "Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7" );
+		headers.put( "Accept-Language", "en-us,en;q=0.5" );
+		headers.put( "Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" );
+		headers.put( "User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0 (Chrome)" );
+		
+		return headers;
 	}
 	
 	public void loadVideo( Uri uri, Uri referer )

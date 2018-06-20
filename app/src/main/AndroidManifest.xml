@@ -75,6 +75,14 @@
 				<data android:host="www.redtube.com" />
 				<data android:host="m.redtube.com" />
 
+				<data android:host="tube8.com" />
+				<data android:host="www.tube8.com" />
+				<data android:host="m.tube8.com" />
+
+				<data android:host="porntube.com" />
+				<data android:host="www.porntube.com" />
+				<data android:host="m.porntube.com" />
+
 				<data android:scheme="https" />
 				<data android:scheme="http" />
 

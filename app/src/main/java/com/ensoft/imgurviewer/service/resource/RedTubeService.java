@@ -1,6 +1,6 @@
 package com.ensoft.imgurviewer.service.resource;
 
-public class RedTubeService extends YouPornService
+public class RedTubeService extends BasicVideoServiceSolver
 {
 	@Override
 	public String getDomain()
@@ -9,8 +9,20 @@ public class RedTubeService extends YouPornService
 	}
 	
 	@Override
-	public String getDomainPath()
+	public String[] getNeedleStart()
 	{
-		return "";
+		return new String[] { "\"quality\":\"1080\",\"videoUrl\":\"", "\"quality\":\"720\",\"videoUrl\":\"", "\"quality\":\"480\",\"videoUrl\":\"", "\"quality\":\"240\",\"videoUrl\":\"" };
+	}
+	
+	@Override
+	public String[] getNeedleEnd()
+	{
+		return new String[] { "\"}" };
+	}
+	
+	@Override
+	protected String parseUrlString( String urlString )
+	{
+		return urlString.replaceAll( "\\\\", "" );
 	}
 }

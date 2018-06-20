@@ -12,6 +12,7 @@ import com.ensoft.imgurviewer.service.resource.ImageServiceSolver;
 import com.ensoft.imgurviewer.service.resource.ImgurService;
 import com.ensoft.imgurviewer.service.resource.InstagramService;
 import com.ensoft.imgurviewer.service.resource.PornHubService;
+import com.ensoft.imgurviewer.service.resource.PornTubeService;
 import com.ensoft.imgurviewer.service.resource.RedTubeService;
 import com.ensoft.imgurviewer.service.resource.RedditUploadsService;
 import com.ensoft.imgurviewer.service.resource.RedditVideoService;
@@ -19,6 +20,7 @@ import com.ensoft.imgurviewer.service.resource.ResourceServiceSolver;
 import com.ensoft.imgurviewer.service.resource.SpankBangService;
 import com.ensoft.imgurviewer.service.resource.StreamableService;
 import com.ensoft.imgurviewer.service.resource.StreamjaService;
+import com.ensoft.imgurviewer.service.resource.Tube8Service;
 import com.ensoft.imgurviewer.service.resource.TwitchClipsService;
 import com.ensoft.imgurviewer.service.resource.VidmeService;
 import com.ensoft.imgurviewer.service.resource.VimeoService;
@@ -61,6 +63,8 @@ public class ResourceSolver
 		resourceServiceSolvers.add( new ResourceServiceSolver( new SpankBangService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new YouPornService(), resourceLoadListener, null ) );
 		resourceServiceSolvers.add( new ResourceServiceSolver( new RedTubeService(), resourceLoadListener, null ) );
+		resourceServiceSolvers.add( new ResourceServiceSolver( new Tube8Service(), resourceLoadListener, null ) );
+		resourceServiceSolvers.add( new ResourceServiceSolver( new PornTubeService(), resourceLoadListener, null ) );
 	}
 	
 	public void solve( Uri uri )
