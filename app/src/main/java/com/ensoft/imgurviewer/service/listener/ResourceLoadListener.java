@@ -4,7 +4,7 @@ import android.net.Uri;
 
 public abstract class ResourceLoadListener
 {
-	public abstract void loadVideo( Uri uri );
+	public abstract void loadVideo( Uri uri, Uri referer );
 	
 	public abstract void loadImage( Uri uri, Uri thumbnail );
 	

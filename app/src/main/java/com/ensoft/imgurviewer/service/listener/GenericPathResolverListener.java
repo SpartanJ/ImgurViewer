@@ -19,15 +19,15 @@ public class GenericPathResolverListener extends PathResolverListener
 	}
 
 	@Override
-	public void onPathResolved( Uri url, Uri thumbnail )
+	public void onPathResolved( Uri url, Uri thumbnailOrReferer )
 	{
 		if ( serviceSolver.isVideo( url ) )
 		{
-			resourceLoadListener.loadVideo( url );
+			resourceLoadListener.loadVideo( url, thumbnailOrReferer );
 		}
 		else
 		{
-			resourceLoadListener.loadImage( url, thumbnail );
+			resourceLoadListener.loadImage( url, thumbnailOrReferer );
 		}
 	}
 

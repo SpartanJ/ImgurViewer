@@ -24,6 +24,8 @@ public class UriUtils
 		return ( uriStr.startsWith( "https://" + domain + path ) ||
 			uriStr.startsWith( "http://" + domain + path ) ||
 			uriStr.startsWith( "https://www." + domain + path ) ||
-			uriStr.startsWith( "http://www." + domain + path ) );
+			uriStr.startsWith( "http://www." + domain + path ) ||
+			uriStr.startsWith( "http://m." + domain + path ) ||
+			uriStr.startsWith( "https://m." + domain + path ) );
 	}
 }

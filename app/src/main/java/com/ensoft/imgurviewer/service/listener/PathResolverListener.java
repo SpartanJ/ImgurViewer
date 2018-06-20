@@ -18,7 +18,7 @@ public abstract class PathResolverListener
 		return serviceSolver;
 	}
 	
-	public abstract void onPathResolved( Uri url, Uri thumbnail );
+	public abstract void onPathResolved( Uri url, Uri thumbnailOrReferer );
 	
 	public abstract void onPathError( String error );
 }
