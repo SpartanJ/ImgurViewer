@@ -50,6 +50,10 @@ public abstract class BasicVideoServiceSolver extends ImageServiceSolver
 		HashMap<String,String> headers = new HashMap<>();
 		headers.put( "Origin", referer.getScheme() + "://" + referer.getHost() );
 		headers.put( "Referer", referer.toString() );
+		headers.put( "Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7" );
+		headers.put( "Accept-Language", "en-us,en;q=0.5" );
+		headers.put( "Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" );
+		headers.put( "User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0 (Chrome)" );
 		return headers;
 	}
 	
@@ -82,7 +86,7 @@ public abstract class BasicVideoServiceSolver extends ImageServiceSolver
 				
 				if ( videoUrl != null )
 				{
-					new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( videoUrl, null ) );
+					new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( videoUrl, referer ) );
 				}
 				else
 				{
