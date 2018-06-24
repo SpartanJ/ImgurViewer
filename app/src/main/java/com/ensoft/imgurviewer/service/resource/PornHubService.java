@@ -19,13 +19,13 @@ public class PornHubService extends BasicVideoServiceSolver
 	@Override
 	public String[] getNeedleStart()
 	{
-		return new String[] { "\"quality\":\"1440\"", "\"quality\":\"1080\"", "\"quality\":\"720\"", "\"quality\":\"480\"", "\"quality\":\"240\"" };
+		return new String[] { "\"quality\":\"1440\",\"videoUrl\":\"", "\"quality\":\"1080\",\"videoUrl\":\"", "\"quality\":\"720\",\"videoUrl\":\"", "\"quality\":\"480\",\"videoUrl\":\"", "\"quality\":\"240\",\"videoUrl\":\"" };
 	}
 	
 	@Override
 	public String[] getNeedleEnd()
 	{
-		return new String[] { "\",\"videoUrl\":\"", "\"}" };
+		return new String[] { "\"}" };
 	}
 	
 	@Override

@@ -4,6 +4,8 @@ import android.net.Uri;
 
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
 import com.ensoft.imgurviewer.service.resource.ClippitUserService;
+import com.ensoft.imgurviewer.service.resource.DeviantArtService;
+import com.ensoft.imgurviewer.service.resource.EromeService;
 import com.ensoft.imgurviewer.service.resource.FlickrService;
 import com.ensoft.imgurviewer.service.resource.GfycatService;
 import com.ensoft.imgurviewer.service.resource.GiphyService;
@@ -68,6 +70,7 @@ public class ResourceSolver
 		addSolver( new StreamjaService() );
 		addSolver( new VimeoService() );
 		addSolver( new ClippitUserService() );
+		addSolver( new DeviantArtService() );
 		addSolver( new PornHubService() );
 		addSolver( new XVideosService() );
 		addSolver( new SpankBangService() );
@@ -75,6 +78,7 @@ public class ResourceSolver
 		addSolver( new RedTubeService() );
 		addSolver( new Tube8Service() );
 		addSolver( new PornTubeService() );
+		addSolver( new EromeService() );
 	}
 	
 	public void solve( Uri uri )
