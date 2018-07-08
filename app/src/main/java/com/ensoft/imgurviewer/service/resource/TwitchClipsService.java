@@ -1,19 +1,19 @@
 package com.ensoft.imgurviewer.service.resource;
 
+import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
 
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.Request;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.TwitchClip;
 import com.ensoft.imgurviewer.model.TwitchClips;
 import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
+import com.ensoft.restafari.network.processor.ResponseListener;
 import com.ensoft.restafari.network.service.RequestService;
-import com.google.gson.Gson;
 import com.imgurviewer.R;
-
-import org.json.JSONObject;
 
 public class TwitchClipsService extends MediaServiceSolver
 {
@@ -23,17 +23,13 @@ public class TwitchClipsService extends MediaServiceSolver
 	
 	protected String getVideoStatusUrl( Uri uri )
 	{
-		String lastPath = uri.toString().substring( uri.toString().lastIndexOf( "/" ) + 1 );
-		
-		return TWITCH_CLIPS_STATUS.replace( "{id}", lastPath );
+		return TWITCH_CLIPS_STATUS.replace( "{id}", uri.getLastPathSegment() );
 	}
 	
-	protected Uri getVideoUrlFromResponse( JSONObject response )
+	protected Uri getVideoUrlFromResponse( TwitchClips twitchClips )
 	{
 		try
 		{
-			TwitchClips twitchClips = new Gson().fromJson( response.toString(), TwitchClips.class );
-			
 			if ( null != twitchClips && null != twitchClips.getClips() )
 			{
 				TwitchClip[] clips = twitchClips.getClips();
@@ -57,9 +53,7 @@ public class TwitchClipsService extends MediaServiceSolver
 				}
 			}
 		}
-		catch ( Exception e )
-		{
-		}
+		catch ( Exception e ) {}
 		
 		return null;
 	}
@@ -67,26 +61,29 @@ public class TwitchClipsService extends MediaServiceSolver
 	@Override
 	public void getPath( Uri uri, final PathResolverListener pathResolverListener )
 	{
-		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( getVideoStatusUrl( uri ), response ->
+		RequestService.getInstance().makeJsonRequest( Request.Method.GET, getVideoStatusUrl( uri ), new ResponseListener<TwitchClips>()
 		{
-			Uri videoUrl = getVideoUrlFromResponse( response );
-			
-			if ( videoUrl != null )
+			@Override
+			public void onRequestSuccess( Context context, TwitchClips response )
 			{
-				pathResolverListener.onPathResolved( videoUrl, UriUtils.guessMediaTypeFromUri( videoUrl ), uri );
+				Uri videoUrl = getVideoUrlFromResponse( response );
+				
+				if ( videoUrl != null )
+				{
+					new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( videoUrl, UriUtils.guessMediaTypeFromUri( videoUrl ), uri ) );
+				}
+				else
+				{
+					new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( App.getInstance().getString( R.string.videoUrlNotFound ) ) );
+				}
 			}
-			else
-			{
-				pathResolverListener.onPathError( App.getInstance().getString( R.string.videoUrlNotFound ) );
-			}
-		}, error ->
-		{
-			Log.v( TAG, error.toString() );
 			
-			pathResolverListener.onPathError( error.toString() );
+			@Override
+			public void onRequestError( Context context, int errorCode, String errorMessage )
+			{
+				new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( errorMessage ) );
+			}
 		} );
-		
-		RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
 	}
 	
 	@Override
