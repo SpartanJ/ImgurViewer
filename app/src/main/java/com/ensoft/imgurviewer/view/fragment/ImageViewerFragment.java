@@ -23,24 +23,30 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
+import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.MediaType;
 import com.ensoft.imgurviewer.service.DownloadService;
 import com.ensoft.imgurviewer.service.FrescoService;
 import com.ensoft.imgurviewer.service.IntentUtils;
 import com.ensoft.imgurviewer.service.PermissionService;
+import com.ensoft.imgurviewer.service.PreferencesService;
 import com.ensoft.imgurviewer.service.ResourceSolver;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
 import com.ensoft.imgurviewer.view.activity.AppActivity;
 import com.ensoft.imgurviewer.view.activity.SettingsView;
 import com.ensoft.imgurviewer.view.helper.MetricsHelper;
+import com.ensoft.imgurviewer.view.helper.SlidrPositionHelper;
 import com.ensoft.imgurviewer.view.helper.ViewHelper;
-import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.github.piasy.biv.loader.ImageLoader;
+import com.github.piasy.biv.view.BigImageView;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.LoopingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -55,16 +61,12 @@ import com.imgurviewer.R;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrInterface;
+import com.r0adkll.slidr.model.SlidrListener;
 import com.r0adkll.slidr.model.SlidrPosition;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
 
-import me.relex.photodraweeview.OnScaleChangeListener;
-import me.relex.photodraweeview.OnViewTapListener;
-import me.relex.photodraweeview.PhotoDraweeView;
-
-public class ImageViewerFragment extends Fragment implements OnScaleChangeListener
+public class ImageViewerFragment extends Fragment
 {
 	public static final String TAG = ImageViewerFragment.class.getCanonicalName();
 	public static final String PARAM_RESOURCE_PATH = "resourcePath";
@@ -74,14 +76,15 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 	private View contentContainer;
 	private View contentView;
 	private ProgressBar progressBar;
-	private PhotoDraweeView imageView;
+	private View progressLine;
+	private BigImageView imageView;
+	private SimpleDraweeView imageViewFallback;
 	private VideoView videoView;
 	private boolean visible;
 	private long lastClickTime;
 	private LinearLayout floatingMenu;
 	private Uri currentResource;
 	private SlidrInterface slidrInterface;
-	private float originalScale = 1.f;
 	
 	public static ImageViewerFragment newInstance( String resource )
 	{
@@ -110,8 +113,10 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 		contentContainer = view.findViewById( R.id.content_container );
 		contentView = view.findViewById( R.id.fullscreen_content );
 		imageView = view.findViewById( R.id.imageView );
+		imageViewFallback = view.findViewById( R.id.imageViewFallback );
 		videoView = view.findViewById( R.id.videoView );
 		progressBar = view.findViewById( R.id.progressBar );
+		progressLine = view.findViewById( R.id.progressLine );
 		floatingMenu = view.findViewById( R.id.floating_menu );
 		
 		view.findViewById( R.id.settings ).setOnClickListener( v -> showSettings() );
@@ -122,17 +127,6 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 		{
 			setFloatingMenuOrientation( getResources().getConfiguration().orientation );
 		}
-		
-		ProgressBarDrawable progressBarDrawable = new ProgressBarDrawable();
-		progressBarDrawable.setColor( getResources().getColor( R.color.imgur_color ) );
-		progressBarDrawable.setBarWidth( MetricsHelper.dpToPx( context, 4 ) );
-		
-		GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder( getResources() )
-			.setActualImageScaleType( ScalingUtils.ScaleType.FIT_CENTER )
-			.setProgressBarImage( progressBarDrawable )
-			.build();
-		
-		imageView.setHierarchy( hierarchy );
 		
 		contentView.setOnClickListener( v -> toggle() );
 		
@@ -179,30 +173,49 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 		super.onResume();
 		
 		if ( null == slidrInterface )
-			slidrInterface = Slidr.replace( contentContainer, new SlidrConfig.Builder().position( SlidrPosition.VERTICAL ).build() );
+		{
+			PreferencesService preferencesService = App.getInstance().getPreferencesService();
+			
+			if ( preferencesService.gesturesEnabled() )
+			{
+				slidrInterface = Slidr.replace( contentContainer, new SlidrConfig.Builder().listener( new SlidrListener()
+				{
+					@Override
+					public void onSlideStateChanged( int state ) {}
+					
+					@Override
+					public void onSlideChange( float percent )
+					{
+						contentContainer.setBackgroundColor( (int) ( percent * 255.0f + 0.5f ) << 24 );
+					}
+					
+					@Override
+					public void onSlideOpened() {}
+					
+					@Override
+					public void onSlideClosed() {}
+				} ).position( SlidrPositionHelper.fromString( preferencesService.getGesturesImageView() ) ).build() );
+			}
+		}
 	}
 	
-	protected OnViewTapListener touchListener = new OnViewTapListener()
+	protected void onImageClick( View v )
 	{
-		@Override
-		public void onViewTap( View view, float x, float y )
+		if ( !( System.currentTimeMillis() - lastClickTime <= UI_ANIMATION_DELAY ) )
 		{
-			if ( !( System.currentTimeMillis() - lastClickTime <= UI_ANIMATION_DELAY ) )
+			new Handler().postDelayed( () ->
 			{
-				new Handler().postDelayed( () ->
+				long diff = System.currentTimeMillis() - lastClickTime;
+				
+				if ( diff >= UI_ANIMATION_DELAY )
 				{
-					long diff = System.currentTimeMillis() - lastClickTime;
-					
-					if ( diff >= UI_ANIMATION_DELAY )
-					{
-						toggle();
-					}
-				}, UI_ANIMATION_DELAY );
-			}
-			
-			lastClickTime = System.currentTimeMillis();
+					toggle();
+				}
+			}, UI_ANIMATION_DELAY );
 		}
-	};
+		
+		lastClickTime = System.currentTimeMillis();
+	}
 	
 	protected MediaPlayerFragment mediaPlayerFragment;
 	
@@ -215,33 +228,120 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 		mediaPlayerFragment.setVideoView( videoView );
 	}
 	
+	public void loadImageFallback( Uri uri, Uri thumbnail )
+	{
+		GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder( imageViewFallback.getResources() )
+			.setActualImageScaleType( ScalingUtils.ScaleType.FIT_CENTER )
+			.build();
+		
+		imageView.setVisibility( View.GONE );
+		
+		progressBar.setVisibility( View.VISIBLE );
+		
+		imageViewFallback.setHierarchy( hierarchy );
+		
+		imageViewFallback.setVisibility( View.VISIBLE );
+		
+		new FrescoService().loadImage( uri, thumbnail, imageViewFallback, new ControllerImageInfoListener()
+		{
+			@Override
+			public void onFinalImageSet( String id, ImageInfo imageInfo, Animatable animatable )
+			{
+				progressBar.setVisibility( View.INVISIBLE );
+			}
+			
+			@Override
+			public void onFailure( String id, Throwable throwable )
+			{
+				Log.v( TAG, throwable.toString() );
+				
+				Toast.makeText( context, throwable.toString(), Toast.LENGTH_SHORT ).show();
+			}
+		} );
+	}
+	
 	public void loadImage( Uri uri, Uri thumbnail )
 	{
 		currentResource = uri;
 		
 		Log.v( TAG, "Loading image: " + uri.toString() );
 		
-		new FrescoService().loadImage( uri, thumbnail, imageView, new ControllerImageInfoListener()
+		videoView.setVisibility( View.GONE );
+		
+		imageView.setOptimizeDisplay( false );
+		imageView.setOnClickListener( this::onImageClick );
+		
+		imageView.setImageLoaderCallback( new ImageLoader.Callback()
 		{
 			@Override
-			public void onFinalImageSet( String id, ImageInfo imageInfo, Animatable animatable )
+			public void onCacheHit( File image ) {}
+			
+			@Override
+			public void onCacheMiss( File image ) {}
+			
+			@Override
+			public void onStart()
 			{
-				progressBar.setVisibility( View.INVISIBLE );
-				
-				imageView.update( imageInfo.getWidth(), imageInfo.getHeight() );
-				
-				originalScale = imageView.getScale();
+				progressLine.setVisibility( View.VISIBLE );
 			}
 			
 			@Override
-			public void onFailure( String id, Throwable throwable )
+			public void onProgress( int progress )
 			{
-				Toast.makeText( context, throwable.getMessage(), Toast.LENGTH_SHORT ).show();
+				progressLine.getLayoutParams().width = ( (int)( ((View)progressLine.getParent()).getWidth() * ( progress / 100.f ) ) );
+				progressLine.requestLayout();
+			}
+			
+			@Override
+			public void onFinish()
+			{}
+			
+			@Override
+			public void onSuccess( File image )
+			{}
+			
+			@Override
+			public void onFail( Exception error )
+			{
+				imageView.setVisibility( View.GONE );
+				
+				Toast.makeText( context, error.getMessage(), Toast.LENGTH_SHORT ).show();
 			}
 		} );
 		
-		imageView.setOnViewTapListener( touchListener );
-		imageView.setOnScaleChangeListener( this );
+		imageView.setOnImageEventListener( new SubsamplingScaleImageView.OnImageEventListener()
+		{
+			@Override
+			public void onReady()
+			{}
+			
+			@Override
+			public void onImageLoaded()
+			{
+				progressBar.setVisibility( View.GONE );
+				progressLine.setVisibility( View.GONE );
+			}
+			
+			@Override
+			public void onPreviewLoadError( Exception e ) {}
+			
+			@Override
+			public void onImageLoadError( Exception e )
+			{
+				loadImageFallback( uri, thumbnail );
+			}
+			
+			@Override
+			public void onTileLoadError( Exception e )
+			{
+				loadImageFallback( uri, thumbnail );
+			}
+			
+			@Override
+			public void onPreviewReleased() {}
+		} );
+		
+		imageView.showImage( null != thumbnail ? thumbnail : Uri.EMPTY, uri );
 		
 		delayedHide();
 	}
@@ -457,24 +557,6 @@ public class ImageViewerFragment extends Fragment implements OnScaleChangeListen
 			{
 				floatingMenu.setPadding( 0, MetricsHelper.dpToPx( context, 8 ), 0, 0 );
 				ViewHelper.setMargins( floatingMenu, 0, MetricsHelper.getStatusBarHeight( context ), MetricsHelper.getNavigationBarWidth( context ), 0 );
-			}
-		}
-	}
-	
-	@Override
-	public void onScaleChange( float scaleFactor, float focusX, float focusY )
-	{
-		if ( null != slidrInterface )
-		{
-			float scale =  imageView.getScale();
-			
-			if ( scale != originalScale )
-			{
-				slidrInterface.lock();
-			}
-			else
-			{
-				slidrInterface.unlock();
 			}
 		}
 	}

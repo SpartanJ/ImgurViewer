@@ -2,6 +2,7 @@ package com.ensoft.imgurviewer.view.activity;
 
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
@@ -80,6 +81,56 @@ public class SettingsView extends PreferenceActivity
 			{
 				new FrescoService().clearCaches();
 				Toast.makeText( MyPreferenceFragment.this.getActivity(), R.string.cacheCleared, Toast.LENGTH_SHORT ).show();
+				return true;
+			} );
+			
+			
+			final CheckBoxPreference gesturesEnabled = (CheckBoxPreference) findPreference( "gesturesEnabled" );
+			gesturesEnabled.setChecked( preferencesService.gesturesEnabled() );
+			gesturesEnabled.setOnPreferenceChangeListener( ( preference, newValue ) ->
+			{
+				preferencesService.setGesturesEnabled( !preferencesService.gesturesEnabled() );
+				gesturesEnabled.setChecked( preferencesService.gesturesEnabled() );
+				
+				return true;
+			} );
+			
+			
+			final ListPreference imageGesturePref = (ListPreference) findPreference( "gestureImageView" );
+			imageGesturePref.setValue( preferencesService.getGesturesImageView() );
+			imageGesturePref.setOnPreferenceChangeListener( ( preference, newValue ) ->
+			{
+				preferencesService.setGesturesImageView( newValue.toString() );
+				
+				return true;
+			} );
+			
+			final ListPreference galleryGesturePref = (ListPreference) findPreference( "gestureGalleryView" );
+			galleryGesturePref.setValue( preferencesService.getGesturesImageView() );
+			galleryGesturePref.setOnPreferenceChangeListener( ( preference, newValue ) ->
+			{
+				preferencesService.setGesturesGalleryView( newValue.toString() );
+				
+				return true;
+			});
+			
+			final CheckBoxPreference screenLockEnabled = (CheckBoxPreference) findPreference( "screenLockEnabled" );
+			screenLockEnabled.setChecked( preferencesService.screenLockButton() );
+			screenLockEnabled.setOnPreferenceChangeListener( ( preference, newValue ) ->
+			{
+				preferencesService.setScreenLockButton( !preferencesService.screenLockButton() );
+				screenLockEnabled.setChecked( preferencesService.screenLockButton() );
+				
+				return true;
+			} );
+			
+			final CheckBoxPreference fullscreenEnabled = (CheckBoxPreference) findPreference( "fullscreenEnabled" );
+			fullscreenEnabled.setChecked( preferencesService.fullscreenButton() );
+			fullscreenEnabled.setOnPreferenceChangeListener( ( preference, newValue ) ->
+			{
+				preferencesService.setFullscreenButton( !preferencesService.fullscreenButton() );
+				fullscreenEnabled.setChecked( preferencesService.fullscreenButton() );
+				
 				return true;
 			} );
 		}

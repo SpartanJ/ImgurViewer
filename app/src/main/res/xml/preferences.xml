@@ -1,25 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<EditTextPreference
-		android:name="proxyHost"
-		android:summary="@string/proxyHostConf"
-		android:defaultValue=""
-		android:title="@string/proxyHost"
-		android:key="proxyHost" />
-
-	<EditTextPreference
-			android:name="proxyPort"
-			android:summary="@string/proxyPortConf"
-			android:defaultValue="8118"
-			android:title="@string/proxyPort"
-			android:key="proxyPort"
-			android:numeric="integer" />
-
 	<CheckBoxPreference
 		android:key="muteVideos"
 		android:title="@string/muteVideos"
 		android:summary="@string/muteVideosConf" />
+
+	<CheckBoxPreference
+		android:key="screenLockEnabled"
+		android:title="@string/screenLockEnabled"
+		android:summary="@string/screenLockEnabledConf" />
+
+	<CheckBoxPreference
+		android:key="fullscreenEnabled"
+		android:title="@string/fullScreenEnabled"
+		android:summary="@string/fullScreenEnabledConf" />
+
+	<EditTextPreference
+		android:name="proxyHost"
+		android:summary="@string/proxyHostConf"
+		android:title="@string/proxyHost"
+		android:key="proxyHost" />
+
+	<EditTextPreference
+		android:name="proxyPort"
+		android:summary="@string/proxyPortConf"
+		android:defaultValue="8118"
+		android:title="@string/proxyPort"
+		android:key="proxyPort"
+		android:numeric="integer" />
+
+	<CheckBoxPreference
+		android:key="gesturesEnabled"
+		android:title="@string/gesturesEnabled"
+		android:summary="@string/gesturesEnabledConf" />
+
+	<ListPreference
+		android:dependency="gesturesEnabled"
+		android:key="gestureImageView"
+		android:title="@string/gesturesImageView"
+		android:summary="@string/gesturesImageViewConf"
+		android:entries="@array/gestures_arr"
+		android:entryValues="@array/gestures_types"
+		android:defaultValue="@string/vertical_val" />
+
+	<ListPreference
+		android:dependency="gesturesEnabled"
+		android:key="gestureGalleryView"
+		android:title="@string/gesturesGalleryView"
+		android:summary="@string/gesturesGalleryViewConf"
+		android:entries="@array/gestures_arr"
+		android:entryValues="@array/gestures_types"
+		android:defaultValue="@string/vertical_val" />
 
 	<Preference android:title="@string/clearCache"
 				android:summary="@string/clearCacheConf"
