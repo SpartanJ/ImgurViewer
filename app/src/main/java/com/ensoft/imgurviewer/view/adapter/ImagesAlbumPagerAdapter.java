@@ -10,12 +10,15 @@ import com.ensoft.imgurviewer.view.fragment.ImageViewerFragment;
 public class ImagesAlbumPagerAdapter extends FragmentPagerAdapter
 {
 	private ImgurImage[] images;
+	private ImageViewerFragment[] fragments;
 	
 	public ImagesAlbumPagerAdapter( FragmentManager fragmentManager, ImgurImage[] images )
 	{
 		super( fragmentManager );
 		
 		this.images = images;
+		
+		this.fragments = new ImageViewerFragment[ images.length ];
 	}
 	
 	@Override
@@ -23,12 +26,24 @@ public class ImagesAlbumPagerAdapter extends FragmentPagerAdapter
 	{
 		ImgurImage image = images[ position ];
 		
-		return ImageViewerFragment.newInstance( image.hasVideo() ? image.getVideoUri().toString() : image.getLink() );
+		fragments[ position ] = ImageViewerFragment.newInstance( image.hasVideo() ? image.getVideoUri().toString() : image.getLink() );
+		
+		return fragments[ position ];
 	}
 	
 	@Override
 	public int getCount()
 	{
 		return null != images ? images.length : 0;
+	}
+	
+	public ImageViewerFragment getImageViewerFragment( int position )
+	{
+		if ( position >= 0 && position < fragments.length )
+		{
+			return fragments[ position ];
+		}
+		
+		return null;
 	}
 }

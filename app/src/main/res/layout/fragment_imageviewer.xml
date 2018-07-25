@@ -24,19 +24,24 @@
 					android:layout_height="match_parent"
 					android:id="@+id/videoView"
 					android:layout_gravity="center"
-					android:visibility="invisible"
-					android:background="@android:color/black" />
+					android:visibility="invisible" />
 
 				<FrameLayout
 					android:id="@+id/player"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_gravity="center_horizontal|bottom">
-				</FrameLayout>
+					android:layout_gravity="center_horizontal|bottom" />
 
 			</FrameLayout>
 
-			<me.relex.photodraweeview.PhotoDraweeView
+			<com.facebook.drawee.view.SimpleDraweeView
+				android:id="@+id/imageViewFallback"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				fresco:actualImageScaleType="fitCenter"
+				android:visibility="gone" />
+
+			<com.github.piasy.biv.view.BigImageView
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				android:id="@+id/imageView"
@@ -56,6 +61,16 @@
 				android:layout_gravity="center"
 				android:layout_centerVertical="true"
 				android:layout_centerHorizontal="true"/>
+
+			<View android:id="@+id/progressLine"
+				  android:layout_width="0dp"
+				  android:layout_height="4dp"
+				  android:layout_gravity="bottom"
+				  android:layout_alignParentBottom="true"
+				  android:background="@color/imgur_color"
+				  android:visibility="gone"
+				/>
+
 		</RelativeLayout>
 
 		<include layout="@layout/toolbar" />

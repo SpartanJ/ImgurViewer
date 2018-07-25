@@ -14,8 +14,10 @@ import android.view.View;
 import android.webkit.URLUtil;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.ImgurAlbum;
 import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.model.InstagramProfileModel;
@@ -23,6 +25,7 @@ import com.ensoft.imgurviewer.service.DeviceService;
 import com.ensoft.imgurviewer.service.DownloadService;
 import com.ensoft.imgurviewer.service.IntentUtils;
 import com.ensoft.imgurviewer.service.PermissionService;
+import com.ensoft.imgurviewer.service.PreferencesService;
 import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
 import com.ensoft.imgurviewer.service.listener.ImgurGalleryResolverListener;
 import com.ensoft.imgurviewer.service.listener.InstagramProfileResolverListener;
@@ -33,16 +36,19 @@ import com.ensoft.imgurviewer.service.resource.InstagramProfileService;
 import com.ensoft.imgurviewer.service.resource.InstagramService;
 import com.ensoft.imgurviewer.view.adapter.ImgurAlbumAdapter;
 import com.ensoft.imgurviewer.view.helper.MetricsHelper;
+import com.ensoft.imgurviewer.view.helper.SlidrPositionHelper;
 import com.ensoft.imgurviewer.view.helper.ViewHelper;
 import com.imgurviewer.R;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
+import com.r0adkll.slidr.model.SlidrListener;
 import com.r0adkll.slidr.model.SlidrPosition;
 
 public class ImgurAlbumGalleryViewer extends AppActivity
 {
 	public static final String TAG = ImgurAlbumGalleryViewer.class.getCanonicalName();
 	
+	protected RelativeLayout albumContainer;
 	protected LinearLayout floatingMenu;
 	protected ImgurAlbumAdapter albumAdapter;
 	protected ProgressBar progressBar;
@@ -57,7 +63,11 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		
 		setContentView( R.layout.activity_albumviewer );
 		
-		Slidr.attach(this, new SlidrConfig.Builder().position( SlidrPosition.HORIZONTAL ).build() );
+		progressBar = findViewById( R.id.albumViewer_progressBar );
+		albumContainer = findViewById( R.id.albumViewer_container );
+		findViewById( R.id.settings ).setOnClickListener( this::showSettings );
+		findViewById( R.id.download ).setOnClickListener( this::downloadImage );
+		findViewById( R.id.share ).setOnClickListener( this::shareImage );
 		
 		floatingMenu = findViewById( R.id.floating_menu );
 		
@@ -85,11 +95,6 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		}
 		
 		Log.v( TAG, "Data is: " + albumData.toString() );
-		
-		progressBar = findViewById( R.id.albumViewer_progressBar );
-		findViewById( R.id.settings ).setOnClickListener( this::showSettings );
-		findViewById( R.id.download ).setOnClickListener( this::downloadImage );
-		findViewById( R.id.share ).setOnClickListener( this::shareImage );
 		
 		if ( new ImgurAlbumService().isImgurAlbum( albumData ) )
 		{
@@ -216,6 +221,31 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 			this.images = newImages;
 			
 			albumAdapter.appendImages( images );
+		}
+		
+		recyclerView.setNestedScrollingEnabled( false );
+		
+		PreferencesService preferencesService = App.getInstance().getPreferencesService();
+		
+		if ( preferencesService.gesturesEnabled() )
+		{
+			Slidr.attach( this, new SlidrConfig.Builder().listener( new SlidrListener()
+			{
+				@Override
+				public void onSlideStateChanged( int state ) {}
+				
+				@Override
+				public void onSlideChange( float percent )
+				{
+					albumContainer.setBackgroundColor( (int) ( percent * 255.0f + 0.5f ) << 24 );
+				}
+				
+				@Override
+				public void onSlideOpened() {}
+				
+				@Override
+				public boolean onSlideClosed() { return false; }
+			} ).position( SlidrPositionHelper.fromString( preferencesService.getGesturesGalleryView() ) ).build() );
 		}
 	}
 	

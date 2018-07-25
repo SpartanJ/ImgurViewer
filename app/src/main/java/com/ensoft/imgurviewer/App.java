@@ -7,6 +7,8 @@ import com.ensoft.restafari.network.service.RequestService;
 import com.ensoft.restafari.network.service.RequestServiceOptions;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.github.piasy.biv.BigImageViewer;
+import com.github.piasy.biv.loader.fresco.FrescoImageLoader;
 
 import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
@@ -17,8 +19,8 @@ import org.acra.annotation.ReportsCrashes;
 public class App extends Application
 {
 	protected static App instance;
-	protected int activityCount = 0;
 	protected PreferencesService preferencesService;
+	protected int activityCount = 0;
 	
 	public static App getInstance()
 	{
@@ -53,10 +55,7 @@ public class App extends Application
 	{
 		if ( 0 == activityCount )
 		{
-			ImagePipelineConfig config = ImagePipelineConfig.newBuilder( this )
-				.build();
-			
-			Fresco.initialize( this, config );
+			BigImageViewer.initialize( FrescoImageLoader.with( this ) );
 		}
 		
 		activityCount++;
