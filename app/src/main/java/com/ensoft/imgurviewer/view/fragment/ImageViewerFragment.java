@@ -33,6 +33,7 @@ import com.ensoft.imgurviewer.service.IntentUtils;
 import com.ensoft.imgurviewer.service.PermissionService;
 import com.ensoft.imgurviewer.service.PreferencesService;
 import com.ensoft.imgurviewer.service.ResourceSolver;
+import com.ensoft.imgurviewer.service.event.OnViewLockStateChange;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
 import com.ensoft.imgurviewer.view.activity.AppActivity;
@@ -62,7 +63,10 @@ import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrInterface;
 import com.r0adkll.slidr.model.SlidrListener;
-import com.r0adkll.slidr.model.SlidrPosition;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 
@@ -85,6 +89,8 @@ public class ImageViewerFragment extends Fragment
 	private long lastClickTime;
 	private LinearLayout floatingMenu;
 	private Uri currentResource;
+	private SlidrInterface slidrInterface;
+	private boolean viewLocked = false;
 	
 	public static ImageViewerFragment newInstance( String resource )
 	{
@@ -176,7 +182,7 @@ public class ImageViewerFragment extends Fragment
 		
 		if ( preferencesService.gesturesEnabled() )
 		{
-			Slidr.replace( contentContainer, new SlidrConfig.Builder().listener( new SlidrListener()
+			slidrInterface = Slidr.replace( contentContainer, new SlidrConfig.Builder().listener( new SlidrListener()
 			{
 				@Override
 				public void onSlideStateChanged( int state ) {}
@@ -218,8 +224,10 @@ public class ImageViewerFragment extends Fragment
 	
 	protected void createMediaPlayer()
 	{
+		PreferencesService preferencesService = App.getInstance().getPreferencesService();
+		
 		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-		fragmentTransaction.replace( R.id.player, mediaPlayerFragment = new MediaPlayerFragment() );
+		fragmentTransaction.replace( R.id.player, mediaPlayerFragment = MediaPlayerFragment.newInstance( preferencesService.fullscreenButton(), preferencesService.screenLockButton() ) );
 		fragmentTransaction.commitAllowingStateLoss();
 		
 		mediaPlayerFragment.setVideoView( videoView );
@@ -430,6 +438,9 @@ public class ImageViewerFragment extends Fragment
 	
 	private void toggle()
 	{
+		if ( viewLocked )
+			return;
+		
 		if ( visible )
 		{
 			hide();
@@ -444,6 +455,17 @@ public class ImageViewerFragment extends Fragment
 	{
 		visible = false;
 		hideHandler.postDelayed( hidePart2Runnable, UI_ANIMATION_DELAY );
+	}
+	
+	private void hideFast()
+	{
+		visible = false;
+		
+		contentView.setSystemUiVisibility( View.SYSTEM_UI_FLAG_LOW_PROFILE | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION );
+		
+		floatingMenu.setVisibility( View.INVISIBLE );
+		
+		context.statusBarUntint();
 	}
 	
 	private final Runnable hidePart2Runnable = new Runnable()
@@ -560,6 +582,43 @@ public class ImageViewerFragment extends Fragment
 				floatingMenu.setPadding( 0, MetricsHelper.dpToPx( context, 8 ), 0, 0 );
 				ViewHelper.setMargins( floatingMenu, 0, MetricsHelper.getStatusBarHeight( context ), MetricsHelper.getNavigationBarWidth( context ), 0 );
 			}
+		}
+	}
+	
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+		
+		EventBus.getDefault().register(this);
+	}
+	
+	@Override
+	public void onStop()
+	{
+		EventBus.getDefault().unregister(this);
+		
+		super.onStop();
+	}
+	
+	@Subscribe( threadMode = ThreadMode.MAIN )
+	public void onMessageEvent( OnViewLockStateChange event )
+	{
+		viewLocked = event.isLocked();
+		
+		if ( viewLocked )
+		{
+			hideFast();
+			
+			if ( null != slidrInterface )
+				slidrInterface.lock();
+		}
+		else
+		{
+			show();
+			
+			if ( null != slidrInterface )
+				slidrInterface.unlock();
 		}
 	}
 }
