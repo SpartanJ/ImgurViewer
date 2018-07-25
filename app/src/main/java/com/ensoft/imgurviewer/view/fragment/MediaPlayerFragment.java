@@ -1,7 +1,9 @@
 package com.ensoft.imgurviewer.view.fragment;
 
 import android.app.Fragment;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -22,24 +25,37 @@ import com.devbrackets.android.exomedia.listener.OnPreparedListener;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.service.TimeService;
+import com.ensoft.imgurviewer.service.event.OnViewLockStateChange;
 import com.ensoft.imgurviewer.view.helper.MetricsHelper;
 import com.ensoft.imgurviewer.view.helper.ViewHelper;
 import com.imgurviewer.R;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, OnPreparedListener
 {
 	private static final String TAG = MediaPlayerFragment.class.getCanonicalName();
 	
+	protected View timeContainer;
+	protected View seekBarContainer;
+	protected View buttonsContainer;
 	protected VideoView videoView;
 	protected ImageView playPauseView;
 	protected ImageView audioOnOffView;
+	protected ImageView fullscreenOnOffView;
+	protected ImageView screenLockOnOff;
 	protected TextView timeTextView;
+	protected TextView timePlayedTextView;
 	protected SeekBar seekBarView;
 	protected OnPreparedListener userOnPreparedListener;
 	protected Handler seekBarHandler = new Handler();
 	protected Rect margins = new Rect( 0, 0, 0, 0 );
 	protected boolean initialized = false;
 	protected boolean isMuted = false;
+	protected boolean fullscreenEnabled = true;
+	protected boolean screenLockEnabled = false;
+	protected boolean fullscreenStateEnabled = false;
+	protected boolean screenLockStateEnabled = false;
 	
 	protected void updatePlayPauseState()
 	{
@@ -79,6 +95,16 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 	
 	protected View.OnClickListener audioOnOffListener = v -> updateAudioOnOffState();
 	
+	public static MediaPlayerFragment newInstance( boolean fullscreenEnabled, boolean screenLockEnabled )
+	{
+		Bundle args = new Bundle();
+		args.putBoolean( "fullscreenEnabled", fullscreenEnabled );
+		args.putBoolean( "screenLockEnabled", screenLockEnabled );
+		MediaPlayerFragment fragment = new MediaPlayerFragment();
+		fragment.setArguments( args );
+		return fragment;
+	}
+	
 	@Nullable
 	@Override
 	public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
@@ -91,10 +117,20 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 	{
 		super.onViewCreated( view, savedInstanceState );
 		
+		if ( getArguments() != null )
+		{
+			fullscreenEnabled = getArguments().getBoolean( "fullscreenEnabled", true );
+			screenLockEnabled = getArguments().getBoolean( "screenLockEnabled", false );
+		}
+		
 		if ( null != getResources() && null != getResources().getConfiguration() )
 		{
 			setOrientationMargins( getResources().getConfiguration().orientation );
 		}
+		
+		timeContainer = view.findViewById( R.id.mediaPlayer_timeContainer );
+		seekBarContainer = view.findViewById( R.id.mediaPlayer_seekBarContainer );
+		buttonsContainer = view.findViewById( R.id.mediaPlayer_buttonsContainer );
 		
 		playPauseView = view.findViewById( R.id.mediaPlayer_playPause );
 		playPauseView.setOnClickListener( playPauseOnClickListener );
@@ -103,6 +139,29 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 		audioOnOffView.setOnClickListener( audioOnOffListener );
 		
 		timeTextView = view.findViewById( R.id.mediaPlayer_time );
+		timePlayedTextView = view.findViewById( R.id.mediaPlayer_timePlayed );
+		
+		fullscreenOnOffView = view.findViewById( R.id.mediaPlayer_fullscreenOnOff );
+		screenLockOnOff = view.findViewById( R.id.mediaPlayer_screenLockOnOff );
+		
+		fullscreenOnOffView.setVisibility( fullscreenEnabled ? View.VISIBLE : View.GONE );
+		screenLockOnOff.setVisibility( screenLockEnabled ? View.VISIBLE : View.GONE );
+		
+		fullscreenOnOffView.setOnClickListener( v -> setFullscreenState( !fullscreenStateEnabled ) );
+		screenLockOnOff.setOnClickListener( v -> setScreenLockState( !screenLockStateEnabled ) );
+		
+		final ViewTreeObserver observer = screenLockOnOff.getViewTreeObserver();
+		observer.addOnGlobalLayoutListener( new ViewTreeObserver.OnGlobalLayoutListener()
+		{
+			@Override
+			public void onGlobalLayout()
+			{
+				screenLockOnOff.setPivotX( 0 );
+				screenLockOnOff.setPivotY( screenLockOnOff.getHeight() );
+				
+				observer.removeGlobalOnLayoutListener(this);
+			}
+		} );
 		
 		seekBarView = view.findViewById( R.id.mediaPlayer_seekBar );
 		
@@ -124,6 +183,62 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 		{
 			init();
 		}
+	}
+	
+	protected void setScreenLockState( boolean enabled )
+	{
+		if ( null == getActivity() )
+			return;
+		
+		if ( enabled )
+		{
+			screenLockOnOff.setAlpha( 0.15f );
+			screenLockOnOff.setScaleX( 0.5f );
+			screenLockOnOff.setScaleY( 0.5f );
+			timeContainer.setVisibility( View.GONE );
+			seekBarContainer.setVisibility( View.GONE );
+			audioOnOffView.setVisibility( View.GONE );
+			playPauseView.setVisibility( View.GONE );
+			fullscreenOnOffView.setVisibility( View.GONE );
+			buttonsContainer.setBackgroundColor( Color.TRANSPARENT );
+		}
+		else
+		{
+			screenLockOnOff.setAlpha( 1.f );
+			screenLockOnOff.setScaleX( 1.f );
+			screenLockOnOff.setScaleY( 1.f );
+			timeContainer.setVisibility( View.VISIBLE );
+			seekBarContainer.setVisibility( View.VISIBLE );
+			audioOnOffView.setVisibility( View.VISIBLE );
+			playPauseView.setVisibility( View.VISIBLE );
+			fullscreenOnOffView.setVisibility( View.VISIBLE );
+			buttonsContainer.setBackgroundColor( getResources().getColor( R.color.toolbar_background ) );
+		}
+		
+		screenLockStateEnabled = enabled;
+		
+		EventBus.getDefault().post( new OnViewLockStateChange( screenLockStateEnabled ) );
+	}
+	
+	protected void setFullscreenState( boolean enabled )
+	{
+		if ( null == getActivity() )
+			return;
+		
+		if ( enabled )
+		{
+			getActivity().setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE );
+			
+			fullscreenOnOffView.setImageResource( R.drawable.ic_fullscreen_exit_white_48dp );
+		}
+		else
+		{
+			getActivity().setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_SENSOR );
+			
+			fullscreenOnOffView.setImageResource( R.drawable.ic_fullscreen_white_48dp );
+		}
+		
+		fullscreenStateEnabled = enabled;
 	}
 	
 	public void setOnPreparedListener( OnPreparedListener onPreparedListener )
@@ -156,10 +271,12 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 				if ( isAdded() )
 				{
 					String timeLeftStr = new TimeService( getActivity() ).timeLeftFormatter( videoView.getDuration(), videoView.getCurrentPosition() );
+					String timePlayed = new TimeService( getActivity() ).timeFormatter( videoView.getCurrentPosition() / 1000L );
 					
 					if ( isVisible() && !timeTextView.getText().equals( timeLeftStr ) )
 					{
 						timeTextView.setText( timeLeftStr );
+						timePlayedTextView.setText( timePlayed );
 					}
 					
 					seekBarView.setProgress( (int)videoView.getCurrentPosition() );

@@ -3,6 +3,8 @@
 	<string name="imgur_client_id">912617e18339d56</string>
 	<string name="flickr_key">2ba8fd93b3d6443c8c8b8f277770bf6e</string>
 	<string name="giphy_api_key">dc6zaTOxFJmzC</string>
+	<string name="gestures">Gestures</string>
+	<string name="proxy">Proxy</string>
 	<string name="proxyHost">Proxy Host</string>
 	<string name="proxyPort">Proxy Port</string>
 	<string name="proxyHostConf">Configure Proxy Host</string>
@@ -28,4 +30,42 @@
 	<string name="cacheCleared">Image cache cleared</string>
 	<string name="errorLoadingAlbum">Error loading album</string>
 	<string name="failedFetchProfile">Failed to fetch profile</string>
+	<string name="gesturesEnabled">Gestures Enabled</string>
+	<string name="gesturesEnabledConf">Enable swipe gestures</string>
+	<string name="gesturesImageView">Image View</string>
+	<string name="gesturesImageViewConf">Discard swipe gesture for image/video view</string>
+	<string name="gesturesGalleryView">Gallery View</string>
+	<string name="gesturesGalleryViewConf">Discard swipe gesture for gallery view</string>
+	<string name="vertical">VERTICAL</string>
+	<string name="horizontal">HORIZONTAL</string>
+	<string name="left">LEFT</string>
+	<string name="right">RIGHT</string>
+	<string name="top">TOP</string>
+	<string name="bottom">BOTTOM</string>
+	<string-array name="gestures_arr">
+		<item>@string/vertical</item>
+		<item>@string/horizontal</item>
+		<item>@string/left</item>
+		<item>@string/right</item>
+		<item>@string/top</item>
+		<item>@string/bottom</item>
+	</string-array>
+	<string name="vertical_val">4</string>
+	<string name="horizontal_val">5</string>
+	<string name="left_val">0</string>
+	<string name="right_val">1</string>
+	<string name="top_val">2</string>
+	<string name="bottom_val">3</string>
+	<string-array name="gestures_types">
+		<item>@string/vertical_val</item>
+		<item>@string/horizontal_val</item>
+		<item>@string/left_val</item>
+		<item>@string/right_val</item>
+		<item>@string/top_val</item>
+		<item>@string/bottom_val</item>
+	</string-array>
+	<string name="screenLockEnabled">Screen-Lock Option</string>
+	<string name="screenLockEnabledConf">Allows to lock/unlock the image/video view.</string>
+	<string name="fullScreenEnabled">Fullscreen Option</string>
+	<string name="fullScreenEnabledConf">Allows a fullscreen button on image/video view.</string>
 </resources>
