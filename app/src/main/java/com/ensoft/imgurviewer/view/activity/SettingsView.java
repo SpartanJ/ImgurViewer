@@ -106,7 +106,7 @@ public class SettingsView extends PreferenceActivity
 			} );
 			
 			final ListPreference galleryGesturePref = (ListPreference) findPreference( "gestureGalleryView" );
-			galleryGesturePref.setValue( preferencesService.getGesturesImageView() );
+			galleryGesturePref.setValue( preferencesService.getGesturesGalleryView() );
 			galleryGesturePref.setOnPreferenceChangeListener( ( preference, newValue ) ->
 			{
 				preferencesService.setGesturesGalleryView( newValue.toString() );

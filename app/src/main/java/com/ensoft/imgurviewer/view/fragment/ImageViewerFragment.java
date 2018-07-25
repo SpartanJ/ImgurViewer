@@ -73,6 +73,7 @@ public class ImageViewerFragment extends Fragment
 	private static final int UI_ANIMATION_DELAY = 300;
 	
 	private AppActivity context;
+	
 	private View contentContainer;
 	private View contentView;
 	private ProgressBar progressBar;
@@ -84,7 +85,6 @@ public class ImageViewerFragment extends Fragment
 	private long lastClickTime;
 	private LinearLayout floatingMenu;
 	private Uri currentResource;
-	private SlidrInterface slidrInterface;
 	
 	public static ImageViewerFragment newInstance( String resource )
 	{
@@ -172,30 +172,27 @@ public class ImageViewerFragment extends Fragment
 	{
 		super.onResume();
 		
-		if ( null == slidrInterface )
+		PreferencesService preferencesService = App.getInstance().getPreferencesService();
+		
+		if ( preferencesService.gesturesEnabled() )
 		{
-			PreferencesService preferencesService = App.getInstance().getPreferencesService();
-			
-			if ( preferencesService.gesturesEnabled() )
+			Slidr.replace( contentContainer, new SlidrConfig.Builder().listener( new SlidrListener()
 			{
-				slidrInterface = Slidr.replace( contentContainer, new SlidrConfig.Builder().listener( new SlidrListener()
+				@Override
+				public void onSlideStateChanged( int state ) {}
+				
+				@Override
+				public void onSlideChange( float percent )
 				{
-					@Override
-					public void onSlideStateChanged( int state ) {}
-					
-					@Override
-					public void onSlideChange( float percent )
-					{
-						contentContainer.setBackgroundColor( (int) ( percent * 255.0f + 0.5f ) << 24 );
-					}
-					
-					@Override
-					public void onSlideOpened() {}
-					
-					@Override
-					public void onSlideClosed() {}
-				} ).position( SlidrPositionHelper.fromString( preferencesService.getGesturesImageView() ) ).build() );
-			}
+					contentContainer.setBackgroundColor( (int) ( percent * 255.0f + 0.5f ) << 24 );
+				}
+				
+				@Override
+				public void onSlideOpened() {}
+				
+				@Override
+				public boolean onSlideClosed() { return false; }
+			} ).position( SlidrPositionHelper.fromString( preferencesService.getGesturesImageView() ) ).build() );
 		}
 	}
 	
@@ -520,6 +517,11 @@ public class ImageViewerFragment extends Fragment
 		}
 		
 		context.statusBarTint();
+	}
+	
+	public View getContentContainer()
+	{
+		return contentContainer;
 	}
 	
 	private final Handler hideHandler = new Handler();

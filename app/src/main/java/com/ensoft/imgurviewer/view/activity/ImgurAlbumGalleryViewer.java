@@ -69,35 +69,6 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		findViewById( R.id.download ).setOnClickListener( this::downloadImage );
 		findViewById( R.id.share ).setOnClickListener( this::shareImage );
 		
-		PreferencesService preferencesService = App.getInstance().getPreferencesService();
-		
-		if ( preferencesService.gesturesEnabled() )
-		{
-			Slidr.attach( this, new SlidrConfig.Builder().listener( new SlidrListener()
-			{
-				@Override
-				public void onSlideStateChanged( int state )
-				{
-				}
-				
-				@Override
-				public void onSlideChange( float percent )
-				{
-					albumContainer.setBackgroundColor( (int) ( percent * 255.0f + 0.5f ) << 24 );
-				}
-				
-				@Override
-				public void onSlideOpened()
-				{
-				}
-				
-				@Override
-				public void onSlideClosed()
-				{
-				}
-			} ).position( SlidrPositionHelper.fromString( preferencesService.getGesturesGalleryView() ) ).build() );
-		}
-		
 		floatingMenu = findViewById( R.id.floating_menu );
 		
 		if ( null != getResources() && null != getResources().getConfiguration() )
@@ -250,6 +221,31 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 			this.images = newImages;
 			
 			albumAdapter.appendImages( images );
+		}
+		
+		recyclerView.setNestedScrollingEnabled( false );
+		
+		PreferencesService preferencesService = App.getInstance().getPreferencesService();
+		
+		if ( preferencesService.gesturesEnabled() )
+		{
+			Slidr.attach( this, new SlidrConfig.Builder().listener( new SlidrListener()
+			{
+				@Override
+				public void onSlideStateChanged( int state ) {}
+				
+				@Override
+				public void onSlideChange( float percent )
+				{
+					albumContainer.setBackgroundColor( (int) ( percent * 255.0f + 0.5f ) << 24 );
+				}
+				
+				@Override
+				public void onSlideOpened() {}
+				
+				@Override
+				public boolean onSlideClosed() { return false; }
+			} ).position( SlidrPositionHelper.fromString( preferencesService.getGesturesGalleryView() ) ).build() );
 		}
 	}
 	

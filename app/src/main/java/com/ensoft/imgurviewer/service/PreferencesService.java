@@ -56,7 +56,7 @@ public class PreferencesService extends NetworkPreferencesService
 	
 	public String getGesturesGalleryView()
 	{
-		return getDefaultSharedPreferences().getString( GESTURE_GALLERY_VIEW, context.getString( R.string.vertical_val ) );
+		return getDefaultSharedPreferences().getString( GESTURE_GALLERY_VIEW, context.getString( R.string.horizontal_val ) );
 	}
 	
 	public void setGesturesGalleryView( String gesturesGalleryView )
