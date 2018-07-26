@@ -3,6 +3,7 @@
     package="com.imgurviewer" >
 
 	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -50,6 +51,7 @@
 
 				<data android:host="streamja.com" />
 				<data android:host="vimeo.com" />
+				<data android:host="player.vimeo.com" />
 
 				<data android:host="clippituser.tv" />
 				<data android:host="www.clippituser.tv" />
@@ -151,6 +153,7 @@
 				<data android:scheme="http" />
 				<data android:scheme="https" />
 				<data android:scheme="file" />
+				<data android:scheme="content"/>
 
 				<data android:pathPattern=".*\\.jpg" />
 				<data android:pathPattern=".*..*..*..*..*..*.jpg" />
@@ -433,6 +436,28 @@
 				<data android:pathPattern=".*.ISM" />
 
 			</intent-filter>
+
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW"/>
+				<category android:name="android.intent.category.DEFAULT"/>
+				<category android:name="android.intent.category.BROWSABLE"/>
+
+				<data android:scheme="file"/>
+				<data android:scheme="content"/>
+				<data android:scheme="http"/>
+				<data android:scheme="https"/>
+				<data android:mimeType="video/*"/>
+				<data android:mimeType="audio/*"/>
+				<data android:mimeType="image/*"/>
+				<data android:mimeType="*/avi"/>
+				<data android:mimeType="*/mkv"/>
+				<data android:mimeType="application/mp4"/>
+				<data android:mimeType="application/mpeg*"/>
+				<data android:mimeType="application/x-extension-mp4"/>
+				<data android:mimeType="application/x-matroska"/>
+				<data android:mimeType="application/x-mpegurl"/>
+			</intent-filter>
+
         </activity>
 
 		<activity

@@ -16,19 +16,12 @@ public class VimeoService extends MediaServiceSolver
 {
 	public static final String TAG = VimeoService.class.getCanonicalName();
 	public static final String VIMEO_DOMAIN = "vimeo.com";
+	public static final String VIMEO_PLAYER_DOMAIN = "player.vimeo.com";
 	public static final String VIMEO_API_URL = "https://player.vimeo.com/video/%s/config";
 	
 	protected String getId( Uri uri )
 	{
-		String url = uri.toString();
-		String[] split = url.split( "/" );
-		
-		if ( split.length > 0 )
-		{
-			return split[ split.length - 1 ];
-		}
-		
-		return null;
+		return uri.getLastPathSegment();
 	}
 	
 	protected Uri getVideo( VimeoVideo[] videos )
@@ -108,7 +101,7 @@ public class VimeoService extends MediaServiceSolver
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
-		return UriUtils.uriMatchesDomain( uri, VIMEO_DOMAIN );
+		return UriUtils.uriMatchesDomain( uri, VIMEO_DOMAIN ) || UriUtils.uriMatchesDomain( uri, VIMEO_PLAYER_DOMAIN, "/video" );
 	}
 	
 	@Override

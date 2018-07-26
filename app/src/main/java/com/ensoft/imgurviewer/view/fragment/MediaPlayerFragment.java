@@ -150,8 +150,7 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 		fullscreenOnOffView.setOnClickListener( v -> setFullscreenState( !fullscreenStateEnabled ) );
 		screenLockOnOff.setOnClickListener( v -> setScreenLockState( !screenLockStateEnabled ) );
 		
-		final ViewTreeObserver observer = screenLockOnOff.getViewTreeObserver();
-		observer.addOnGlobalLayoutListener( new ViewTreeObserver.OnGlobalLayoutListener()
+		screenLockOnOff.getViewTreeObserver().addOnGlobalLayoutListener( new ViewTreeObserver.OnGlobalLayoutListener()
 		{
 			@Override
 			public void onGlobalLayout()
@@ -159,7 +158,21 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 				screenLockOnOff.setPivotX( 0 );
 				screenLockOnOff.setPivotY( screenLockOnOff.getHeight() );
 				
-				observer.removeGlobalOnLayoutListener(this);
+				try
+				{
+					if ( screenLockOnOff.getViewTreeObserver().isAlive() )
+					{
+						if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN )
+						{
+							screenLockOnOff.getViewTreeObserver().removeOnGlobalLayoutListener( this );
+						}
+						else
+						{
+							screenLockOnOff.getViewTreeObserver().removeGlobalOnLayoutListener( this );
+						}
+					}
+				}
+				catch ( Exception e ) {}
 			}
 		} );
 		

@@ -1,7 +1,11 @@
 package com.ensoft.imgurviewer.service;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.ensoft.imgurviewer.model.MediaType;
 
@@ -59,6 +63,30 @@ public class UriUtils
 		return false;
 	}
 	
+	public static boolean isAudioUrl( Uri uri )
+	{
+		if ( null != uri )
+		{
+			List<String> pathSegments = uri.getPathSegments();
+			
+			if ( null != pathSegments && pathSegments.size() > 0 )
+			{
+				String lastPathSegment = pathSegments.get( pathSegments.size() - 1 );
+				
+				return lastPathSegment.endsWith( ".ogg" ) ||
+					lastPathSegment.endsWith( ".mp3" ) ||
+					lastPathSegment.endsWith( ".wav" ) ||
+					lastPathSegment.endsWith( ".3gp" ) ||
+					lastPathSegment.endsWith( ".m4a" ) ||
+					lastPathSegment.endsWith( ".opus" ) ||
+					lastPathSegment.endsWith( ".wma" ) ||
+					lastPathSegment.endsWith( ".flac" );
+			}
+		}
+		
+		return false;
+	}
+	
 	public static boolean isVideoUrl( String uri )
 	{
 		return isVideoUrl( Uri.parse( uri ) );
@@ -87,5 +115,47 @@ public class UriUtils
 		}
 		
 		return isVideoUrl( uri ) ? MediaType.VIDEO_MP4 : MediaType.IMAGE;
+	}
+	
+	public static boolean isContentUri( Uri uri )
+	{
+		return "content".equals( uri.getScheme() );
+	}
+	
+	public static boolean isFileUri( Uri uri )
+	{
+		return "file".equals( uri.getScheme() );
+	}
+	
+	public static Uri contentUriToFileUri( Context context, @NonNull Uri uri )
+	{
+		String filePath = null;
+		
+		try
+		{
+			if ( isContentUri( uri ) )
+			{
+				Cursor cursor = context.getContentResolver().query( uri, new String[]{ android.provider.MediaStore.Images.ImageColumns.DATA }, null, null, null );
+				
+				if ( null != cursor && cursor.moveToFirst() )
+				{
+					filePath = "file://" + cursor.getString( 0 );
+					
+					cursor.close();
+				}
+			}
+			else
+			{
+				filePath = "file://" + uri.getPath();
+			}
+			
+			return Uri.parse( filePath );
+		}
+		catch ( Exception e )
+		{
+			Log.e( UriUtils.class.getCanonicalName(), "contentUriToFileUri: " + e.toString() );
+		}
+		
+		return null;
 	}
 }

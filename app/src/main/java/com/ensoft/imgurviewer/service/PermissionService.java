@@ -10,7 +10,9 @@ import android.support.v4.content.ContextCompat;
 
 public class PermissionService
 {
+	public static final String READ_EXTERNAL_STORAGE = "android.permission.READ_EXTERNAL_STORAGE";
 	public static int REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION = 0x0F3124;
+	public static int REQUEST_READ_EXTERNAL_STORAGE_PERMISSION = 0x0F3125;
 	
 	public boolean isExternalStorageAccess( Context context )
 	{
@@ -38,6 +40,39 @@ public class PermissionService
 			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M )
 			{
 				fragment.requestPermissions( new String[]{ android.Manifest.permission.WRITE_EXTERNAL_STORAGE }, REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION );
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean isReadExternalStorageAccess( Context context )
+	{
+		return ContextCompat.checkSelfPermission( context, READ_EXTERNAL_STORAGE ) == PackageManager.PERMISSION_GRANTED;
+	}
+	
+	public boolean askReadExternalStorageAccess( Activity activity )
+	{
+		if ( !isReadExternalStorageAccess( activity ) )
+		{
+			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M )
+			{
+				activity.requestPermissions( new String[]{ READ_EXTERNAL_STORAGE }, REQUEST_READ_EXTERNAL_STORAGE_PERMISSION );
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean askReadExternalStorageAccess( Fragment fragment )
+	{
+		if ( !isReadExternalStorageAccess( fragment.getActivity() ) )
+		{
+			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M )
+			{
+				fragment.requestPermissions( new String[]{ READ_EXTERNAL_STORAGE }, REQUEST_READ_EXTERNAL_STORAGE_PERMISSION );
 				return true;
 			}
 		}

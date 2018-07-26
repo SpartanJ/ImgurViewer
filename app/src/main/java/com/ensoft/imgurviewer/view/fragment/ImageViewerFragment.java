@@ -3,6 +3,7 @@ package com.ensoft.imgurviewer.view.fragment;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -33,6 +34,7 @@ import com.ensoft.imgurviewer.service.IntentUtils;
 import com.ensoft.imgurviewer.service.PermissionService;
 import com.ensoft.imgurviewer.service.PreferencesService;
 import com.ensoft.imgurviewer.service.ResourceSolver;
+import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.event.OnViewLockStateChange;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
@@ -48,6 +50,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.github.piasy.biv.view.BigImageView;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.LoopingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -57,6 +60,7 @@ import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource;
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.imgurviewer.R;
 import com.r0adkll.slidr.Slidr;
@@ -91,6 +95,7 @@ public class ImageViewerFragment extends Fragment
 	private Uri currentResource;
 	private SlidrInterface slidrInterface;
 	private boolean viewLocked = false;
+	private boolean requestinPermissions = false;
 	
 	public static ImageViewerFragment newInstance( String resource )
 	{
@@ -142,13 +147,42 @@ public class ImageViewerFragment extends Fragment
 		
 		if ( null != path )
 		{
-			loadResource( Uri.parse( path ) );
+			Uri uri = Uri.parse( path );
+			
+			if ( UriUtils.isContentUri( uri ) )
+			{
+				solveContentUri( uri );
+			}
+			else
+			{
+				loadResource( uri );
+			}
+		}
+	}
+	
+	protected void solveContentUri( Uri uri )
+	{
+		try
+		{
+			if ( !new PermissionService().askReadExternalStorageAccess( this ) )
+			{
+				loadResource( UriUtils.contentUriToFileUri( context, uri ) );
+			}
+			else
+			{
+				requestinPermissions = true;
+				currentResource = uri;
+			}
+		}
+		catch ( Exception e )
+		{
+			getActivity().finish();
 		}
 	}
 	
 	public void loadResource( Uri uri )
 	{
-		new ResourceSolver( new ResourceLoadListener()
+		new ResourceSolver( getActivity(), new ResourceLoadListener()
 		{
 			@Override
 			public void loadVideo( Uri uri, MediaType mediaType, Uri referer )
@@ -182,6 +216,13 @@ public class ImageViewerFragment extends Fragment
 		
 		if ( preferencesService.gesturesEnabled() )
 		{
+			if ( null != slidrInterface && requestinPermissions )
+			{
+				requestinPermissions = false;
+				
+				return;
+			}
+			
 			slidrInterface = Slidr.replace( contentContainer, new SlidrConfig.Builder().listener( new SlidrListener()
 			{
 				@Override
@@ -242,6 +283,8 @@ public class ImageViewerFragment extends Fragment
 		imageView.setVisibility( View.GONE );
 		
 		progressBar.setVisibility( View.VISIBLE );
+		
+		progressLine.setVisibility( View.GONE );
 		
 		imageViewFallback.setHierarchy( hierarchy );
 		
@@ -354,7 +397,7 @@ public class ImageViewerFragment extends Fragment
 	private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
 	private static final DefaultHttpDataSourceFactory DATA_SOURCE_FACTORY = new DefaultHttpDataSourceFactory("Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0 (Chrome)", BANDWIDTH_METER );
 	
-	private static MediaSource buildMediaSource( Uri uri, MediaType mediaType )
+	private static MediaSource buildMediaSource( Context context, Uri uri, MediaType mediaType )
 	{
 		if ( MediaType.STREAM_SS == mediaType )
 			return new SsMediaSource.Factory( new DefaultSsChunkSource.Factory( DATA_SOURCE_FACTORY ), DATA_SOURCE_FACTORY ).createMediaSource(uri);
@@ -364,6 +407,9 @@ public class ImageViewerFragment extends Fragment
 		
 		if ( MediaType.STREAM_HLS == mediaType )
 			return new HlsMediaSource.Factory( DATA_SOURCE_FACTORY ).createMediaSource(uri);
+		
+		if ( UriUtils.isFileUri( uri ) )
+			return new ExtractorMediaSource.Factory( new DefaultDataSourceFactory( context, "ua" ) ).setExtractorsFactory( new DefaultExtractorsFactory() ).createMediaSource( uri );
 		
 		return new ExtractorMediaSource.Factory( DATA_SOURCE_FACTORY ).createMediaSource(uri);
 	}
@@ -378,9 +424,16 @@ public class ImageViewerFragment extends Fragment
 		
 		videoView.setOnClickListener( v -> toggle() );
 		
-		LoopingMediaSource loopingMediaSource = new LoopingMediaSource( buildMediaSource( uri, mediaType ) );
+		MediaSource mediaSource;
 		
-		videoView.setVideoURI( uri, loopingMediaSource );
+		if ( UriUtils.isAudioUrl( uri ) )
+		{
+			mediaSource = buildMediaSource( getActivity(), uri, mediaType );
+		}
+		else
+		{
+			mediaSource = new LoopingMediaSource( buildMediaSource( getActivity(), uri, mediaType ) );
+		}
 		
 		createMediaPlayer();
 		
@@ -393,6 +446,8 @@ public class ImageViewerFragment extends Fragment
 			videoView.setBackgroundColor( Color.TRANSPARENT );
 		} );
 		
+		videoView.setVideoURI( uri, mediaSource );
+		
 		delayedHide();
 	}
 	
@@ -403,7 +458,27 @@ public class ImageViewerFragment extends Fragment
 		
 		if ( requestCode == PermissionService.REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION )
 		{
-			download();
+			if ( grantResults[0] == 0 )
+			{
+				download();
+			}
+			else
+			{
+				Toast.makeText( getActivity(), R.string.cantDownloadNoPermission, Toast.LENGTH_LONG ).show();
+			}
+		}
+		else if ( requestCode == PermissionService.REQUEST_READ_EXTERNAL_STORAGE_PERMISSION )
+		{
+			if ( grantResults[0] == 0 )
+			{
+				loadResource( UriUtils.contentUriToFileUri( context, currentResource ) );
+			}
+			else
+			{
+				Toast.makeText( getActivity(), R.string.cantDisplayResourceNoPermission, Toast.LENGTH_LONG ).show();
+				
+				getActivity().finish();
+			}
 		}
 	}
 	
@@ -425,6 +500,10 @@ public class ImageViewerFragment extends Fragment
 		if ( !new PermissionService().askExternalStorageAccess( this ) )
 		{
 			download();
+		}
+		else
+		{
+			requestinPermissions = true;
 		}
 	}
 	

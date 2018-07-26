@@ -1,5 +1,6 @@
 package com.ensoft.imgurviewer.service;
 
+import android.content.Context;
 import android.net.Uri;
 
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
@@ -34,11 +35,13 @@ import java.util.ArrayList;
 
 public class ResourceSolver
 {
+	private Context context;
 	private ResourceLoadListener resourceLoadListener;
 	private ArrayList<ResourceServiceSolver> resourceServiceSolvers = new ArrayList<>();
 	
-	public ResourceSolver( ResourceLoadListener resourceLoadListener )
+	public ResourceSolver( Context context, ResourceLoadListener resourceLoadListener )
 	{
+		this.context = context;
 		this.resourceLoadListener = resourceLoadListener;
 		
 		loadServices();
@@ -91,7 +94,7 @@ public class ResourceSolver
 			}
 		}
 		
-		if ( UriUtils.isVideoUrl( uri ) )
+		if ( UriUtils.isVideoUrl( uri ) || UriUtils.isAudioUrl( uri ) )
 		{
 			resourceLoadListener.loadVideo( uri, UriUtils.guessMediaTypeFromUri( uri ), uri );
 		}

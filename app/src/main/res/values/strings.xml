@@ -68,4 +68,6 @@
 	<string name="screenLockEnabledConf">Allows to lock/unlock the image/video view.</string>
 	<string name="fullScreenEnabled">Fullscreen Option</string>
 	<string name="fullScreenEnabledConf">Allows a fullscreen button on image/video view.</string>
+	<string name="cantDisplayResourceNoPermission">Sorry, can\'t display resource without proper permissions.</string>
+	<string name="cantDownloadNoPermission">Sorry, can\'t download resource/s without proper permissions.</string>
 </resources>
