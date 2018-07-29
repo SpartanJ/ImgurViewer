@@ -20,7 +20,7 @@ public class ResourceServiceSolver
 	
 	public boolean solve( Uri uri )
 	{
-		if ( serviceSolver.isServicePath( uri ) )
+		if ( null != uri && serviceSolver.isServicePath( uri ) )
 		{
 			if ( serviceSolver.isGallery( uri ) )
 			{

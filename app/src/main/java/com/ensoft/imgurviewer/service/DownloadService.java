@@ -7,7 +7,7 @@ import android.os.Environment;
 
 public class DownloadService
 {
-	Context context;
+	private Context context;
 	
 	public DownloadService( Context context )
 	{
@@ -20,7 +20,6 @@ public class DownloadService
 		
 		DownloadManager.Request request = new DownloadManager.Request( uriDownload );
 		
-		request.setAllowedOverRoaming( false );
 		request.setNotificationVisibility( DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED );
 		
 		if ( new PermissionService().isExternalStorageAccess( context ) )
@@ -32,6 +31,6 @@ public class DownloadService
 			request.setDestinationInExternalFilesDir( context, Environment.DIRECTORY_DOWNLOADS, fileName );
 		}
 		
-		return downloadManager.enqueue( request );
+		return null != downloadManager ? downloadManager.enqueue( request ) : 0;
 	}
 }
