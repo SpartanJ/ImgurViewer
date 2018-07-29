@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 def versionMajor = 1
 def versionMinor = 8
-def versionPatch = 1
+def versionPatch = 2
 
 android {
     compileSdkVersion 27
@@ -33,11 +33,11 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.android.support:support-v13:27.1.1'
-    implementation 'com.facebook.fresco:fresco:1.9.0'
+    implementation 'com.facebook.fresco:fresco:1.10.0'
     implementation 'com.android.support:exifinterface:27.1.1'
-    implementation 'com.facebook.fresco:animated-gif:1.9.0'
-    implementation 'com.facebook.fresco:animated-webp:1.9.0'
-    implementation 'com.facebook.fresco:webpsupport:1.9.0'
+    implementation 'com.facebook.fresco:animated-gif:1.10.0'
+    implementation 'com.facebook.fresco:animated-webp:1.10.0'
+    implementation 'com.facebook.fresco:webpsupport:1.10.0'
     implementation 'ch.acra:acra:4.9.2'
     implementation 'com.ensoft-dev.restafari:restafari:0.3.17'
     implementation 'com.readystatesoftware.systembartint:systembartint:1.0.3'

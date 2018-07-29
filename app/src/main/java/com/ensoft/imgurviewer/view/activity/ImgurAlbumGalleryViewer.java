@@ -42,7 +42,6 @@ import com.imgurviewer.R;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrListener;
-import com.r0adkll.slidr.model.SlidrPosition;
 
 public class ImgurAlbumGalleryViewer extends AppActivity
 {
@@ -90,9 +89,15 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 			finish();
 			
 			Log.v( TAG, "Data not found." );
-			
-			return;
 		}
+	}
+	
+	@Override
+	public void onPostCreate( @Nullable Bundle savedInstanceState )
+	{
+		super.onPostCreate( savedInstanceState );
+		
+		statusBarTint();
 		
 		Log.v( TAG, "Data is: " + albumData.toString() );
 		
@@ -146,14 +151,6 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		{
 			loadInstagramProfile();
 		}
-	}
-	
-	@Override
-	public void onPostCreate( @Nullable Bundle savedInstanceState )
-	{
-		super.onPostCreate( savedInstanceState );
-		
-		statusBarTint();
 	}
 	
 	protected void loadInstagramProfile()
