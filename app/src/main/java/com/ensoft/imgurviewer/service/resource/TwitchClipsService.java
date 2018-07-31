@@ -23,6 +23,11 @@ public class TwitchClipsService extends MediaServiceSolver
 	
 	protected String getVideoStatusUrl( Uri uri )
 	{
+		if ( uri.getLastPathSegment().equals( "embed" ) )
+		{
+			return TWITCH_CLIPS_STATUS.replace( "{id}", uri.getQueryParameter( "clip" ) );
+		}
+		
 		return TWITCH_CLIPS_STATUS.replace( "{id}", uri.getLastPathSegment() );
 	}
 	
