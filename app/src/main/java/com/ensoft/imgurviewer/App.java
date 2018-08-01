@@ -6,7 +6,6 @@ import com.ensoft.imgurviewer.service.PreferencesService;
 import com.ensoft.restafari.network.service.RequestService;
 import com.ensoft.restafari.network.service.RequestServiceOptions;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.github.piasy.biv.BigImageViewer;
 import com.github.piasy.biv.loader.fresco.FrescoImageLoader;
 

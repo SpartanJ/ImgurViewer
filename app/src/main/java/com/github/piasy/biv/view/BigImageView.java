@@ -314,15 +314,19 @@ public class BigImageView extends FrameLayout implements ImageLoader.Callback {
     }
 
     public void showImage(final Uri thumbnail, final Uri uri) {
-        mThumbnail = thumbnail;
-        mUri = uri;
-        mImageLoader.loadImage(hashCode(), uri, mInternalCallback);
-
-        if (mFailureImageView != null) {
-            mFailureImageView.setVisibility(GONE);
-        }
+		showImage(hashCode(), thumbnail, uri);
     }
-
+	
+	public void showImage(final int requestId, final Uri thumbnail, final Uri uri) {
+		mThumbnail = thumbnail;
+		mUri = uri;
+		mImageLoader.loadImage(requestId, uri, mInternalCallback);
+		
+		if (mFailureImageView != null) {
+			mFailureImageView.setVisibility(GONE);
+		}
+	}
+	
     public void cancel() {
         mImageLoader.cancel(hashCode());
     }

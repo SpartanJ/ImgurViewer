@@ -389,7 +389,7 @@ public class ImageViewerFragment extends Fragment
 			public void onPreviewReleased() {}
 		} );
 		
-		imageView.showImage( null != thumbnail ? thumbnail : Uri.EMPTY, uri );
+		imageView.showImage( uri.toString().hashCode(), null != thumbnail ? thumbnail : Uri.EMPTY, uri );
 		
 		delayedHide();
 	}
