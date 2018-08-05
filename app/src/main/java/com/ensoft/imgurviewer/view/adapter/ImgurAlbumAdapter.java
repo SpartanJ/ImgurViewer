@@ -1,13 +1,17 @@
 package com.ensoft.imgurviewer.view.adapter;
 
+import android.graphics.Point;
 import android.graphics.drawable.Animatable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ensoft.imgurviewer.App;
@@ -30,15 +34,21 @@ import java.util.List;
 public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.AlbumImageHolder>
 {
 	public static final String TAG = ImgurAlbumAdapter.class.getCanonicalName();
-	protected int resourceId;
-	protected List<ImgurImage> dataSet = new ArrayList<>();
+	private int resourceId;
+	private List<ImgurImage> dataSet = new ArrayList<>();
 	private boolean isLandscape = false;
-	protected int floatingMenuHeight;
+	private boolean isGridLayout;
+	private int layoutRows;
+	private int floatingMenuHeight;
+	private Point resizeOption;
 	
-	public ImgurAlbumAdapter( int resource, ImgurImage[] objects, int floatingMenuHeight )
+	public ImgurAlbumAdapter( int resource, boolean isGridLayout, int layoutRows, ImgurImage[] objects, int floatingMenuHeight, Point resizeOption )
 	{
 		resourceId = resource;
+		this.isGridLayout = isGridLayout;
+		this.layoutRows = layoutRows;
 		this.floatingMenuHeight = floatingMenuHeight;
+		this.resizeOption = resizeOption;
 		
 		appendImages( objects );
 	}
@@ -56,16 +66,17 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 	}
 	
 	@Override
-	public AlbumImageHolder onCreateViewHolder( ViewGroup parent, int viewType )
+	@NonNull
+	public AlbumImageHolder onCreateViewHolder( @NonNull ViewGroup parent, int viewType )
 	{
 		View v = LayoutInflater.from( parent.getContext() ).inflate( resourceId, parent, false );
 		return new AlbumImageHolder( v );
 	}
 	
 	@Override
-	public void onBindViewHolder( AlbumImageHolder holder, int position )
+	public void onBindViewHolder( @NonNull AlbumImageHolder holder, int position )
 	{
-		holder.setData( dataSet, dataSet.get( position ), position, getItemCount(), isLandscape, floatingMenuHeight );
+		holder.setData( dataSet, dataSet.get( position ), position, getItemCount(), isLandscape, isGridLayout, layoutRows, floatingMenuHeight, resizeOption );
 	}
 	
 	@Override
@@ -76,6 +87,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 	
 	static class AlbumImageHolder extends RecyclerView.ViewHolder
 	{
+		LinearLayout container;
 		ImgurImage image;
 		ImageViewForcedHeight imageView;
 		TextView title;
@@ -86,6 +98,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 		{
 			super( view );
 			
+			container = view.findViewById( R.id.albumPhoto_container );
 			imageView = view.findViewById( R.id.albumPhoto_photo );
 			progressBar = view.findViewById( R.id.albumPhoto_progressBar );
 			title = view.findViewById( R.id.albumPhoto_title );
@@ -98,7 +111,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 			imageView.setHierarchy( hierarchy );
 		}
 		
-		private void setData( List<ImgurImage> dataSet, ImgurImage img, int position, int count, boolean isLandscape, int floatingMenuHeight )
+		private void setData( List<ImgurImage> dataSet, ImgurImage img, int position, int count, boolean isLandscape, boolean isGridLayout, int layoutRows, int floatingMenuHeight, Point resizeOption )
 		{
 			image = img;
 			imageView.setOnClickListener( v -> AlbumPagerActivity.newInstance( v.getContext(), dataSet.toArray( new ImgurImage[ dataSet.size() ] ), position ) );
@@ -107,7 +120,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 			
 			progressBar.setVisibility( View.VISIBLE );
 			
-			if ( null != image.getTitle() )
+			if ( null != image.getTitle() && !isGridLayout )
 			{
 				title.setVisibility( View.VISIBLE );
 				title.setText( image.getTitle() );
@@ -117,7 +130,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 				title.setVisibility( View.GONE );
 			}
 			
-			if ( null != image.getDescription() )
+			if ( null != image.getDescription() && !isGridLayout )
 			{
 				description.setVisibility( View.VISIBLE );
 				
@@ -130,30 +143,46 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 			
 			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT )
 			{
-				if ( position == 0 )
+				int top = MetricsHelper.getStatusBarHeight( App.getInstance() ) + floatingMenuHeight;
+				
+				if ( !isGridLayout )
 				{
-					int top = MetricsHelper.getStatusBarHeight( App.getInstance() ) + floatingMenuHeight;
-					
-					if ( null != image.getTitle() )
+					if ( position == 0 )
 					{
-						title.setPadding( 0, top, 0, 0 );
+						if ( null != image.getTitle() )
+						{
+							title.setPadding( 0, top, 0, 0 );
+						}
+						else if ( null != image.getDescription() )
+						{
+							description.setPadding( 0, top, 0, 0 );
+						}
+						else
+						{
+							imageView.setPadding( 0, top, 0, 0 );
+						}
 					}
-					else if ( null != image.getDescription() )
+					else if ( position == count - 1 && !isLandscape )
 					{
-						description.setPadding( 0, top, 0, 0 );
+						imageView.setPadding( 0, 0, 0, MetricsHelper.getNavigationBarHeight( App.getInstance() ) );
 					}
 					else
 					{
-						imageView.setPadding( 0, top, 0, 0 );
+						imageView.setPadding( 0, 0, 0, 0 );
 					}
-				}
-				else if ( position == count - 1 && !isLandscape )
-				{
-					imageView.setPadding( 0, 0, 0, MetricsHelper.getNavigationBarHeight( App.getInstance() ) );
 				}
 				else
 				{
-					imageView.setPadding( 0, 0, 0, 0 );
+					container.setPadding( 0, 0, 0, 0 );
+					
+					imageView.setHeightRatio( 1 );
+					
+					RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams( RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT );
+					
+					layoutParams.setMargins( 0, ( position < layoutRows ) ? top : 0, 0, ( position >= count - layoutRows ) && !isLandscape ? MetricsHelper.getNavigationBarHeight( App.getInstance() ) : 0 );
+					
+					imageView.setLayoutParams( layoutParams );
+					progressBar.setLayoutParams( layoutParams );
 				}
 			}
 			
@@ -170,7 +199,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 				{
 					Log.v( TAG, throwable.toString() );
 				}
-			} );
+			}, resizeOption );
 		}
 	}
 }

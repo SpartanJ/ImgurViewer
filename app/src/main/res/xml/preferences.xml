@@ -36,6 +36,22 @@
 		android:summary="@string/gesturesEnabledConf" />
 
 	<ListPreference
+		android:key="defaultGalleryViewStyle"
+		android:title="@string/defaultGalleryViewStyle"
+		android:summary="@string/defaultGalleryViewStyleConf"
+		android:entries="@array/gallery_view_arr"
+		android:entryValues="@array/gallery_view_val"
+		android:defaultValue="0" />
+
+	<EditTextPreference
+		android:name="gridViewRows"
+		android:title="@string/gridViewColumns"
+		android:summary="@string/gridViewColumnsConf"
+		android:defaultValue="2"
+		android:key="gridViewRows"
+		android:numeric="integer" />
+
+	<ListPreference
 		android:dependency="gesturesEnabled"
 		android:key="gestureImageView"
 		android:title="@string/gesturesImageView"

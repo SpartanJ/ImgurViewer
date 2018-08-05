@@ -1,50 +1,76 @@
 package com.ensoft.imgurviewer.service.resource;
 
+import android.content.Context;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.Request;
+import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.GyazoOEmbed;
+import com.ensoft.imgurviewer.model.MediaType;
 import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
+import com.ensoft.restafari.network.processor.ResponseListener;
 import com.ensoft.restafari.network.service.RequestService;
-import com.google.gson.Gson;
+import com.imgurviewer.R;
 
 public class GyazoService extends MediaServiceSolver
 {
 	public static final String TAG = GyazoService.class.getCanonicalName();
-	public static final String GYAZO_DOMAIN = "gyazo.com";
-	public static final String GYAZO_API_URL = "https://api.gyazo.com/api";
-	public static final String GYAZO_GET_IMAGE_URL = GYAZO_API_URL + "/oembed?url=";
+	private static final String GYAZO_DOMAIN = "gyazo.com";
+	private static final String GYAZO_API_URL = "https://api.gyazo.com/api";
+	private static final String GYAZO_GET_IMAGE_URL = GYAZO_API_URL + "/oembed?url=";
+	private static final String GYAZO_PLAYER_URL = "https://gyazo.com/player/";
 	
 	public void getPath( Uri uri, final PathResolverListener pathResolverListener )
 	{
 		String oEmbedUrl = GYAZO_GET_IMAGE_URL + uri.toString();
 		
-		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( oEmbedUrl, null, response ->
+		RequestService.getInstance().makeJsonRequest( Request.Method.GET, oEmbedUrl, new ResponseListener<GyazoOEmbed>()
 		{
-			try
+			@Override
+			public void onRequestSuccess( Context context, GyazoOEmbed response )
 			{
-				Log.v( TAG, response.toString() );
-				
-				GyazoOEmbed oEmbed = new Gson().fromJson( response.toString(), GyazoOEmbed.class );
-				
-				pathResolverListener.onPathResolved( oEmbed.getUri(), UriUtils.guessMediaTypeFromUri( oEmbed.getUri() ), uri );
+				if ( null != response && null != response.getUri() && !TextUtils.isEmpty( response.getUri().toString() ) )
+				{
+					pathResolverListener.onPathResolved( response.getUri(), UriUtils.guessMediaTypeFromUri( response.getUri() ), uri );
+				}
+				else if ( null != response && "video".equals( response.getType() ) && !TextUtils.isEmpty( response.getHtml() ) && response.getHtml().startsWith( "<iframe" ) )
+				{
+					Uri playerUri = Uri.parse( GYAZO_PLAYER_URL + uri.getLastPathSegment() );
+					
+					new GyazoVideoService().getPath( playerUri, new PathResolverListener( GyazoService.this )
+					{
+						@Override
+						public void onPathResolved( Uri url, MediaType mediaType, Uri thumbnailOrReferer )
+						{
+							pathResolverListener.onPathResolved( url, mediaType, thumbnailOrReferer );
+						}
+						
+						@Override
+						public void onPathError( String error )
+						{
+							Log.v( TAG, error );
+							
+							pathResolverListener.onPathError( error );
+						}
+					} );
+				}
+				else
+				{
+					pathResolverListener.onPathError( App.getInstance().getString( R.string.could_not_resolve_url ) );
+				}
 			}
-			catch ( Exception e )
-			{
-				Log.v( TAG, e.getMessage() );
-				
-				pathResolverListener.onPathError( e.toString() );
-			}
-		}, error ->
-		{
-			Log.v( TAG, error.toString() );
 			
-			pathResolverListener.onPathError( error.toString() );
+			@Override
+			public void onRequestError( Context context, int errorCode, String errorMessage )
+			{
+				Log.v( TAG, errorMessage );
+				
+				pathResolverListener.onPathError( errorMessage );
+			}
 		} );
-		
-		RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
 	}
 	
 	@Override

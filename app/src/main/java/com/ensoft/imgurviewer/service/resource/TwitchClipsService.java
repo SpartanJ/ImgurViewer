@@ -2,8 +2,6 @@ package com.ensoft.imgurviewer.service.resource;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 
 import com.android.volley.Request;
 import com.ensoft.imgurviewer.App;
@@ -75,18 +73,18 @@ public class TwitchClipsService extends MediaServiceSolver
 				
 				if ( videoUrl != null )
 				{
-					new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( videoUrl, UriUtils.guessMediaTypeFromUri( videoUrl ), uri ) );
+					pathResolverListener.onPathResolved( videoUrl, UriUtils.guessMediaTypeFromUri( videoUrl ), uri );
 				}
 				else
 				{
-					new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( App.getInstance().getString( R.string.videoUrlNotFound ) ) );
+					pathResolverListener.onPathError( App.getInstance().getString( R.string.videoUrlNotFound ) );
 				}
 			}
 			
 			@Override
 			public void onRequestError( Context context, int errorCode, String errorMessage )
 			{
-				new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( errorMessage ) );
+				pathResolverListener.onPathError( errorMessage );
 			}
 		} );
 	}

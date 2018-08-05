@@ -27,6 +27,9 @@ public class GyazoOEmbed
 	@SerializedName( "height" )
 	protected int height;
 	
+	@SerializedName( "html" )
+	protected String html;
+	
 	public String getVersion()
 	{
 		return version;
@@ -54,7 +57,7 @@ public class GyazoOEmbed
 	
 	public Uri getUri()
 	{
-		return Uri.parse( url );
+		return null != url ? Uri.parse( url ) : null;
 	}
 	
 	public int getWidth()
@@ -65,5 +68,10 @@ public class GyazoOEmbed
 	public int getHeight()
 	{
 		return height;
+	}
+	
+	public String getHtml()
+	{
+		return html;
 	}
 }

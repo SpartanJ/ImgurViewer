@@ -36,12 +36,26 @@
 	<string name="gesturesImageViewConf">Discard swipe gesture for image/video view</string>
 	<string name="gesturesGalleryView">Gallery View</string>
 	<string name="gesturesGalleryViewConf">Discard swipe gesture for gallery view</string>
+	<string name="defaultGalleryViewStyle">Default Gallery View style</string>
+	<string name="defaultGalleryViewStyleConf">Select between List and Grid view</string>
+	<string name="gridViewColumns">Grid view number of columns</string>
+	<string name="gridViewColumnsConf">Select a value between 1 and 10</string>
 	<string name="vertical">VERTICAL</string>
 	<string name="horizontal">HORIZONTAL</string>
 	<string name="left">LEFT</string>
 	<string name="right">RIGHT</string>
 	<string name="top">TOP</string>
 	<string name="bottom">BOTTOM</string>
+	<string name="listView">List View</string>
+	<string name="gridView">Grid View</string>
+	<string-array name="gallery_view_arr">
+		<item>@string/listView</item>
+		<item>@string/gridView</item>
+	</string-array>
+	<string-array name="gallery_view_val">
+		<item>0</item>
+		<item>1</item>
+	</string-array>
 	<string-array name="gestures_arr">
 		<item>@string/vertical</item>
 		<item>@string/horizontal</item>

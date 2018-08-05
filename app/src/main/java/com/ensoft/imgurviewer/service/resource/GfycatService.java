@@ -1,22 +1,23 @@
 package com.ensoft.imgurviewer.service.resource;
 
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.Request;
 import com.ensoft.imgurviewer.model.GfycatResource;
 import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
+import com.ensoft.restafari.network.processor.ResponseListener;
 import com.ensoft.restafari.network.service.RequestService;
-import com.google.gson.Gson;
 
 public class GfycatService extends MediaServiceSolver
 {
-	public static final String TAG = GyazoService.class.getCanonicalName();
-	public static final String GFYCAT_DOMAIN = "gfycat.com";
-	public static final String GFYCAT_INFO_URL = "https://gfycat.com/cajax/get/";
+	public static final String TAG = GfycatService.class.getCanonicalName();
+	private static final String GFYCAT_DOMAIN = "gfycat.com";
+	private static final String GFYCAT_INFO_URL = "https://gfycat.com/cajax/get/";
 	
-	protected String getResourceName( Uri uri )
+	private String getResourceName( Uri uri )
 	{
 		String resourceName = uri.getLastPathSegment();
 		
@@ -37,7 +38,7 @@ public class GfycatService extends MediaServiceSolver
 		return resourceName;
 	}
 	
-	protected String getResourcePath( Uri uri )
+	private String getResourcePath( Uri uri )
 	{
 		return GFYCAT_INFO_URL + getResourceName( uri );
 	}
@@ -45,30 +46,22 @@ public class GfycatService extends MediaServiceSolver
 	@Override
 	public void getPath( Uri uri, final PathResolverListener pathResolverListener )
 	{
-		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( getResourcePath( uri ), null, response ->
+		RequestService.getInstance().makeJsonRequest( Request.Method.GET, getResourcePath( uri ), new ResponseListener<GfycatResource>()
 		{
-			try
+			@Override
+			public void onRequestSuccess( Context context, GfycatResource resource )
 			{
-				Log.v( TAG, response.toString() );
-				
-				GfycatResource resource = new Gson().fromJson( response.toString(), GfycatResource.class );
-				
 				pathResolverListener.onPathResolved( resource.item.getUri(), UriUtils.guessMediaTypeFromUri( resource.item.getUri() ), uri );
 			}
-			catch ( Exception e )
-			{
-				Log.v( TAG, e.getMessage() );
-				
-				pathResolverListener.onPathError( e.toString() );
-			}
-		}, error ->
-		{
-			Log.v( TAG, error.toString() );
 			
-			pathResolverListener.onPathError( error.toString() );
+			@Override
+			public void onRequestError( Context context, int errorCode, String errorMessage )
+			{
+				Log.v( TAG, errorMessage );
+				
+				pathResolverListener.onPathError( errorMessage );
+			}
 		} );
-		
-		RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
 	}
 	
 	@Override

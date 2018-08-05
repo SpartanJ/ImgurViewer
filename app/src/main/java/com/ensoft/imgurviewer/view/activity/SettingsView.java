@@ -84,6 +84,39 @@ public class SettingsView extends PreferenceActivity
 				return true;
 			} );
 			
+			final ListPreference defaultGalleryViewStyle = (ListPreference) findPreference( "defaultGalleryViewStyle" );
+			defaultGalleryViewStyle.setValue( preferencesService.getDefaultGalleryLayout() );
+			defaultGalleryViewStyle.setOnPreferenceChangeListener( ( preference, newValue ) ->
+			{
+				preferencesService.setDefaultGalleryLayout( newValue.toString() );
+				
+				return true;
+			} );
+			
+			Preference gridViewRows = findPreference( "gridViewRows" );
+			gridViewRows.setDefaultValue( Integer.toString( preferencesService.getGridLayoutColumns() ) );
+			gridViewRows.setOnPreferenceChangeListener( ( preference, newValue ) ->
+			{
+				if ( newValue != null && !( (String) newValue ).isEmpty() )
+				{
+					try
+					{
+						int intValue = Integer.valueOf( (String) newValue );
+						
+						preferencesService.setGridLayoutColumns( intValue );
+					}
+					catch ( Exception e )
+					{
+						return false;
+					}
+				}
+				else
+				{
+					return false;
+				}
+				
+				return true;
+			} );
 			
 			final CheckBoxPreference gesturesEnabled = (CheckBoxPreference) findPreference( "gesturesEnabled" );
 			gesturesEnabled.setChecked( preferencesService.gesturesEnabled() );
