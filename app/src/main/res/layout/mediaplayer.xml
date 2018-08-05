@@ -8,39 +8,6 @@
 	android:gravity="end">
 
 	<LinearLayout
-		android:id="@+id/mediaPlayer_timeContainer"
-		android:orientation="horizontal"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:paddingTop="8dp"
-		android:paddingBottom="8dp"
-		android:layout_gravity="start"
-		android:weightSum="1">
-
-		<TextView
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:id="@+id/mediaPlayer_timePlayed"
-			android:text="@string/seconds_abbr"
-			android:layout_marginLeft="8dp"
-			android:layout_marginStart="8dp"
-			android:textColor="@android:color/white"
-			/>
-
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/mediaPlayer_time"
-			android:text="@string/seconds_abbr"
-			android:layout_marginEnd="8dp"
-			android:layout_marginRight="8dp"
-			android:textColor="@android:color/white"
-			/>
-
-	</LinearLayout>
-
-	<LinearLayout
 		android:id="@+id/mediaPlayer_seekBarContainer"
 		android:background="@color/toolbar_background"
 		android:orientation="horizontal"
@@ -48,15 +15,37 @@
 		android:layout_height="wrap_content"
 		android:paddingTop="8dp"
 		android:paddingBottom="8dp"
-		android:layout_gravity="end">
+		android:layout_gravity="end"
+		android:weightSum="1">
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:id="@+id/mediaPlayer_timePlayed"
+			android:text="@string/seconds_abbr"
+			android:layout_marginLeft="8dp"
+			android:textColor="@android:color/white"
+			android:gravity="center_vertical"
+			/>
 
 		<SeekBar
-			android:layout_width="match_parent"
+			android:layout_width="0dp"
+			android:layout_weight="1"
 			android:layout_height="wrap_content"
 			android:id="@+id/mediaPlayer_seekBar"
 			android:layout_gravity="center_vertical"
-			android:layout_marginLeft="4dp"
-			android:layout_marginRight="4dp"
+			android:layout_marginLeft="8dp"
+			android:layout_marginRight="8dp"
+			/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:id="@+id/mediaPlayer_time"
+			android:text="@string/seconds_abbr"
+			android:layout_marginRight="8dp"
+			android:textColor="@android:color/white"
+			android:gravity="center_vertical"
 			/>
 
 	</LinearLayout>

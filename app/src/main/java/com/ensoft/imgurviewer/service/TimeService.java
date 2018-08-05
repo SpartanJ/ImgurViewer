@@ -19,7 +19,7 @@ public class TimeService
 	{
 		if ( totalSeconds < 60 )
 		{
-			return String.valueOf( totalSeconds ) + context.getString( R.string.seconds_abbr );
+			return String.format( Locale.getDefault(), "%02d", 0 ) + ":" + String.format( Locale.getDefault(), "%02d", totalSeconds );
 		}
 		
 		long minutesLeft = totalSeconds / 60;

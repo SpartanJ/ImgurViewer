@@ -36,7 +36,6 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 {
 	private static final String TAG = MediaPlayerFragment.class.getCanonicalName();
 	
-	protected View timeContainer;
 	protected View seekBarContainer;
 	protected View buttonsContainer;
 	protected VideoView videoView;
@@ -128,7 +127,6 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 			setOrientationMargins( getResources().getConfiguration().orientation );
 		}
 		
-		timeContainer = view.findViewById( R.id.mediaPlayer_timeContainer );
 		seekBarContainer = view.findViewById( R.id.mediaPlayer_seekBarContainer );
 		buttonsContainer = view.findViewById( R.id.mediaPlayer_buttonsContainer );
 		
@@ -211,7 +209,6 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 			screenLockOnOff.setAlpha( 0.15f );
 			screenLockOnOff.setScaleX( 0.5f );
 			screenLockOnOff.setScaleY( 0.5f );
-			timeContainer.setVisibility( View.GONE );
 			seekBarContainer.setVisibility( View.GONE );
 			audioOnOffView.setVisibility( View.GONE );
 			playPauseView.setVisibility( View.GONE );
@@ -223,7 +220,6 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 			screenLockOnOff.setAlpha( 1.f );
 			screenLockOnOff.setScaleX( 1.f );
 			screenLockOnOff.setScaleY( 1.f );
-			timeContainer.setVisibility( View.VISIBLE );
 			seekBarContainer.setVisibility( View.VISIBLE );
 			audioOnOffView.setVisibility( View.VISIBLE );
 			playPauseView.setVisibility( View.VISIBLE );

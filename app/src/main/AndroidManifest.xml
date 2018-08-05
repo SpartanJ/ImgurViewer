@@ -85,14 +85,6 @@
 				<data android:host="www.porntube.com" />
 				<data android:host="m.porntube.com" />
 
-				<data android:host="xnxx.com" />
-				<data android:host="www.xnxx.com" />
-				<data android:host="m.xnxx.com" />
-
-				<data android:host="xhamster.com" />
-				<data android:host="www.xhamster.com" />
-				<data android:host="m.xhamster.com" />
-
 				<data android:scheme="https" />
 				<data android:scheme="http" />
 
@@ -110,6 +102,36 @@
 				<data android:scheme="http" />
 
 				<data android:pathPattern="/photos/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:host="xhamster.com" />
+				<data android:host="www.xhamster.com" />
+				<data android:host="m.xhamster.com" />
+
+				<data android:pathPattern="/videos/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:host="xnxx.com" />
+				<data android:host="www.xnxx.com" />
+				<data android:host="m.xnxx.com" />
+
+				<data android:pathPattern="/video.*" />
 			</intent-filter>
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
