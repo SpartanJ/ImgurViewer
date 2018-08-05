@@ -2,16 +2,19 @@ package com.ensoft.imgurviewer.view.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.URLUtil;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -21,6 +24,7 @@ import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.ImgurAlbum;
 import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.model.InstagramProfileModel;
+import com.ensoft.imgurviewer.model.LayoutType;
 import com.ensoft.imgurviewer.service.DeviceService;
 import com.ensoft.imgurviewer.service.DownloadService;
 import com.ensoft.imgurviewer.service.IntentUtils;
@@ -49,11 +53,13 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 	
 	protected RelativeLayout albumContainer;
 	protected LinearLayout floatingMenu;
+	protected ImageView layoutTypeView;
 	protected ImgurAlbumAdapter albumAdapter;
 	protected ProgressBar progressBar;
 	protected RecyclerView recyclerView;
 	protected Uri albumData;
 	protected ImgurImage[] images;
+	protected LayoutType currentLayoutType;
 	
 	@Override
 	public void onCreate( Bundle savedInstanceState )
@@ -64,11 +70,17 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		
 		progressBar = findViewById( R.id.albumViewer_progressBar );
 		albumContainer = findViewById( R.id.albumViewer_container );
+		floatingMenu = findViewById( R.id.floating_menu );
+		recyclerView = findViewById( R.id.albumViewer_listView );
+		layoutTypeView = findViewById( R.id.view_type );
 		findViewById( R.id.settings ).setOnClickListener( this::showSettings );
 		findViewById( R.id.download ).setOnClickListener( this::downloadImage );
 		findViewById( R.id.share ).setOnClickListener( this::shareImage );
 		
-		floatingMenu = findViewById( R.id.floating_menu );
+		currentLayoutType = App.getInstance().getPreferencesService().getDefaultGalleryLayoutType();
+		setLayoutType( currentLayoutType );
+		layoutTypeView.setVisibility( View.VISIBLE );
+		layoutTypeView.setOnClickListener( this::onLayoutTypeClick );
 		
 		if ( null != getResources() && null != getResources().getConfiguration() )
 		{
@@ -175,6 +187,33 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		} );
 	}
 	
+	protected void createAdapter()
+	{
+		boolean isGridLayout = currentLayoutType == LayoutType.GRID;
+		int layoutRows = App.getInstance().getPreferencesService().getGridLayoutColumns();
+		
+		progressBar.setVisibility( View.INVISIBLE );
+		
+		if ( isGridLayout )
+		{
+			recyclerView.setLayoutManager( new GridLayoutManager( this, layoutRows ) );
+		}
+		else
+		{
+			recyclerView.setLayoutManager( new LinearLayoutManager( this ) );
+		}
+		
+		Point viewSize = isGridLayout ?
+			new Point( recyclerView.getMeasuredWidth() / layoutRows, recyclerView.getMeasuredWidth() / layoutRows ) :
+			new Point( recyclerView.getMeasuredWidth(), (int)( recyclerView.getMeasuredWidth() * 0.89f ) );
+		
+		albumAdapter = new ImgurAlbumAdapter( R.layout.item_album_photo, isGridLayout, layoutRows, images, floatingMenu.getMeasuredHeight(), viewSize );
+		albumAdapter.setOrientationLandscape( new DeviceService().isLandscapeOrientation( this ) );
+		
+		recyclerView.setAdapter( albumAdapter );
+		recyclerView.setNestedScrollingEnabled( false );
+	}
+	
 	protected void create( ImgurImage[] images )
 	{
 		if ( null != images && images.length == 1 && TextUtils.isEmpty( images[0].getTitle() ) && TextUtils.isEmpty( images[0].getDescription() ) )
@@ -189,38 +228,43 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		if ( null == albumAdapter )
 		{
 			this.images = images;
-			progressBar.setVisibility( View.INVISIBLE );
-			albumAdapter = new ImgurAlbumAdapter( R.layout.item_album_photo, images, floatingMenu.getMeasuredHeight() );
-			albumAdapter.setOrientationLandscape( new DeviceService().isLandscapeOrientation( this ) );
 			
-			recyclerView = findViewById( R.id.albumViewer_listView );
-			recyclerView.setLayoutManager( new LinearLayoutManager( this ) );
-			recyclerView.setAdapter( albumAdapter );
+			createAdapter();
 		}
-		else
+		else if ( null != images )
 		{
-			ImgurImage[] newImages = new ImgurImage[ this.images.length + images.length ];
-			
-			int i = 0;
-			
-			for ( ImgurImage img : this.images )
+			if ( null != this.images && this.images.length > 0 && images.length > 0 && this.images[0].getLink().equals( images[0].getLink() ) )
 			{
-				newImages[i] = img;
-				i++;
+				// TODO: Find why this happens
+				return;
 			}
-			
-			for ( ImgurImage img : images )
+			else if ( this.images == null )
 			{
-				newImages[i] = img;
-				i++;
+				this.images = images;
 			}
-			
-			this.images = newImages;
+			else
+			{
+				ImgurImage[] newImages = new ImgurImage[ this.images.length + images.length ];
+				
+				int i = 0;
+				
+				for ( ImgurImage img : this.images )
+				{
+					newImages[ i ] = img;
+					i++;
+				}
+				
+				for ( ImgurImage img : images )
+				{
+					newImages[ i ] = img;
+					i++;
+				}
+				
+				this.images = newImages;
+			}
 			
 			albumAdapter.appendImages( images );
 		}
-		
-		recyclerView.setNestedScrollingEnabled( false );
 		
 		PreferencesService preferencesService = App.getInstance().getPreferencesService();
 		
@@ -273,6 +317,27 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 	public void showSettings( View v )
 	{
 		startActivity( new Intent( this, SettingsView.class ) );
+	}
+	
+	private void setLayoutType( LayoutType layoutType )
+	{
+		if ( layoutType == LayoutType.LIST )
+		{
+			layoutTypeView.setImageResource( R.drawable.ic_view_comfy_white_24dp );
+		}
+		else
+		{
+			layoutTypeView.setImageResource( R.drawable.ic_view_headline_white_24dp );
+		}
+		
+		currentLayoutType = layoutType;
+	}
+	
+	public void onLayoutTypeClick( View v )
+	{
+		setLayoutType( LayoutType.GRID == currentLayoutType ? LayoutType.LIST : LayoutType.GRID );
+		
+		createAdapter();
 	}
 	
 	@Override

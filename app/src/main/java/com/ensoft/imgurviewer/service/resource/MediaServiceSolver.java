@@ -5,8 +5,6 @@ import android.net.Uri;
 import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 
-import java.util.List;
-
 public abstract class MediaServiceSolver
 {
 	public abstract void getPath( Uri uri, final PathResolverListener pathResolverListener );

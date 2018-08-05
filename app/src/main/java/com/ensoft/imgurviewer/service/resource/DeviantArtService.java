@@ -2,8 +2,6 @@ package com.ensoft.imgurviewer.service.resource;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -26,7 +24,7 @@ public class DeviantArtService extends MediaServiceSolver
 			@Override
 			public void onRequestSuccess( Context context, DeviantArtImageModel response )
 			{
-				new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( response.getUri(), MediaType.IMAGE, response.getThumbnailUri() ) );
+				pathResolverListener.onPathResolved( response.getUri(), MediaType.IMAGE, response.getThumbnailUri() );
 			}
 			
 			@Override
@@ -34,7 +32,7 @@ public class DeviantArtService extends MediaServiceSolver
 			{
 				Log.v( DEVIANTART_DOMAIN, errorMessage );
 				
-				new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( errorMessage ) );
+				pathResolverListener.onPathError( errorMessage );
 			}
 		} );
 	}

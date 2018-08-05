@@ -85,6 +85,14 @@
 				<data android:host="www.porntube.com" />
 				<data android:host="m.porntube.com" />
 
+				<data android:host="xnxx.com" />
+				<data android:host="www.xnxx.com" />
+				<data android:host="m.xnxx.com" />
+
+				<data android:host="xhamster.com" />
+				<data android:host="www.xhamster.com" />
+				<data android:host="m.xhamster.com" />
+
 				<data android:scheme="https" />
 				<data android:scheme="http" />
 
@@ -128,6 +136,19 @@
 				<data android:scheme="http" />
 
 				<data android:pathPattern="/a/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="imgflip.com" />
+				<data android:host="www.imgflip.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/i/.*" />
 			</intent-filter>
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />

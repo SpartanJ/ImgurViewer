@@ -172,7 +172,10 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 						}
 					}
 				}
-				catch ( Exception e ) {}
+				catch ( Exception e )
+				{
+					Log.e( TAG, "Error on onGlobalLayout: " + e.toString() );
+				}
 			}
 		} );
 		

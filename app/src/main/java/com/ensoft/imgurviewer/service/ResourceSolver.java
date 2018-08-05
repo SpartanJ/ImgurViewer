@@ -11,9 +11,10 @@ import com.ensoft.imgurviewer.service.resource.FlickrService;
 import com.ensoft.imgurviewer.service.resource.GfycatService;
 import com.ensoft.imgurviewer.service.resource.GiphyService;
 import com.ensoft.imgurviewer.service.resource.GyazoService;
-import com.ensoft.imgurviewer.service.resource.MediaServiceSolver;
+import com.ensoft.imgurviewer.service.resource.ImgFlipService;
 import com.ensoft.imgurviewer.service.resource.ImgurService;
 import com.ensoft.imgurviewer.service.resource.InstagramService;
+import com.ensoft.imgurviewer.service.resource.MediaServiceSolver;
 import com.ensoft.imgurviewer.service.resource.PornHubService;
 import com.ensoft.imgurviewer.service.resource.PornTubeService;
 import com.ensoft.imgurviewer.service.resource.RedTubeService;
@@ -27,7 +28,9 @@ import com.ensoft.imgurviewer.service.resource.Tube8Service;
 import com.ensoft.imgurviewer.service.resource.TwitchClipsService;
 import com.ensoft.imgurviewer.service.resource.VidmeService;
 import com.ensoft.imgurviewer.service.resource.VimeoService;
+import com.ensoft.imgurviewer.service.resource.XHamsterService;
 import com.ensoft.imgurviewer.service.resource.XVideosService;
+import com.ensoft.imgurviewer.service.resource.XnxxService;
 import com.ensoft.imgurviewer.service.resource.YouPornService;
 import com.ensoft.imgurviewer.view.activity.ImgurAlbumGalleryViewer;
 
@@ -61,6 +64,7 @@ public class ResourceSolver
 	{
 		addSolver( new ImgurService(), ImgurAlbumGalleryViewer.class );
 		addSolver( new GyazoService() );
+		addSolver( new ImgFlipService() );
 		addSolver( new GfycatService() );
 		addSolver( new RedditUploadsService() );
 		addSolver( new StreamableService() );
@@ -82,6 +86,8 @@ public class ResourceSolver
 		addSolver( new Tube8Service() );
 		addSolver( new PornTubeService() );
 		addSolver( new EromeService() );
+		addSolver( new XnxxService() );
+		addSolver( new XHamsterService() );
 	}
 	
 	public void solve( Uri uri )

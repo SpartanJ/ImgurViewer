@@ -2,6 +2,7 @@ package com.ensoft.imgurviewer.service;
 
 import android.content.Context;
 
+import com.ensoft.imgurviewer.model.LayoutType;
 import com.ensoft.restafari.network.service.NetworkPreferencesService;
 import com.imgurviewer.R;
 
@@ -13,6 +14,8 @@ public class PreferencesService extends NetworkPreferencesService
 	private static final String GESTURE_GALLERY_VIEW = "gesturesGalleryView";
 	private static final String SCREEN_LOCK_BUTTON = "screenLockButton";
 	private static final String FULLSCREEN_BUTTON = "fullscreenButton";
+	private static final String DEFAULT_GALLERY_LAYOUT = "defaultGalleryLayout";
+	private static final String GRID_LAYOUT_COLUMNS = "gridLayoutColumns";
 	
 	public PreferencesService( Context context )
 	{
@@ -82,5 +85,30 @@ public class PreferencesService extends NetworkPreferencesService
 	public void setFullscreenButton( boolean fullscreenButton )
 	{
 		getDefaultSharedPreferences().edit().putBoolean( FULLSCREEN_BUTTON, fullscreenButton ).apply();
+	}
+	
+	public String getDefaultGalleryLayout()
+	{
+		return getDefaultSharedPreferences().getString( DEFAULT_GALLERY_LAYOUT, "0" );
+	}
+	
+	public void setDefaultGalleryLayout( String defaultGalleryLayout )
+	{
+		getDefaultSharedPreferences().edit().putString( DEFAULT_GALLERY_LAYOUT, defaultGalleryLayout ).apply();
+	}
+	
+	public LayoutType getDefaultGalleryLayoutType()
+	{
+		return LayoutType.fromString( getDefaultGalleryLayout() );
+	}
+	
+	public int getGridLayoutColumns()
+	{
+		return Integer.valueOf( getDefaultSharedPreferences().getString( GRID_LAYOUT_COLUMNS, "2" ) );
+	}
+	
+	public void setGridLayoutColumns( int columns )
+	{
+		getDefaultSharedPreferences().edit().putString( GRID_LAYOUT_COLUMNS, Integer.toString( columns ) ).apply();
 	}
 }

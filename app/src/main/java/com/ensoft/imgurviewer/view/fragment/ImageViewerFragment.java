@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -305,7 +306,7 @@ public class ImageViewerFragment extends Fragment
 				
 				Toast.makeText( context, throwable.toString(), Toast.LENGTH_SHORT ).show();
 			}
-		} );
+		}, new Point( 0,0 ) );
 	}
 	
 	public void loadImage( Uri uri, Uri thumbnail )

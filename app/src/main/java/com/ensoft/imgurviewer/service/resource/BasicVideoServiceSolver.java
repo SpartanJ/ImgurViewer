@@ -11,6 +11,7 @@ import com.android.volley.Request;
 import com.ensoft.imgurviewer.service.StringUtils;
 import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
+import com.ensoft.restafari.helper.ThreadMode;
 import com.ensoft.restafari.network.processor.ResponseListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.imgurviewer.R;
@@ -79,6 +80,12 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 	{
 		return new ResponseListener<String>()
 		{
+			@Override
+			public ThreadMode getThreadMode()
+			{
+				return ThreadMode.ASYNC;
+			}
+			
 			@Override
 			public void onRequestSuccess( Context context, String response )
 			{
