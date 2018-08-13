@@ -27,6 +27,7 @@
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
 
+				<data android:host="www.imgur.com" />
 				<data android:host="imgur.com" />
 				<data android:host="i.imgur.com" />
 				<data android:host="m.imgur.com" />
