@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.ensoft.imgurviewer.App;
@@ -13,17 +13,40 @@ import com.ensoft.imgurviewer.service.FrescoService;
 import com.ensoft.imgurviewer.service.PreferencesService;
 import com.imgurviewer.R;
 
-public class SettingsView extends PreferenceActivity
+public class SettingsView extends AppCompatPreferenceActivity
 {
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
 		
-		getFragmentManager().beginTransaction().replace( android.R.id.content, new MyPreferenceFragment() ).commit();
+		if ( null != getSupportActionBar() )
+		{
+			getSupportActionBar().show();
+			getSupportActionBar().setTitle( R.string.settings );
+			getSupportActionBar().setDisplayHomeAsUpEnabled( true );
+			getSupportActionBar().setDisplayShowTitleEnabled( true );
+		}
+		
+		getFragmentManager().beginTransaction().replace( android.R.id.content, new AppPreferenceFragment() ).commit();
 	}
 	
-	public static class MyPreferenceFragment extends PreferenceFragment
+	@Override
+	public boolean onOptionsItemSelected( MenuItem item )
+	{
+		switch ( item.getItemId() )
+		{
+			case android.R.id.home:
+			{
+				onBackPressed();
+				return true;
+			}
+		}
+		
+		return super.onOptionsItemSelected(item);
+	}
+
+	public static class AppPreferenceFragment extends PreferenceFragment
 	{
 		@Override
 		public void onCreate( final Bundle savedInstanceState )
@@ -80,7 +103,7 @@ public class SettingsView extends PreferenceActivity
 			clearCache.setOnPreferenceClickListener( ( preference ) ->
 			{
 				new FrescoService().clearCaches();
-				Toast.makeText( MyPreferenceFragment.this.getActivity(), R.string.cacheCleared, Toast.LENGTH_SHORT ).show();
+				Toast.makeText( AppPreferenceFragment.this.getActivity(), R.string.cacheCleared, Toast.LENGTH_SHORT ).show();
 				return true;
 			} );
 			

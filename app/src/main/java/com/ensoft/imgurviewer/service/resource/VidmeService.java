@@ -76,10 +76,4 @@ public class VidmeService extends MediaServiceSolver
 	{
 		return true;
 	}
-	
-	@Override
-	public boolean isVideo( String uri )
-	{
-		return true;
-	}
 }

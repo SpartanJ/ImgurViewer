@@ -2,8 +2,6 @@ package com.ensoft.imgurviewer.service;
 
 import android.content.Context;
 
-import com.imgurviewer.R;
-
 import java.util.Locale;
 
 public class TimeService

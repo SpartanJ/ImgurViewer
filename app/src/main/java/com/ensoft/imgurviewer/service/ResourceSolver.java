@@ -1,6 +1,5 @@
 package com.ensoft.imgurviewer.service;
 
-import android.content.Context;
 import android.net.Uri;
 
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
@@ -25,6 +24,7 @@ import com.ensoft.imgurviewer.service.resource.SpankBangService;
 import com.ensoft.imgurviewer.service.resource.StreamableService;
 import com.ensoft.imgurviewer.service.resource.StreamjaService;
 import com.ensoft.imgurviewer.service.resource.Tube8Service;
+import com.ensoft.imgurviewer.service.resource.TumblrService;
 import com.ensoft.imgurviewer.service.resource.TwitchClipsService;
 import com.ensoft.imgurviewer.service.resource.VidmeService;
 import com.ensoft.imgurviewer.service.resource.VimeoService;
@@ -38,29 +38,27 @@ import java.util.ArrayList;
 
 public class ResourceSolver
 {
-	private Context context;
 	private ResourceLoadListener resourceLoadListener;
 	private ArrayList<ResourceServiceSolver> resourceServiceSolvers = new ArrayList<>();
 	
-	public ResourceSolver( Context context, ResourceLoadListener resourceLoadListener )
+	public ResourceSolver( ResourceLoadListener resourceLoadListener )
 	{
-		this.context = context;
 		this.resourceLoadListener = resourceLoadListener;
 		
 		loadServices();
 	}
 	
-	protected void addSolver( MediaServiceSolver serviceSolver )
+	private void addSolver( MediaServiceSolver serviceSolver )
 	{
 		addSolver( serviceSolver, null );
 	}
 	
-	protected void addSolver( MediaServiceSolver serviceSolver, Class<?> galleryViewClass )
+	private void addSolver( MediaServiceSolver serviceSolver, Class<?> galleryViewClass )
 	{
 		resourceServiceSolvers.add( new ResourceServiceSolver( serviceSolver, resourceLoadListener, galleryViewClass ) );
 	}
 	
-	protected void loadServices()
+	private void loadServices()
 	{
 		addSolver( new ImgurService(), ImgurAlbumGalleryViewer.class );
 		addSolver( new GyazoService() );
@@ -88,6 +86,7 @@ public class ResourceSolver
 		addSolver( new EromeService() );
 		addSolver( new XnxxService() );
 		addSolver( new XHamsterService() );
+		addSolver( new TumblrService() );
 	}
 	
 	public void solve( Uri uri )

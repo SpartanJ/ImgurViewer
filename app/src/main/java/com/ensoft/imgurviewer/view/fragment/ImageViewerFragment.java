@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -96,7 +97,7 @@ public class ImageViewerFragment extends Fragment
 	private Uri currentResource;
 	private SlidrInterface slidrInterface;
 	private boolean viewLocked = false;
-	private boolean requestinPermissions = false;
+	private boolean requestingPermissions = false;
 	
 	public static ImageViewerFragment newInstance( String resource )
 	{
@@ -171,7 +172,7 @@ public class ImageViewerFragment extends Fragment
 			}
 			else
 			{
-				requestinPermissions = true;
+				requestingPermissions = true;
 				currentResource = uri;
 			}
 		}
@@ -183,12 +184,12 @@ public class ImageViewerFragment extends Fragment
 	
 	public void loadResource( Uri uri )
 	{
-		new ResourceSolver( getActivity(), new ResourceLoadListener()
+		new ResourceSolver( new ResourceLoadListener()
 		{
 			@Override
 			public void loadVideo( Uri uri, MediaType mediaType, Uri referer )
 			{
-				ImageViewerFragment.this.loadVideo( uri, mediaType, referer );
+				ImageViewerFragment.this.loadVideo( uri, mediaType );
 			}
 			
 			@Override
@@ -217,9 +218,9 @@ public class ImageViewerFragment extends Fragment
 		
 		if ( preferencesService.gesturesEnabled() )
 		{
-			if ( null != slidrInterface && requestinPermissions )
+			if ( null != slidrInterface && requestingPermissions )
 			{
-				requestinPermissions = false;
+				requestingPermissions = false;
 				
 				return;
 			}
@@ -244,7 +245,7 @@ public class ImageViewerFragment extends Fragment
 		}
 	}
 	
-	protected void onImageClick( View v )
+	protected void onImageClick()
 	{
 		if ( !( System.currentTimeMillis() - lastClickTime <= UI_ANIMATION_DELAY ) )
 		{
@@ -318,7 +319,7 @@ public class ImageViewerFragment extends Fragment
 		videoView.setVisibility( View.GONE );
 		
 		imageView.setOptimizeDisplay( false );
-		imageView.setOnClickListener( this::onImageClick );
+		imageView.setOnClickListener( v -> onImageClick() );
 		
 		imageView.setImageLoaderCallback( new ImageLoader.Callback()
 		{
@@ -415,7 +416,7 @@ public class ImageViewerFragment extends Fragment
 		return new ExtractorMediaSource.Factory( DATA_SOURCE_FACTORY ).createMediaSource(uri);
 	}
 	
-	public void loadVideo( Uri uri, MediaType mediaType, Uri referer )
+	public void loadVideo( Uri uri, MediaType mediaType )
 	{
 		currentResource = uri;
 		
@@ -504,7 +505,7 @@ public class ImageViewerFragment extends Fragment
 		}
 		else
 		{
-			requestinPermissions = true;
+			requestingPermissions = true;
 		}
 	}
 	
@@ -537,11 +538,24 @@ public class ImageViewerFragment extends Fragment
 		hideHandler.postDelayed( hidePart2Runnable, UI_ANIMATION_DELAY );
 	}
 	
+	private void setSystemUiVisibility()
+	{
+		int flags = View.SYSTEM_UI_FLAG_LOW_PROFILE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+		
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN )
+			flags |= View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+		
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT )
+			flags |=  View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+		
+		contentView.setSystemUiVisibility( flags );
+	}
+	
 	private void hideFast()
 	{
 		visible = false;
 		
-		contentView.setSystemUiVisibility( View.SYSTEM_UI_FLAG_LOW_PROFILE | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION );
+		setSystemUiVisibility();
 		
 		floatingMenu.setVisibility( View.INVISIBLE );
 		
@@ -550,11 +564,10 @@ public class ImageViewerFragment extends Fragment
 	
 	private final Runnable hidePart2Runnable = new Runnable()
 	{
-		@SuppressLint( "InlinedApi" )
 		@Override
 		public void run()
 		{
-			contentView.setSystemUiVisibility( View.SYSTEM_UI_FLAG_LOW_PROFILE | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION );
+			setSystemUiVisibility();
 			
 			floatingMenu.setVisibility( View.VISIBLE );
 			

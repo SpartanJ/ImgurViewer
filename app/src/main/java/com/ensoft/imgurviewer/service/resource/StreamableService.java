@@ -1,12 +1,9 @@
 package com.ensoft.imgurviewer.service.resource;
 
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.MediaType;
 import com.ensoft.imgurviewer.model.StreamableVideo;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
@@ -21,8 +18,8 @@ import java.net.URL;
 public class StreamableService extends MediaServiceSolver
 {
 	public static final String TAG = StreamableService.class.getCanonicalName();
-	public static final String STREAMABLE_DOMAIN = "streamable.com";
-	public static final String STREAMABLE_API_URL = "https://api.streamable.com/videos/";
+	private static final String STREAMABLE_DOMAIN = "streamable.com";
+	private static final String STREAMABLE_API_URL = "https://api.streamable.com/videos/";
 	
 	@Override
 	public void getPath( Uri uri, final PathResolverListener pathResolverListener )
@@ -58,16 +55,16 @@ public class StreamableService extends MediaServiceSolver
 						
 						if ( urlConnection.getResponseCode() == HttpStatus.OK_200.getCode() )
 						{
-							new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( video.getUri(), MediaType.VIDEO_MP4, uri ) );
+							sendPathResolved( pathResolverListener, video.getUri(), MediaType.VIDEO_MP4, uri );
 						}
 						else
 						{
-							new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( App.getInstance().getString( R.string.videoRemoved ) ) );
+							sendPathError( pathResolverListener, R.string.videoRemoved );
 						}
 					}
 					catch ( final Exception e )
 					{
-						new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( App.getInstance().getString( R.string.videoRemoved ) ) );
+						sendPathError( pathResolverListener, R.string.videoRemoved );
 					}
 					finally
 					{
