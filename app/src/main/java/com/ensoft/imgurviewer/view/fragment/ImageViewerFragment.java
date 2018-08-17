@@ -97,7 +97,7 @@ public class ImageViewerFragment extends Fragment
 	private Uri currentResource;
 	private SlidrInterface slidrInterface;
 	private boolean viewLocked = false;
-	private boolean requestingPermissions = false;
+	private boolean skipDettaching = false;
 	
 	public static ImageViewerFragment newInstance( String resource )
 	{
@@ -172,7 +172,7 @@ public class ImageViewerFragment extends Fragment
 			}
 			else
 			{
-				requestingPermissions = true;
+				skipDettaching = true;
 				currentResource = uri;
 			}
 		}
@@ -218,9 +218,9 @@ public class ImageViewerFragment extends Fragment
 		
 		if ( preferencesService.gesturesEnabled() )
 		{
-			if ( null != slidrInterface && requestingPermissions )
+			if ( null != slidrInterface && skipDettaching )
 			{
-				requestingPermissions = false;
+				skipDettaching = false;
 				
 				return;
 			}
@@ -426,6 +426,8 @@ public class ImageViewerFragment extends Fragment
 		
 		videoView.setOnClickListener( v -> toggle() );
 		
+		videoView.setHandleAudioFocus( false );
+		
 		MediaSource mediaSource;
 		
 		if ( UriUtils.isAudioUrl( uri ) )
@@ -494,6 +496,8 @@ public class ImageViewerFragment extends Fragment
 	
 	public void showSettings()
 	{
+		skipDettaching = true;
+		
 		startActivity( new Intent( context, SettingsActivity.class ) );
 	}
 	
@@ -505,7 +509,7 @@ public class ImageViewerFragment extends Fragment
 		}
 		else
 		{
-			requestingPermissions = true;
+			skipDettaching = true;
 		}
 	}
 	
