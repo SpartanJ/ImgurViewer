@@ -2,8 +2,6 @@ package com.ensoft.imgurviewer.service.resource;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -89,29 +87,29 @@ public class PornTubeService extends BasicVideoServiceSolver
 								{
 									final Uri videoUri = Uri.parse( videoUrl );
 									
-									new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( videoUri, UriUtils.guessMediaTypeFromUri( videoUri ), referer ) );
+									sendPathResolved( pathResolverListener, videoUri, UriUtils.guessMediaTypeFromUri( videoUri ), referer );
 								}
 								else
 								{
-									new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( context.getString( R.string.could_not_resolve_video_url ) ) );
+									sendPathError( pathResolverListener, R.string.could_not_resolve_video_url );
 								}
 							}
 							
 							@Override
 							public void onRequestError( Context context, int errorCode, String errorMessage )
 							{
-								new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( context.getString( R.string.could_not_resolve_video_url ) ) );
+								sendPathError( pathResolverListener, R.string.could_not_resolve_video_url );
 							}
 						}, getParameters(), getHeaders( referer ), null );
 					}
 					else
 					{
-						new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( context.getString( R.string.could_not_resolve_video_url ) ) );
+						sendPathError( pathResolverListener, R.string.could_not_resolve_video_url );
 					}
 				}
 				catch ( Exception e )
 				{
-					new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( context.getString( R.string.could_not_resolve_video_url ) ) );
+					sendPathError( pathResolverListener, R.string.could_not_resolve_video_url );
 				}
 			}
 			
@@ -120,7 +118,7 @@ public class PornTubeService extends BasicVideoServiceSolver
 			{
 				Log.v( getDomain(), errorMessage );
 				
-				new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( errorMessage ) );
+				sendPathError( pathResolverListener, errorMessage );
 			}
 		};
 	}

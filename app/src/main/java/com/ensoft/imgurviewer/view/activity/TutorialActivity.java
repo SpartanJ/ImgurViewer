@@ -14,6 +14,7 @@ import com.imgurviewer.R;
 
 public class TutorialActivity extends Activity implements View.OnClickListener
 {
+	protected ImageView settingsImage;
 	protected TextView tutorialText;
 	protected TextView tutorialNext;
 	protected ImageView tutorialImage;
@@ -38,11 +39,18 @@ public class TutorialActivity extends Activity implements View.OnClickListener
 	{
 		super.onPostCreate( savedInstanceState );
 		
+		settingsImage = findViewById( R.id.settings );
 		tutorialText = findViewById( R.id.tutorial_text );
 		tutorialNext = findViewById( R.id.tutorial_next );
 		tutorialImage = findViewById( R.id.tutorial_image );
 		
+		settingsImage.setOnClickListener( this::onSettingsClick );
 		tutorialNext.setOnClickListener( this );
+	}
+	
+	public void onSettingsClick( View v )
+	{
+		startActivity( new Intent( this, SettingsView.class ) );
 	}
 	
 	@Override

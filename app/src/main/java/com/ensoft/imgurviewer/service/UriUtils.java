@@ -92,11 +92,6 @@ public class UriUtils
 		return false;
 	}
 	
-	public static boolean isVideoUrl( String uri )
-	{
-		return isVideoUrl( Uri.parse( uri ) );
-	}
-	
 	public static MediaType guessMediaTypeFromUri( Uri uri )
 	{
 		List<String> pathSegments = null != uri ? uri.getPathSegments() : null;

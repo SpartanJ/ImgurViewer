@@ -1,8 +1,6 @@
 package com.ensoft.imgurviewer.service.resource;
 
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import com.ensoft.imgurviewer.App;
@@ -17,12 +15,12 @@ import java.net.URL;
 public class RedditVideoService extends MediaServiceSolver
 {
 	public static final String TAG = RedditVideoService.class.getCanonicalName();
-	public static final String V_REDD_IT_DOMAIN = "v.redd.it";
-	public static final String V_REDD_IT_VIDEO_URL_M38U = "https://v.redd.it/%s/HLSPlaylist.m3u8";
-	public static final String V_REDD_IT_VIDEO_URL = "https://v.redd.it/%s/DASH_2_4_M";
-	public static final String V_REDD_IT_VIDEO_URL_2 = "https://v.redd.it/%s/DASH_600_K";
+	private static final String V_REDD_IT_DOMAIN = "v.redd.it";
+	private static final String V_REDD_IT_VIDEO_URL_M38U = "https://v.redd.it/%s/HLSPlaylist.m3u8";
+	private static final String V_REDD_IT_VIDEO_URL = "https://v.redd.it/%s/DASH_2_4_M";
+	private static final String V_REDD_IT_VIDEO_URL_2 = "https://v.redd.it/%s/DASH_600_K";
 	
-	protected String getId( Uri uri )
+	private String getId( Uri uri )
 	{
 		String url = uri.toString();
 		String[] split = url.split( "/" );
@@ -42,7 +40,7 @@ public class RedditVideoService extends MediaServiceSolver
 		return null;
 	}
 	
-	protected boolean videoExists( final String video )
+	private boolean videoExists( final String video )
 	{
 		HttpURLConnection urlConnection = null;
 		
@@ -69,16 +67,6 @@ public class RedditVideoService extends MediaServiceSolver
 		}
 	}
 	
-	protected void sendPathResolved( final String video, final MediaType mediaType, final Uri referer, final PathResolverListener pathResolverListener )
-	{
-		new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( Uri.parse( video ), mediaType, referer ) );
-	}
-	
-	protected void sendPathNotFound( final PathResolverListener pathResolverListener )
-	{
-		new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( App.getInstance().getString( R.string.could_not_resolve_video_url ) ) );
-	}
-	
 	@Override
 	public void getPath( Uri uri, final PathResolverListener pathResolverListener )
 	{
@@ -94,7 +82,7 @@ public class RedditVideoService extends MediaServiceSolver
 					
 					if ( videoExists( video ) )
 					{
-						sendPathResolved( video, MediaType.STREAM_HLS, uri, pathResolverListener );
+						sendPathResolved( pathResolverListener, Uri.parse( video ), MediaType.STREAM_HLS, uri );
 						return;
 					}
 					else
@@ -103,7 +91,7 @@ public class RedditVideoService extends MediaServiceSolver
 						
 						if ( videoExists( video ) )
 						{
-							sendPathResolved( video, MediaType.STREAM_DASH, uri, pathResolverListener );
+							sendPathResolved( pathResolverListener, Uri.parse( video ), MediaType.STREAM_DASH, uri );
 							return;
 						}
 						else
@@ -112,13 +100,13 @@ public class RedditVideoService extends MediaServiceSolver
 							
 							if ( videoExists( video ) )
 							{
-								sendPathResolved( video, MediaType.STREAM_DASH, uri, pathResolverListener );
+								sendPathResolved( pathResolverListener, Uri.parse( video ), MediaType.STREAM_DASH, uri );
 								return;
 							}
 						}
 					}
 					
-					sendPathNotFound( pathResolverListener );
+					sendPathError( pathResolverListener );
 				} ).start();
 			}
 			catch ( Exception e )
@@ -148,12 +136,6 @@ public class RedditVideoService extends MediaServiceSolver
 	
 	@Override
 	public boolean isVideo( Uri uri )
-	{
-		return true;
-	}
-	
-	@Override
-	public boolean isVideo( String uri )
 	{
 		return true;
 	}
