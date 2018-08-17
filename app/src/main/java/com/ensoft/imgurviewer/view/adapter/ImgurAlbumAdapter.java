@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.service.FrescoService;
+import com.ensoft.imgurviewer.service.ScaleTypeUtils;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
 import com.ensoft.imgurviewer.view.activity.AlbumPagerActivity;
 import com.ensoft.imgurviewer.view.helper.MetricsHelper;
@@ -70,7 +71,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 	public AlbumImageHolder onCreateViewHolder( @NonNull ViewGroup parent, int viewType )
 	{
 		View v = LayoutInflater.from( parent.getContext() ).inflate( resourceId, parent, false );
-		return new AlbumImageHolder( v );
+		return new AlbumImageHolder( v, isGridLayout );
 	}
 	
 	@Override
@@ -94,7 +95,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 		TextView description;
 		ProgressBar progressBar;
 		
-		private AlbumImageHolder( final View view )
+		private AlbumImageHolder( final View view, boolean isGridLayout )
 		{
 			super( view );
 			
@@ -105,7 +106,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 			description = view.findViewById( R.id.albumPhoto_description );
 			
 			GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder( view.getResources() )
-				.setActualImageScaleType( ScalingUtils.ScaleType.CENTER_CROP )
+				.setActualImageScaleType( isGridLayout ? ScaleTypeUtils.getGridViewImageScaleType() : ScaleTypeUtils.getListViewImageScaleType() )
 				.build();
 			
 			imageView.setHierarchy( hierarchy );

@@ -50,7 +50,7 @@ public class TutorialActivity extends Activity implements View.OnClickListener
 	
 	public void onSettingsClick( View v )
 	{
-		startActivity( new Intent( this, SettingsView.class ) );
+		startActivity( new Intent( this, SettingsActivity.class ) );
 	}
 	
 	@Override

@@ -13,7 +13,7 @@ import com.ensoft.imgurviewer.service.FrescoService;
 import com.ensoft.imgurviewer.service.PreferencesService;
 import com.imgurviewer.R;
 
-public class SettingsView extends AppCompatPreferenceActivity
+public class SettingsActivity extends AppCompatPreferenceActivity
 {
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -189,6 +189,24 @@ public class SettingsView extends AppCompatPreferenceActivity
 				
 				return true;
 			} );
+			
+			final ListPreference listViewImageScaleType = (ListPreference) findPreference( "listViewImageScaleType" );
+			listViewImageScaleType.setValue( preferencesService.getListViewImageScaleType() );
+			listViewImageScaleType.setOnPreferenceChangeListener( ( preference, newValue ) ->
+			{
+				preferencesService.setListViewImageScaleType( newValue.toString() );
+				
+				return true;
+			});
+			
+			final ListPreference gridViewImageScaleType = (ListPreference) findPreference( "gridViewImageScaleType" );
+			gridViewImageScaleType.setValue( preferencesService.getGridViewImageScaleType() );
+			gridViewImageScaleType.setOnPreferenceChangeListener( ( preference, newValue ) ->
+			{
+				preferencesService.setGridViewImageScaleType( newValue.toString() );
+				
+				return true;
+			});
 		}
 	}
 }

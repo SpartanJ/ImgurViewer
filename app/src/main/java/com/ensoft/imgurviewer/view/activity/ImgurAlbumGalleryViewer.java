@@ -316,7 +316,7 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 	
 	public void showSettings( View v )
 	{
-		startActivity( new Intent( this, SettingsView.class ) );
+		startActivity( new Intent( this, SettingsActivity.class ) );
 	}
 	
 	private void setLayoutType( LayoutType layoutType )
