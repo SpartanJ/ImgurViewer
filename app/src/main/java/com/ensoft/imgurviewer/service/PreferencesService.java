@@ -16,6 +16,8 @@ public class PreferencesService extends NetworkPreferencesService
 	private static final String FULLSCREEN_BUTTON = "fullscreenButton";
 	private static final String DEFAULT_GALLERY_LAYOUT = "defaultGalleryLayout";
 	private static final String GRID_LAYOUT_COLUMNS = "gridLayoutColumns";
+	private static final String LIST_VIEW_IMAGE_SCALE_TYPE = "listViewImageScaleType";
+	private static final String GRID_VIEW_IMAGE_SCALE_TYPE = "gridViewImageScaleType";
 	
 	public PreferencesService( Context context )
 	{
@@ -65,6 +67,26 @@ public class PreferencesService extends NetworkPreferencesService
 	public void setGesturesGalleryView( String gesturesGalleryView )
 	{
 		getDefaultSharedPreferences().edit().putString( GESTURE_GALLERY_VIEW, gesturesGalleryView ).apply();
+	}
+	
+	public String getListViewImageScaleType()
+	{
+		return getDefaultSharedPreferences().getString( LIST_VIEW_IMAGE_SCALE_TYPE, context.getString( R.string.list_view_default_scale_type ) );
+	}
+	
+	public void setListViewImageScaleType( String listViewImageScaleType )
+	{
+		getDefaultSharedPreferences().edit().putString( LIST_VIEW_IMAGE_SCALE_TYPE, listViewImageScaleType ).apply();
+	}
+	
+	public String getGridViewImageScaleType()
+	{
+		return getDefaultSharedPreferences().getString( GRID_VIEW_IMAGE_SCALE_TYPE, context.getString( R.string.grid_view_default_scale_type ) );
+	}
+	
+	public void setGridViewImageScaleType( String gridViewImageScaleType )
+	{
+		getDefaultSharedPreferences().edit().putString( GRID_VIEW_IMAGE_SCALE_TYPE, gridViewImageScaleType ).apply();
 	}
 	
 	public boolean screenLockButton()

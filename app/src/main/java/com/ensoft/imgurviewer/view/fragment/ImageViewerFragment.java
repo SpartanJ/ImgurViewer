@@ -41,7 +41,7 @@ import com.ensoft.imgurviewer.service.event.OnViewLockStateChange;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
 import com.ensoft.imgurviewer.view.activity.AppActivity;
-import com.ensoft.imgurviewer.view.activity.SettingsView;
+import com.ensoft.imgurviewer.view.activity.SettingsActivity;
 import com.ensoft.imgurviewer.view.helper.MetricsHelper;
 import com.ensoft.imgurviewer.view.helper.SlidrPositionHelper;
 import com.ensoft.imgurviewer.view.helper.ViewHelper;
@@ -494,7 +494,7 @@ public class ImageViewerFragment extends Fragment
 	
 	public void showSettings()
 	{
-		startActivity( new Intent( context, SettingsView.class ) );
+		startActivity( new Intent( context, SettingsActivity.class ) );
 	}
 	
 	public void downloadImage()

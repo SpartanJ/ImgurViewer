@@ -5,11 +5,12 @@
 	<string name="giphy_api_key">dc6zaTOxFJmzC</string>
 	<string name="settings">Settings</string>
 	<string name="gestures">Gestures</string>
+	<string name="gallery">Gallery</string>
+	<string name="videos">Videos</string>
 	<string name="proxy">Proxy</string>
+	<string name="actions">Actions</string>
 	<string name="proxyHost">Proxy Host</string>
 	<string name="proxyPort">Proxy Port</string>
-	<string name="proxyHostConf">Configure Proxy Host</string>
-	<string name="proxyPortConf">Configure Proxy Port</string>
 	<string name="share">Share</string>
 	<string name="shareUsing">Share using&#8230;</string>
 	<string name="videoRemoved">"Video removed."</string>
@@ -33,14 +34,16 @@
 	<string name="failedFetchProfile">Failed to fetch profile</string>
 	<string name="gesturesEnabled">Gestures Enabled</string>
 	<string name="gesturesEnabledConf">Enable swipe gestures</string>
-	<string name="gesturesImageView">Image View</string>
+	<string name="gesturesImageView">Image View swipe</string>
 	<string name="gesturesImageViewConf">Discard swipe gesture for image/video view</string>
-	<string name="gesturesGalleryView">Gallery View</string>
+	<string name="gesturesGalleryView">Gallery View swipe</string>
 	<string name="gesturesGalleryViewConf">Discard swipe gesture for gallery view</string>
 	<string name="defaultGalleryViewStyle">Default Gallery View style</string>
 	<string name="defaultGalleryViewStyleConf">Select between List and Grid view</string>
 	<string name="gridViewColumns">Grid view number of columns</string>
 	<string name="gridViewColumnsConf">Select a value between 1 and 10</string>
+	<string name="listViewImageScaleType">List View Image Scale Type</string>
+	<string name="gridViewImageScaleType">Grid View Image Scale Type</string>
 	<string name="vertical">VERTICAL</string>
 	<string name="horizontal">HORIZONTAL</string>
 	<string name="left">LEFT</string>
@@ -78,6 +81,30 @@
 		<item>@string/right_val</item>
 		<item>@string/top_val</item>
 		<item>@string/bottom_val</item>
+	</string-array>
+	<string name="list_view_default_scale_type">FIT_CENTER</string>
+	<string name="grid_view_default_scale_type">CENTER_CROP</string>
+	<string-array name="scale_types_names">
+		<item>FIT XY</item>
+		<item>FIT START</item>
+		<item>FIT CENTER</item>
+		<item>FIT END</item>
+		<item>CENTER</item>
+		<item>CENTER INSIDE</item>
+		<item>CENTER CROP</item>
+		<item>FOCUS CROP</item>
+		<item>FIT BOTTOM START</item>
+	</string-array>
+	<string-array name="scale_types_values">
+		<item>FIT_XY</item>
+		<item>FIT_START</item>
+		<item>FIT_CENTER</item>
+		<item>FIT_END</item>
+		<item>CENTER</item>
+		<item>CENTER_INSIDE</item>
+		<item>CENTER_CROP</item>
+		<item>FOCUS_CROP</item>
+		<item>FIT_BOTTOM_START</item>
 	</string-array>
 	<string name="screenLockEnabled">Screen-Lock Option</string>
 	<string name="screenLockEnabledConf">Allows to lock/unlock the image/video view.</string>
