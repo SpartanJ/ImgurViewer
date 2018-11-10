@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.service.resource.ImgurService;
 import com.google.gson.annotations.SerializedName;
 
@@ -102,12 +103,14 @@ public class ImgurImage implements Parcelable
 	
 	public Uri getLinkUri()
 	{
-		return Uri.parse( getLink() );
+		return App.getInstance().getPreferencesService().thumbnailSizeOnGallery() != ThumbnailSize.FULL_IMAGE ?
+			new ImgurService().getThumbnailPath( Uri.parse( getLink() ), App.getInstance().getPreferencesService().thumbnailSizeOnGallery() ) :
+			Uri.parse( getLink() );
 	}
 	
 	public Uri getThumbnailLinkUri()
 	{
-		return null != thumbnailUri ? thumbnailUri : new ImgurService().getThumbnailPath( getLinkUri() );
+		return null != thumbnailUri ? thumbnailUri : new ImgurService().getThumbnailPath( getLinkUri(), ThumbnailSize.SMALL_SQUARE );
 	}
 	
 	public boolean hasVideo()

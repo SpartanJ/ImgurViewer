@@ -33,6 +33,14 @@
 			android:entryValues="@array/scale_types_values"
 			android:defaultValue="@string/grid_view_default_scale_type" />
 
+		<ListPreference
+			android:key="thumbnailsSizeOnGallery"
+			android:title="@string/thumbnailsSizeOnGallery"
+			android:summary="@string/thumbnailsSizeOnGalleryConf"
+			android:entries="@array/thumbnail_sizes_names"
+			android:entryValues="@array/thumbnail_sizes_values"
+			android:defaultValue="@string/thumbnail_sizes_default" />
+
 	</PreferenceCategory>
 
 	<PreferenceCategory android:title="@string/videos">

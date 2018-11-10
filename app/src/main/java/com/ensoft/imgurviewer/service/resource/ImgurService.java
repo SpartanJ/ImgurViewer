@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import com.ensoft.imgurviewer.model.ImgurAlbum;
 import com.ensoft.imgurviewer.model.ImgurImage;
+import com.ensoft.imgurviewer.model.ThumbnailSize;
 import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
 import com.ensoft.imgurviewer.service.listener.ImgurGalleryResolverListener;
@@ -102,6 +103,11 @@ public class ImgurService extends MediaServiceSolver
 	
 	public Uri getThumbnailPath( Uri uri )
 	{
+		return getThumbnailPath( uri, ThumbnailSize.SMALL_SQUARE );
+	}
+	
+	public Uri getThumbnailPath( Uri uri, ThumbnailSize thumbnailSize )
+	{
 		String fixedUri = processPath( uri ).toString();
 		
 		int pos = fixedUri.lastIndexOf( "." );
@@ -109,7 +115,7 @@ public class ImgurService extends MediaServiceSolver
 		String path = fixedUri.substring( 0, pos );
 		String ext = fixedUri.substring( pos );
 		
-		return Uri.parse( path + "s" + ext );
+		return Uri.parse( path + thumbnailSize.toString() + ext );
 	}
 	
 	public void getPath( Uri uri, PathResolverListener pathResolverListener )
