@@ -207,6 +207,15 @@ public class SettingsActivity extends AppCompatPreferenceActivity
 				
 				return true;
 			});
+			
+			final ListPreference thumbnailSizeOnGallery = (ListPreference) findPreference( "thumbnailsSizeOnGallery" );
+			thumbnailSizeOnGallery.setValue( preferencesService.thumbnailSizeOnGallery().toString() );
+			thumbnailSizeOnGallery.setOnPreferenceChangeListener( ( preference, newValue ) ->
+			{
+				preferencesService.setThumbnailSizeOnGallery( newValue.toString() );
+				
+				return true;
+			});
 		}
 	}
 }

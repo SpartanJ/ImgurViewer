@@ -2,7 +2,9 @@ package com.ensoft.imgurviewer.service;
 
 import android.content.Context;
 
+import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.LayoutType;
+import com.ensoft.imgurviewer.model.ThumbnailSize;
 import com.ensoft.restafari.network.service.NetworkPreferencesService;
 import com.imgurviewer.R;
 
@@ -18,6 +20,7 @@ public class PreferencesService extends NetworkPreferencesService
 	private static final String GRID_LAYOUT_COLUMNS = "gridLayoutColumns";
 	private static final String LIST_VIEW_IMAGE_SCALE_TYPE = "listViewImageScaleType";
 	private static final String GRID_VIEW_IMAGE_SCALE_TYPE = "gridViewImageScaleType";
+	private static final String THUMBNAIL_SIZE_ON_GALLERY = "thumbnailSizeOnGallery";
 	
 	public PreferencesService( Context context )
 	{
@@ -132,5 +135,15 @@ public class PreferencesService extends NetworkPreferencesService
 	public void setGridLayoutColumns( int columns )
 	{
 		getDefaultSharedPreferences().edit().putString( GRID_LAYOUT_COLUMNS, Integer.toString( columns ) ).apply();
+	}
+	
+	public ThumbnailSize thumbnailSizeOnGallery()
+	{
+		return ThumbnailSize.fromString( getDefaultSharedPreferences().getString( THUMBNAIL_SIZE_ON_GALLERY, context.getString( R.string.thumbnail_sizes_default ) ) );
+	}
+	
+	public void setThumbnailSizeOnGallery( String thumbnailSizeOnGallery )
+	{
+		getDefaultSharedPreferences().edit().putString( THUMBNAIL_SIZE_ON_GALLERY, thumbnailSizeOnGallery ).apply();
 	}
 }

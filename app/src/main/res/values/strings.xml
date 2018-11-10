@@ -42,6 +42,10 @@
 	<string name="defaultGalleryViewStyleConf">Select between List and Grid view</string>
 	<string name="gridViewColumns">Grid view number of columns</string>
 	<string name="gridViewColumnsConf">Select a value between 1 and 10</string>
+	<string name="thumbnailsOnGallery">Thumbnails on Gallery</string>
+	<string name="thumbnailsOnGalleryConf">Use thumbnails of the original images, otherwise load the full image</string>
+	<string name="thumbnailsSizeOnGallery">Imgur Thumbnail Size</string>
+	<string name="thumbnailsSizeOnGalleryConf">Select the default thumbnail size used to display images for Imgur albums and galleries</string>
 	<string name="listViewImageScaleType">List View Image Scale Type</string>
 	<string name="gridViewImageScaleType">Grid View Image Scale Type</string>
 	<string name="vertical">VERTICAL</string>
@@ -106,6 +110,25 @@
 		<item>FOCUS_CROP</item>
 		<item>FIT_BOTTOM_START</item>
 	</string-array>
+	<string-array name="thumbnail_sizes_names">
+		<item>Full Image</item>
+		<item>Small Square (90×90)</item>
+		<item>Big Square (160×160)</item>
+		<item>Small Thumbnail (160×160)</item>
+		<item>Medium Thumbnail (320×320)</item>
+		<item>Large Thumbnail (640×640)</item>
+		<item>Huge Thumbnail (1024×1024)</item>
+	</string-array>
+	<string-array name="thumbnail_sizes_values">
+		<item></item>
+		<item>s</item>
+		<item>b</item>
+		<item>t</item>
+		<item>m</item>
+		<item>l</item>
+		<item>h</item>
+	</string-array>
+	<string name="thumbnail_sizes_default">l</string>
 	<string name="screenLockEnabled">Screen-Lock Option</string>
 	<string name="screenLockEnabledConf">Allows to lock/unlock the image/video view.</string>
 	<string name="fullScreenEnabled">Fullscreen Option</string>
