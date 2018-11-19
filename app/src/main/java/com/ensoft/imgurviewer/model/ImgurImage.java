@@ -101,6 +101,11 @@ public class ImgurImage implements Parcelable
 		return link;
 	}
 	
+	public Uri getFullImageLinkUri()
+	{
+		return Uri.parse( getLink() );
+	}
+	
 	public Uri getLinkUri()
 	{
 		return App.getInstance().getPreferencesService().thumbnailSizeOnGallery() != ThumbnailSize.FULL_IMAGE ?

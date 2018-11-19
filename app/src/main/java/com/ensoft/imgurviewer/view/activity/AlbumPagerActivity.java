@@ -92,9 +92,9 @@ public class AlbumPagerActivity extends AppActivity
 		{
 			try
 			{
-				Parcelable[] imagesParceable = bundle.getParcelableArray( PARAM_IMAGES );
+				Parcelable[] imagesParcelable = bundle.getParcelableArray( PARAM_IMAGES );
 				
-				ImgurImage[] images = Arrays.copyOf( imagesParceable, imagesParceable.length, ImgurImage[].class );
+				ImgurImage[] images = Arrays.copyOf( imagesParcelable, imagesParcelable.length, ImgurImage[].class );
 				
 				int initialPosition = bundle.getInt( PARAM_IMAGES_CUR_POSITION );
 				
