@@ -357,7 +357,7 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		{
 			for ( ImgurImage image : images )
 			{
-				new DownloadService( this ).download( image.getLinkUri(), URLUtil.guessFileName( image.getLink(), null, null ) );
+				new DownloadService( this ).download( image.getFullImageLinkUri(), URLUtil.guessFileName( image.getLink(), null, null ) );
 			}
 		}
 	}
