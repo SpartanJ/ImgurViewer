@@ -7,5 +7,5 @@ import java.util.List;
 public class TumblrImagePage
 {
 	@SerializedName( "photo" )
-	public List<TumblrPhoto> photos;
+	public TumblrPhoto photo;
 }

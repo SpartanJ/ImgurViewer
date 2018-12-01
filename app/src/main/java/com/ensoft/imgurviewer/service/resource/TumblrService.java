@@ -45,9 +45,9 @@ public class TumblrService extends MediaServiceSolver
 					}
 				}
 				
-				if ( null != tumblrMedia && null != tumblrMedia.imagePage && null != tumblrMedia.imagePage.photos )
+				if ( null != tumblrMedia && null != tumblrMedia.imagePage && null != tumblrMedia.imagePage.photo )
 				{
-					TumblrPhoto photo = tumblrMedia.imagePage.photos.get( tumblrMedia.imagePage.photos.size() - 1 );
+					TumblrPhoto photo = tumblrMedia.imagePage.photo;
 					
 					sendPathResolved( pathResolverListener, photo.getUri(), photo.getType().contains( "image" ) ? MediaType.IMAGE : MediaType.VIDEO_MP4, null );
 				}
