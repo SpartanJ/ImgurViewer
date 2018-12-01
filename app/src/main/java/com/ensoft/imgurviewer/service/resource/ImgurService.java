@@ -118,11 +118,15 @@ public class ImgurService extends MediaServiceSolver
 		
 		String path = fixedUri.substring( 0, pos );
 		String ext = fixedUri.substring( pos );
+		String thumbSize = thumbnailSize.toString();
 		
 		if ( ".gif".equals( ext ) || ".mp4".equals( ext ) )
+		{
 			ext = ".jpg";
+			thumbSize = "";
+		}
 		
-		return Uri.parse( path + thumbnailSize.toString() + ext );
+		return Uri.parse( path + thumbSize + ext );
 	}
 	
 	public void getPath( Uri uri, PathResolverListener pathResolverListener )

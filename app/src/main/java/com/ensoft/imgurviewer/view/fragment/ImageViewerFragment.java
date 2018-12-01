@@ -440,7 +440,9 @@ public class ImageViewerFragment extends Fragment
 		} );
 		
 		videoView.setOnErrorListener( e -> {
-			Log.e( TAG, e.toString() );
+			Toast.makeText( getActivity(), R.string.couldNotReproduceVideo, Toast.LENGTH_LONG ).show();
+			
+			progressBar.setVisibility( View.INVISIBLE );
 			
 			return false;
 		} );
