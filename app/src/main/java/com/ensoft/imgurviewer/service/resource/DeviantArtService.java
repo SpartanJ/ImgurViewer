@@ -11,6 +11,8 @@ import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.processor.ResponseListener;
 import com.ensoft.restafari.network.service.RequestService;
 
+import java.util.List;
+
 public class DeviantArtService extends MediaServiceSolver
 {
 	public static final String DEVIANTART_DOMAIN = "deviantart.com";
@@ -40,7 +42,21 @@ public class DeviantArtService extends MediaServiceSolver
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
-		return uri.toString().contains( DEVIANTART_DOMAIN + "/art/" );
+		if ( uri.toString().contains( DEVIANTART_DOMAIN ) )
+		{
+			if ( uri.toString().contains( DEVIANTART_DOMAIN + "/art/" ) )
+			{
+				return true;
+			}
+			else
+			{
+				List<String> segments = uri.getPathSegments();
+				
+				return segments.size() >= 2 && segments.get( segments.size() - 2 ).equals( "art" );
+			}
+		}
+		
+		return false;
 	}
 	
 	@Override
