@@ -64,14 +64,30 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 		{
 			if ( videoView.isPlaying() )
 			{
-				videoView.pause();
-				playPauseView.setImageResource( R.drawable.ic_play_circle_outline_white_48dp );
+				pause();
 			}
 			else
 			{
-				videoView.start();
-				playPauseView.setImageResource( R.drawable.ic_pause_circle_outline_white_48dp );
+				play();
 			}
+		}
+	}
+	
+	public void pause()
+	{
+		if ( videoView.isPlaying() )
+		{
+			videoView.pause();
+			playPauseView.setImageResource( R.drawable.ic_play_circle_outline_white_48dp );
+		}
+	}
+	
+	public void play()
+	{
+		if ( !videoView.isPlaying() )
+		{
+			videoView.start();
+			playPauseView.setImageResource( R.drawable.ic_pause_circle_outline_white_48dp );
 		}
 	}
 	
@@ -349,13 +365,13 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 	{
 		init();
 		
-		userOnPreparedListener.onPrepared();
-		
 		isMuted = !App.getInstance().getPreferencesService().videosMuted();
 		
 		updatePlayPauseState();
 		
 		updateAudioOnOffState();
+		
+		userOnPreparedListener.onPrepared();
 	}
 	
 	public void setVisibility( int visibility )

@@ -2,7 +2,6 @@ package com.ensoft.imgurviewer.service;
 
 import android.content.Context;
 
-import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.LayoutType;
 import com.ensoft.imgurviewer.model.ThumbnailSize;
 import com.ensoft.restafari.network.service.NetworkPreferencesService;

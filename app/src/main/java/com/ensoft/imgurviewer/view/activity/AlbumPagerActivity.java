@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.service.PreferencesService;
+import com.ensoft.imgurviewer.service.listener.AlbumPagerProvider;
 import com.ensoft.imgurviewer.view.adapter.ImagesAlbumPagerAdapter;
 import com.ensoft.imgurviewer.view.fragment.ImageViewerFragment;
 import com.ensoft.imgurviewer.view.helper.SlidrPositionHelper;
@@ -22,7 +23,7 @@ import com.r0adkll.slidr.model.SlidrPosition;
 
 import java.util.Arrays;
 
-public class AlbumPagerActivity extends AppActivity
+public class AlbumPagerActivity extends AppActivity implements AlbumPagerProvider
 {
 	public static final String PARAM_IMAGES = "images";
 	public static final String PARAM_IMAGES_CUR_POSITION = "imagesCurPosition";
@@ -37,6 +38,7 @@ public class AlbumPagerActivity extends AppActivity
 	
 	private ViewPager pager;
 	private ImagesAlbumPagerAdapter adapter;
+	private int currentPage;
 	
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -100,6 +102,30 @@ public class AlbumPagerActivity extends AppActivity
 				
 				pager.setAdapter( adapter = new ImagesAlbumPagerAdapter( getSupportFragmentManager(), images ) );
 				pager.setCurrentItem( initialPosition );
+				currentPage = initialPosition;
+				pager.addOnPageChangeListener( new ViewPager.OnPageChangeListener()
+				{
+					@Override
+					public void onPageScrolled( int i, float v, int i1 )
+					{}
+					
+					@Override
+					public void onPageSelected( int i )
+					{
+						if ( currentPage != i )
+						{
+							adapter.getImageViewerFragment( currentPage ).onViewHide();
+						}
+						
+						adapter.getImageViewerFragment( i ).onViewShow();
+						
+						currentPage = i;
+					}
+					
+					@Override
+					public void onPageScrollStateChanged( int i )
+					{}
+				} );
 			}
 			catch ( Exception e )
 			{
@@ -108,5 +134,11 @@ public class AlbumPagerActivity extends AppActivity
 				finish();
 			}
 		}
+	}
+	
+	@Override
+	public int getCurrentPage()
+	{
+		return currentPage;
 	}
 }
