@@ -1,6 +1,7 @@
 package com.ensoft.imgurviewer.view.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -38,6 +39,7 @@ import com.ensoft.imgurviewer.service.PreferencesService;
 import com.ensoft.imgurviewer.service.ResourceSolver;
 import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.event.OnViewLockStateChange;
+import com.ensoft.imgurviewer.service.listener.AlbumPagerProvider;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
 import com.ensoft.imgurviewer.view.activity.AppActivity;
@@ -69,6 +71,7 @@ public class ImageViewerFragment extends Fragment
 {
 	public static final String TAG = ImageViewerFragment.class.getCanonicalName();
 	public static final String PARAM_RESOURCE_PATH = "resourcePath";
+	public static final String PARAM_ADAPTER_POSITION = "adapterPosition";
 	private static final int UI_ANIMATION_DELAY = 300;
 	
 	private AppActivity context;
@@ -87,12 +90,21 @@ public class ImageViewerFragment extends Fragment
 	private SlidrInterface slidrInterface;
 	private boolean viewLocked = false;
 	private boolean skipDettaching = false;
+	private int adapterPosition = 0;
+	protected MediaPlayerFragment mediaPlayerFragment;
+	private AlbumPagerProvider albumPagerProvider;
 	
 	public static ImageViewerFragment newInstance( String resource )
+	{
+		return newInstance( resource, 0 );
+	}
+	
+	public static ImageViewerFragment newInstance( String resource, int adapterPosition )
 	{
 		ImageViewerFragment imageViewerFragment = new ImageViewerFragment();
 		Bundle args = new Bundle();
 		args.putString( PARAM_RESOURCE_PATH, resource );
+		args.putInt( PARAM_ADAPTER_POSITION, adapterPosition );
 		imageViewerFragment.setArguments( args );
 		return imageViewerFragment;
 	}
@@ -109,13 +121,17 @@ public class ImageViewerFragment extends Fragment
 	{
 		super.onViewCreated( view, savedInstanceState );
 		
+		Bundle args = getArguments();
+		
+		adapterPosition = args != null ? args.getInt( PARAM_ADAPTER_POSITION, 0 ) : 0;
+		
 		context = (AppActivity)getActivity();
 		if ( null != context )
 			context.statusBarTint();
 		visible = true;
 		contentContainer = view.findViewById( R.id.content_container );
 		
-		contentView = view.findViewById( R.id.fullscreen_content );
+		contentView = context.findViewById( android.R.id.content );
 		imageView = view.findViewById( R.id.imageView );
 		imageViewFallback = view.findViewById( R.id.imageViewFallback );
 		videoView = view.findViewById( R.id.videoView );
@@ -133,9 +149,8 @@ public class ImageViewerFragment extends Fragment
 			setFloatingMenuOrientation( getResources().getConfiguration().orientation );
 		}
 		
+		contentView.setClickable( true );
 		contentView.setOnClickListener( v -> toggle() );
-		
-		Bundle args = getArguments();
 		
 		String path = null != args ? args.getString( PARAM_RESOURCE_PATH ) : null;
 		
@@ -151,6 +166,17 @@ public class ImageViewerFragment extends Fragment
 			{
 				loadResource( uri );
 			}
+		}
+	}
+	
+	@Override
+	public void onAttach( Context context )
+	{
+		super.onAttach( context );
+		
+		if ( context instanceof AlbumPagerProvider )
+		{
+			albumPagerProvider = (AlbumPagerProvider)context;
 		}
 	}
 	
@@ -271,8 +297,6 @@ public class ImageViewerFragment extends Fragment
 		
 		lastClickTime = System.currentTimeMillis();
 	}
-	
-	protected MediaPlayerFragment mediaPlayerFragment;
 	
 	protected void createMediaPlayer()
 	{
@@ -437,10 +461,22 @@ public class ImageViewerFragment extends Fragment
 			videoView.setVisibility( View.VISIBLE );
 			
 			videoView.setBackgroundColor( Color.TRANSPARENT );
+			
+			if ( albumPagerProvider != null )
+			{
+				if ( albumPagerProvider.getCurrentPage() == adapterPosition )
+				{
+					mediaPlayerFragment.play();
+				}
+				else
+				{
+					mediaPlayerFragment.pause();
+				}
+			}
 		} );
 		
 		videoView.setOnErrorListener( e -> {
-			Toast.makeText( getActivity(), R.string.couldNotReproduceVideo, Toast.LENGTH_LONG ).show();
+			Toast.makeText( getActivity(), R.string.couldNotReproduceVideo, Toast.LENGTH_SHORT ).show();
 			
 			progressBar.setVisibility( View.INVISIBLE );
 			
@@ -721,5 +757,17 @@ public class ImageViewerFragment extends Fragment
 			if ( null != slidrInterface )
 				slidrInterface.unlock();
 		}
+	}
+	
+	public void onViewShow()
+	{
+		if ( null != mediaPlayerFragment )
+			mediaPlayerFragment.play();
+	}
+	
+	public void onViewHide()
+	{
+		if ( null != mediaPlayerFragment )
+			mediaPlayerFragment.pause();
 	}
 }

@@ -1,9 +1,7 @@
 package com.ensoft.imgurviewer.view.adapter;
 
-import android.content.Context;
 import android.graphics.Point;
 import android.graphics.drawable.Animatable;
-import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
