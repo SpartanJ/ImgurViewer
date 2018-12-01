@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.ensoft.imgurviewer.App;
+import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.resource.ImgurService;
 import com.google.gson.annotations.SerializedName;
 
@@ -33,6 +34,12 @@ public class ImgurImage implements Parcelable
 	
 	@SerializedName( "link" )
 	protected String link;
+	
+	@SerializedName( "mp4" )
+	protected String mp4;
+	
+	@SerializedName( "hls" )
+	protected String hls;
 	
 	protected Uri thumbnailUri;
 	
@@ -106,11 +113,27 @@ public class ImgurImage implements Parcelable
 		return Uri.parse( getLink() );
 	}
 	
+	public Uri getImageUri()
+	{
+		Uri link = Uri.parse( getLink() );
+		
+		if ( this.link.contains( ImgurService.IMGUR_DOMAIN ) )
+		{
+			return App.getInstance().getPreferencesService().thumbnailSizeOnGallery() != ThumbnailSize.FULL_IMAGE ?
+				new ImgurService().getThumbnailPath( link, App.getInstance().getPreferencesService().thumbnailSizeOnGallery() ) : new ImgurService().getThumbnailPath( link, ThumbnailSize.FULL_IMAGE );
+		}
+		else
+		{
+			return link;
+		}
+	}
+	
 	public Uri getLinkUri()
 	{
-		return App.getInstance().getPreferencesService().thumbnailSizeOnGallery() != ThumbnailSize.FULL_IMAGE ?
-			new ImgurService().getThumbnailPath( Uri.parse( getLink() ), App.getInstance().getPreferencesService().thumbnailSizeOnGallery() ) :
-			Uri.parse( getLink() );
+		Uri link = Uri.parse( getLink() );
+		
+		return App.getInstance().getPreferencesService().thumbnailSizeOnGallery() != ThumbnailSize.FULL_IMAGE && this.link.contains( ImgurService.IMGUR_DOMAIN ) ?
+			new ImgurService().getThumbnailPath( link, App.getInstance().getPreferencesService().thumbnailSizeOnGallery() ) : link;
 	}
 	
 	public Uri getThumbnailLinkUri()
@@ -120,12 +143,31 @@ public class ImgurImage implements Parcelable
 	
 	public boolean hasVideo()
 	{
-		return null != videoUri;
+		return null != videoUri || null != hls || null != mp4 || UriUtils.isVideoUrl( getLinkUri() );
 	}
 	
 	public Uri getVideoUri()
 	{
-		return videoUri;
+		if ( null != mp4 )
+			return Uri.parse( mp4 );
+		
+		if ( null != videoUri )
+			return videoUri;
+		
+		Uri link = Uri.parse( getLink() );
+		
+		String lastPathSegment = link.getLastPathSegment();
+		
+		if ( null != lastPathSegment )
+		{
+			int dotPos = lastPathSegment.lastIndexOf( "." );
+			
+			String newPathSegment = lastPathSegment.substring( 0, dotPos ) + ".mp4";
+			
+			return Uri.parse( link.toString().replace( lastPathSegment, newPathSegment ) );
+		}
+		
+		return null;
 	}
 	
 	@Override
@@ -145,6 +187,8 @@ public class ImgurImage implements Parcelable
 		dest.writeInt( this.height );
 		dest.writeLong( this.size );
 		dest.writeString( this.link );
+		dest.writeString( this.mp4 );
+		dest.writeString( this.hls );
 		dest.writeParcelable( this.thumbnailUri, flags );
 		dest.writeParcelable( this.videoUri, flags );
 	}
@@ -159,11 +203,13 @@ public class ImgurImage implements Parcelable
 		this.height = in.readInt();
 		this.size = in.readLong();
 		this.link = in.readString();
+		this.mp4 = in.readString();
+		this.hls = in.readString();
 		this.thumbnailUri = in.readParcelable( Uri.class.getClassLoader() );
 		this.videoUri = in.readParcelable( Uri.class.getClassLoader() );
 	}
 	
-	public static final Parcelable.Creator<ImgurImage> CREATOR = new Parcelable.Creator<ImgurImage>()
+	public static final Creator<ImgurImage> CREATOR = new Creator<ImgurImage>()
 	{
 		@Override
 		public ImgurImage createFromParcel( Parcel source )

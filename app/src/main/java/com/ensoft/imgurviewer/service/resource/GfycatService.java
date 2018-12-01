@@ -15,7 +15,7 @@ public class GfycatService extends MediaServiceSolver
 {
 	public static final String TAG = GfycatService.class.getCanonicalName();
 	private static final String GFYCAT_DOMAIN = "gfycat.com";
-	private static final String GFYCAT_INFO_URL = "https://gfycat.com/cajax/get/";
+	private static final String GFYCAT_INFO_URL = "https://api.gfycat.com/v1/gfycats/";
 	
 	private String getResourceName( Uri uri )
 	{

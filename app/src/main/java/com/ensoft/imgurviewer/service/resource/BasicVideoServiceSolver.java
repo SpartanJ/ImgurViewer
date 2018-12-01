@@ -102,9 +102,10 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 			@Override
 			public void onRequestError( Context context, int errorCode, String errorMessage )
 			{
-				Log.v( getDomain(), errorMessage );
+				if ( null != getDomain() && null != errorMessage )
+					Log.v( getDomain(), errorMessage );
 				
-				sendPathError( pathResolverListener, errorMessage );
+				sendPathError( pathResolverListener, null != errorMessage ? errorMessage : "" );
 			}
 		};
 	}

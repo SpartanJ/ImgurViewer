@@ -2,17 +2,17 @@ package com.ensoft.imgurviewer.service;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 
 public class PermissionService
 {
 	public static final String READ_EXTERNAL_STORAGE = "android.permission.READ_EXTERNAL_STORAGE";
-	public static int REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION = 0x0F3124;
-	public static int REQUEST_READ_EXTERNAL_STORAGE_PERMISSION = 0x0F3125;
+	public static int REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION = 0xF1;
+	public static int REQUEST_READ_EXTERNAL_STORAGE_PERMISSION = 0xF2;
 	
 	public boolean isExternalStorageAccess( Context context )
 	{

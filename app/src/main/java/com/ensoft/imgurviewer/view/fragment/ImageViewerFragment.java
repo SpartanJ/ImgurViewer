@@ -1,9 +1,6 @@
 package com.ensoft.imgurviewer.view.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -15,6 +12,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +32,7 @@ import com.ensoft.imgurviewer.model.MediaType;
 import com.ensoft.imgurviewer.service.DownloadService;
 import com.ensoft.imgurviewer.service.FrescoService;
 import com.ensoft.imgurviewer.service.IntentUtils;
+import com.ensoft.imgurviewer.service.MediaSourceHelper;
 import com.ensoft.imgurviewer.service.PermissionService;
 import com.ensoft.imgurviewer.service.PreferencesService;
 import com.ensoft.imgurviewer.service.ResourceSolver;
@@ -52,18 +52,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.github.piasy.biv.view.BigImageView;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.LoopingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.dash.DashMediaSource;
-import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource;
-import com.google.android.exoplayer2.source.hls.HlsMediaSource;
-import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource;
-import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.imgurviewer.R;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
@@ -110,24 +99,27 @@ public class ImageViewerFragment extends Fragment
 	
 	@Nullable
 	@Override
-	public View onCreateView( LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
+	public View onCreateView( @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
 	{
 		return inflater.inflate( R.layout.fragment_imageviewer, container, false );
 	}
 	
 	@Override
-	public void onViewCreated( View view, @Nullable Bundle savedInstanceState )
+	public void onViewCreated( @NonNull View view, @Nullable Bundle savedInstanceState )
 	{
 		super.onViewCreated( view, savedInstanceState );
 		
 		context = (AppActivity)getActivity();
-		context.statusBarTint();
+		if ( null != context )
+			context.statusBarTint();
 		visible = true;
 		contentContainer = view.findViewById( R.id.content_container );
+		
 		contentView = view.findViewById( R.id.fullscreen_content );
 		imageView = view.findViewById( R.id.imageView );
 		imageViewFallback = view.findViewById( R.id.imageViewFallback );
 		videoView = view.findViewById( R.id.videoView );
+		videoView.setReleaseOnDetachFromWindow( false );
 		progressBar = view.findViewById( R.id.progressBar );
 		progressLine = view.findViewById( R.id.progressLine );
 		floatingMenu = view.findViewById( R.id.floating_menu );
@@ -136,7 +128,7 @@ public class ImageViewerFragment extends Fragment
 		view.findViewById( R.id.download ).setOnClickListener( v -> downloadImage() );
 		view.findViewById( R.id.share ).setOnClickListener( v -> shareImage() );
 		
-		if ( null != getResources() && null != getResources().getConfiguration() )
+		if ( null != getResources().getConfiguration() )
 		{
 			setFloatingMenuOrientation( getResources().getConfiguration().orientation );
 		}
@@ -145,7 +137,7 @@ public class ImageViewerFragment extends Fragment
 		
 		Bundle args = getArguments();
 		
-		String path = args.getString( PARAM_RESOURCE_PATH );
+		String path = null != args ? args.getString( PARAM_RESOURCE_PATH ) : null;
 		
 		if ( null != path )
 		{
@@ -178,8 +170,18 @@ public class ImageViewerFragment extends Fragment
 		}
 		catch ( Exception e )
 		{
-			getActivity().finish();
+			if ( null != context )
+				context.finish();
 		}
+	}
+	
+	@Override
+	public void onDetach()
+	{
+		super.onDetach();
+		
+		if ( null != videoView )
+			videoView.release();
 	}
 	
 	public void loadResource( Uri uri )
@@ -204,16 +206,15 @@ public class ImageViewerFragment extends Fragment
 				Intent intent = new Intent( context, view );
 				intent.putExtra( AppActivity.ALBUM_DATA, uri.toString() );
 				startActivity( intent );
-				getActivity().finish();
+				
+				if ( null != context )
+					context.finish();
 			}
 		} ).solve( uri );
 	}
 	
-	@Override
-	public void onResume()
+	private void initSlider()
 	{
-		super.onResume();
-		
 		PreferencesService preferencesService = App.getInstance().getPreferencesService();
 		
 		if ( preferencesService.gesturesEnabled() )
@@ -245,6 +246,14 @@ public class ImageViewerFragment extends Fragment
 		}
 	}
 	
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		
+		initSlider();
+	}
+	
 	protected void onImageClick()
 	{
 		if ( !( System.currentTimeMillis() - lastClickTime <= UI_ANIMATION_DELAY ) )
@@ -269,7 +278,7 @@ public class ImageViewerFragment extends Fragment
 	{
 		PreferencesService preferencesService = App.getInstance().getPreferencesService();
 		
-		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+		FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
 		fragmentTransaction.replace( R.id.player, mediaPlayerFragment = MediaPlayerFragment.newInstance( preferencesService.fullscreenButton(), preferencesService.screenLockButton() ) );
 		fragmentTransaction.commitAllowingStateLoss();
 		
@@ -396,26 +405,6 @@ public class ImageViewerFragment extends Fragment
 		delayedHide();
 	}
 	
-	private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
-	private static final DefaultHttpDataSourceFactory DATA_SOURCE_FACTORY = new DefaultHttpDataSourceFactory("Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0 (Chrome)", BANDWIDTH_METER );
-	
-	private static MediaSource buildMediaSource( Context context, Uri uri, MediaType mediaType )
-	{
-		if ( MediaType.STREAM_SS == mediaType )
-			return new SsMediaSource.Factory( new DefaultSsChunkSource.Factory( DATA_SOURCE_FACTORY ), DATA_SOURCE_FACTORY ).createMediaSource(uri);
-		
-		if ( MediaType.STREAM_DASH == mediaType )
-			return new DashMediaSource.Factory( new DefaultDashChunkSource.Factory( DATA_SOURCE_FACTORY ), DATA_SOURCE_FACTORY ).createMediaSource(uri);
-		
-		if ( MediaType.STREAM_HLS == mediaType )
-			return new HlsMediaSource.Factory( DATA_SOURCE_FACTORY ).createMediaSource(uri);
-		
-		if ( UriUtils.isFileUri( uri ) )
-			return new ExtractorMediaSource.Factory( new DefaultDataSourceFactory( context, "ua" ) ).setExtractorsFactory( new DefaultExtractorsFactory() ).createMediaSource( uri );
-		
-		return new ExtractorMediaSource.Factory( DATA_SOURCE_FACTORY ).createMediaSource(uri);
-	}
-	
 	public void loadVideo( Uri uri, MediaType mediaType )
 	{
 		currentResource = uri;
@@ -432,11 +421,11 @@ public class ImageViewerFragment extends Fragment
 		
 		if ( UriUtils.isAudioUrl( uri ) )
 		{
-			mediaSource = buildMediaSource( getActivity(), uri, mediaType );
+			mediaSource = MediaSourceHelper.buildMediaSource( getActivity(), uri, mediaType );
 		}
 		else
 		{
-			mediaSource = new LoopingMediaSource( buildMediaSource( getActivity(), uri, mediaType ) );
+			mediaSource = MediaSourceHelper.buildLoopingMediaSource( getActivity(), uri, mediaType );
 		}
 		
 		createMediaPlayer();
@@ -448,6 +437,12 @@ public class ImageViewerFragment extends Fragment
 			videoView.setVisibility( View.VISIBLE );
 			
 			videoView.setBackgroundColor( Color.TRANSPARENT );
+		} );
+		
+		videoView.setOnErrorListener( e -> {
+			Log.e( TAG, e.toString() );
+			
+			return false;
 		} );
 		
 		videoView.setVideoURI( uri, mediaSource );
@@ -481,7 +476,8 @@ public class ImageViewerFragment extends Fragment
 			{
 				Toast.makeText( getActivity(), R.string.cantDisplayResourceNoPermission, Toast.LENGTH_LONG ).show();
 				
-				getActivity().finish();
+				if ( null != context )
+					context.finish();
 			}
 		}
 	}
@@ -542,7 +538,7 @@ public class ImageViewerFragment extends Fragment
 		hideHandler.postDelayed( hidePart2Runnable, UI_ANIMATION_DELAY );
 	}
 	
-	private void setSystemUiVisibility()
+	private int getSystemUiVisibilityHideFlags()
 	{
 		int flags = View.SYSTEM_UI_FLAG_LOW_PROFILE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
 		
@@ -550,9 +546,14 @@ public class ImageViewerFragment extends Fragment
 			flags |= View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
 		
 		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT )
-			flags |=  View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+			flags |=  View.SYSTEM_UI_FLAG_IMMERSIVE;
 		
-		contentView.setSystemUiVisibility( flags );
+		return flags;
+	}
+	
+	private void setSystemUiVisibility()
+	{
+		contentView.setSystemUiVisibility( getSystemUiVisibilityHideFlags() );
 	}
 	
 	private void hideFast()
@@ -621,6 +622,7 @@ public class ImageViewerFragment extends Fragment
 	private void show()
 	{
 		contentView.setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION );
+		
 		visible = true;
 		hideHandler.removeCallbacks( hidePart2Runnable );
 		

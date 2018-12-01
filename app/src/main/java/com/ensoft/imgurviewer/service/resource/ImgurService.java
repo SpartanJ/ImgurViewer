@@ -65,7 +65,7 @@ public class ImgurService extends MediaServiceSolver
 		} );
 	}
 	
-	protected Uri processPath( Uri uri )
+	public Uri processPath( Uri uri, boolean fixVideoPath )
 	{
 		String url = uri.toString();
 		
@@ -87,13 +87,17 @@ public class ImgurService extends MediaServiceSolver
 			url = url.substring( 0, url.indexOf( "/r/" ) ) + url.substring( url.lastIndexOf( "/" ) );
 		}
 		
-		if ( url.endsWith( ".gif" ) || url.endsWith( ".gifv" ) )
+		if ( url.endsWith( ".gifv" ) )
 		{
 			url = url.replace( ".gifv", ".mp4" );
+		}
+		
+		if ( fixVideoPath && ( url.endsWith( ".gif" ) ) )
+		{
 			url = url.replace( ".gif", ".mp4" );
 		}
 		
-		if ( !url.endsWith( ".png" ) && !url.endsWith( ".jpg" ) && !url.endsWith( ".jpeg" ) && !url.endsWith( ".mp4" ) )
+		if ( !url.endsWith( ".png" ) && !url.endsWith( ".jpg" ) && !url.endsWith( ".jpeg" ) && !url.endsWith( ".mp4" ) && !url.endsWith( ".m3u8" ) && !url.endsWith( ".gif" ) )
 		{
 			url += ".jpg";
 		}
@@ -108,12 +112,15 @@ public class ImgurService extends MediaServiceSolver
 	
 	public Uri getThumbnailPath( Uri uri, ThumbnailSize thumbnailSize )
 	{
-		String fixedUri = processPath( uri ).toString();
+		String fixedUri = processPath( uri, false ).toString();
 		
 		int pos = fixedUri.lastIndexOf( "." );
 		
 		String path = fixedUri.substring( 0, pos );
 		String ext = fixedUri.substring( pos );
+		
+		if ( ".gif".equals( ext ) || ".mp4".equals( ext ) )
+			ext = ".jpg";
 		
 		return Uri.parse( path + thumbnailSize.toString() + ext );
 	}
@@ -130,7 +137,7 @@ public class ImgurService extends MediaServiceSolver
 		}
 		else
 		{
-			Uri fixedUri = processPath( uri );
+			Uri fixedUri = processPath( uri, true );
 			
 			pathResolverListener.onPathResolved( fixedUri, UriUtils.guessMediaTypeFromUri( uri ), isVideo( uri ) ? uri : getThumbnailPath( fixedUri ) );
 		}

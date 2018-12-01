@@ -52,5 +52,18 @@
 			android:layout_gravity="center"
 			android:layout_centerVertical="true"
 			android:layout_centerHorizontal="true"/>
+
+		<ImageView
+			android:id="@+id/albumPhoto_play"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/ic_play_circle_outline_white_48dp"
+			android:scaleType="centerInside"
+			android:clickable="false"
+			android:visibility="gone"
+			android:layout_gravity="center"
+			android:layout_centerVertical="true"
+			android:layout_centerHorizontal="true"
+			/>
 	</RelativeLayout>
 </LinearLayout>
