@@ -1,6 +1,5 @@
 package com.ensoft.imgurviewer.view.fragment;
 
-import android.app.Fragment;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -10,7 +9,9 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,6 +56,7 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 	protected boolean screenLockEnabled = false;
 	protected boolean fullscreenStateEnabled = false;
 	protected boolean screenLockStateEnabled = false;
+	protected View view;
 	
 	protected void updatePlayPauseState()
 	{
@@ -106,15 +108,17 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 	
 	@Nullable
 	@Override
-	public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
+	public View onCreateView( @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
 	{
 		return inflater.inflate( R.layout.mediaplayer, container, false );
 	}
 	
 	@Override
-	public void onViewCreated( View view, @Nullable Bundle savedInstanceState )
+	public void onViewCreated( @NonNull View view, @Nullable Bundle savedInstanceState )
 	{
 		super.onViewCreated( view, savedInstanceState );
+		
+		this.view = view;
 		
 		if ( getArguments() != null )
 		{
@@ -122,7 +126,7 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 			screenLockEnabled = getArguments().getBoolean( "screenLockEnabled", false );
 		}
 		
-		if ( null != getResources() && null != getResources().getConfiguration() )
+		if ( null != getResources().getConfiguration() )
 		{
 			setOrientationMargins( getResources().getConfiguration().orientation );
 		}
@@ -237,20 +241,24 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 		if ( null == getActivity() )
 			return;
 		
-		if ( enabled )
+		try
 		{
-			getActivity().setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE );
+			if ( enabled )
+			{
+				getActivity().setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE );
+				
+				fullscreenOnOffView.setImageResource( R.drawable.ic_fullscreen_exit_white_48dp );
+			}
+			else
+			{
+				getActivity().setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_SENSOR );
+				
+				fullscreenOnOffView.setImageResource( R.drawable.ic_fullscreen_white_48dp );
+			}
 			
-			fullscreenOnOffView.setImageResource( R.drawable.ic_fullscreen_exit_white_48dp );
+			fullscreenStateEnabled = enabled;
 		}
-		else
-		{
-			getActivity().setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_SENSOR );
-			
-			fullscreenOnOffView.setImageResource( R.drawable.ic_fullscreen_white_48dp );
-		}
-		
-		fullscreenStateEnabled = enabled;
+		catch ( Exception ignored ) {}
 	}
 	
 	public void setOnPreparedListener( OnPreparedListener onPreparedListener )
@@ -352,23 +360,23 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 	
 	public void setVisibility( int visibility )
 	{
-		if ( null != getView() )
+		if ( null != view )
 		{
-			getView().setVisibility( visibility );
+			view.setVisibility( visibility );
 		}
 	}
 	
 	public void startAnimation( Animation animation )
 	{
-		if ( null != getView() )
+		if ( null != view )
 		{
-			getView().startAnimation( animation );
+			view.startAnimation( animation );
 		}
 	}
 	
 	public void setMargins( int left, int top, int right, int bottom )
 	{
-		View v = getView();
+		View v = view;
 		
 		if ( null != v )
 		{
@@ -388,9 +396,12 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 		}
 		else if ( orientation == Configuration.ORIENTATION_PORTRAIT )
 		{
-			setMargins( 0, 0, 0, MetricsHelper.getNavigationBarHeight( getActivity() ) +
-				( ViewHelper.hasImmersive( getActivity() ) ? MetricsHelper.dpToPx( getActivity(), 8 ) : 0 )
-			);
+			if ( null != getActivity() )
+			{
+				setMargins( 0, 0, 0, MetricsHelper.getNavigationBarHeight( getActivity() ) +
+					( ViewHelper.hasImmersive( getActivity() ) ? MetricsHelper.dpToPx( getActivity(), 8 ) : 0 )
+				);
+			}
 		}
 	}
 	

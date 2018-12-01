@@ -1,7 +1,9 @@
 package com.ensoft.imgurviewer.view.adapter;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.graphics.drawable.Animatable;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -22,7 +25,6 @@ import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
 import com.ensoft.imgurviewer.view.activity.AlbumPagerActivity;
 import com.ensoft.imgurviewer.view.helper.MetricsHelper;
 import com.ensoft.imgurviewer.view.widget.ImageViewForcedHeight;
-import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.imagepipeline.image.ImageInfo;
@@ -94,6 +96,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 		TextView title;
 		TextView description;
 		ProgressBar progressBar;
+		ImageView playButton;
 		
 		private AlbumImageHolder( final View view, boolean isGridLayout )
 		{
@@ -104,6 +107,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 			progressBar = view.findViewById( R.id.albumPhoto_progressBar );
 			title = view.findViewById( R.id.albumPhoto_title );
 			description = view.findViewById( R.id.albumPhoto_description );
+			playButton = view.findViewById( R.id.albumPhoto_play );
 			
 			GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder( view.getResources() )
 				.setActualImageScaleType( isGridLayout ? ScaleTypeUtils.getGridViewImageScaleType() : ScaleTypeUtils.getListViewImageScaleType() )
@@ -117,7 +121,7 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 			image = img;
 			imageView.setOnClickListener( v -> AlbumPagerActivity.newInstance( v.getContext(), dataSet.toArray( new ImgurImage[ dataSet.size() ] ), position ) );
 			
-			Log.v( TAG, "Loading album image: " + image.getLink() );
+			Log.v( TAG, "Loading album image: " + image.getImageUri().toString() );
 			
 			progressBar.setVisibility( View.VISIBLE );
 			
@@ -184,10 +188,13 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 					
 					imageView.setLayoutParams( layoutParams );
 					progressBar.setLayoutParams( layoutParams );
+					playButton.setLayoutParams( layoutParams );
 				}
 			}
 			
-			new FrescoService().loadImage( img.getLinkUri(), img.getThumbnailLinkUri(), imageView, new ControllerImageInfoListener()
+			playButton.setVisibility( img.hasVideo() ? View.VISIBLE : View.GONE );
+			
+			new FrescoService().loadImage( img.getImageUri(), img.getThumbnailLinkUri(), imageView, new ControllerImageInfoListener()
 			{
 				@Override
 				public void onFinalImageSet( String id, ImageInfo imageInfo, Animatable animatable )

@@ -1,10 +1,11 @@
 package com.ensoft.imgurviewer.view.activity;
 
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.CheckBoxPreference;
+import android.support.v7.preference.ListPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -13,7 +14,7 @@ import com.ensoft.imgurviewer.service.FrescoService;
 import com.ensoft.imgurviewer.service.PreferencesService;
 import com.imgurviewer.R;
 
-public class SettingsActivity extends AppCompatPreferenceActivity
+public class SettingsActivity extends AppCompatActivity
 {
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -28,7 +29,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity
 			getSupportActionBar().setDisplayShowTitleEnabled( true );
 		}
 		
-		getFragmentManager().beginTransaction().replace( android.R.id.content, new AppPreferenceFragment() ).commit();
+		getSupportFragmentManager().beginTransaction().replace( android.R.id.content, new AppPreferenceFragment() ).commit();
 	}
 	
 	@Override
@@ -46,14 +47,14 @@ public class SettingsActivity extends AppCompatPreferenceActivity
 		return super.onOptionsItemSelected(item);
 	}
 
-	public static class AppPreferenceFragment extends PreferenceFragment
+	public static class AppPreferenceFragment extends PreferenceFragmentCompat
 	{
 		@Override
-		public void onCreate( final Bundle savedInstanceState )
+		public void onCreatePreferences( Bundle bundle, String rootKey )
 		{
 			final PreferencesService preferencesService = App.getInstance().getPreferencesService();
-			super.onCreate( savedInstanceState );
-			addPreferencesFromResource( R.xml.preferences );
+			
+			setPreferencesFromResource( R.xml.preferences, rootKey );
 			
 			Preference proxyHost = findPreference( "proxyHost" );
 			

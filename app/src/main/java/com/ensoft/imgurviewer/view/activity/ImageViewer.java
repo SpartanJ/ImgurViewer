@@ -1,9 +1,9 @@
 package com.ensoft.imgurviewer.view.activity;
 
-import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 import com.ensoft.imgurviewer.view.fragment.ImageViewerFragment;
@@ -34,7 +34,7 @@ public class ImageViewer extends AppActivity
 	
 	protected void loadFragment( Uri uri )
 	{
-		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 		fragmentTransaction.replace( R.id.image_viewer, imageViewer = ImageViewerFragment.newInstance( uri.toString() ) );
 		fragmentTransaction.commitAllowingStateLoss();
 	}

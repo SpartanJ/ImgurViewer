@@ -98,7 +98,7 @@ public class AlbumPagerActivity extends AppActivity
 				
 				int initialPosition = bundle.getInt( PARAM_IMAGES_CUR_POSITION );
 				
-				pager.setAdapter( adapter = new ImagesAlbumPagerAdapter( getFragmentManager(), images ) );
+				pager.setAdapter( adapter = new ImagesAlbumPagerAdapter( getSupportFragmentManager(), images ) );
 				pager.setCurrentItem( initialPosition );
 			}
 			catch ( Exception e )
