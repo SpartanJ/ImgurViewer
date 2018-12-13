@@ -578,13 +578,24 @@ public class ImageViewerFragment extends Fragment
 	
 	private int getSystemUiVisibilityHideFlags()
 	{
-		int flags = View.SYSTEM_UI_FLAG_LOW_PROFILE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+		int flags = View.SYSTEM_UI_FLAG_LOW_PROFILE;
 		
 		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN )
-			flags |= View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+			flags |= View.SYSTEM_UI_FLAG_FULLSCREEN;
 		
-		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT )
-			flags |=  View.SYSTEM_UI_FLAG_IMMERSIVE;
+		if ( !App.getInstance().getPreferencesService().isNavigationBarKeptVisible() )
+		{
+			flags |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+			
+			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN )
+				flags |= View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+			
+			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT )
+				flags |=  View.SYSTEM_UI_FLAG_IMMERSIVE;
+			
+			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN )
+				flags |= View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+		}
 		
 		return flags;
 	}
@@ -659,7 +670,7 @@ public class ImageViewerFragment extends Fragment
 	@SuppressLint( "InlinedApi" )
 	private void show()
 	{
-		contentView.setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION );
+		contentView.setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_STABLE );
 		
 		visible = true;
 		hideHandler.removeCallbacks( hidePart2Runnable );
