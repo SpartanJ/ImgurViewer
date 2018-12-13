@@ -4,6 +4,7 @@
 	<string name="flickr_key">2ba8fd93b3d6443c8c8b8f277770bf6e</string>
 	<string name="giphy_api_key">dc6zaTOxFJmzC</string>
 	<string name="settings">Settings</string>
+	<string name="general">General</string>
 	<string name="gestures">Gestures</string>
 	<string name="gallery">Gallery</string>
 	<string name="videos">Videos</string>
@@ -46,6 +47,8 @@
 	<string name="thumbnailsOnGalleryConf">Use thumbnails of the original images, otherwise load the full image</string>
 	<string name="thumbnailsSizeOnGallery">Imgur Thumbnail Size</string>
 	<string name="thumbnailsSizeOnGalleryConf">Select the default thumbnail size used to display images for Imgur albums and galleries</string>
+	<string name="keepNavigationVisible">Keep Navigation Bar Visible</string>
+	<string name="keepNavigationVisibleConf">Don\'t auto-hide the navigation bar then fullscreen mode enables.</string>
 	<string name="listViewImageScaleType">List View Image Scale Type</string>
 	<string name="gridViewImageScaleType">Grid View Image Scale Type</string>
 	<string name="vertical">VERTICAL</string>

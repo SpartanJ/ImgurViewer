@@ -56,6 +56,16 @@ public class SettingsActivity extends AppCompatActivity
 			
 			setPreferencesFromResource( R.xml.preferences, rootKey );
 			
+			final CheckBoxPreference keepNavigationVisible = (CheckBoxPreference) findPreference( "keepNavigationVisible" );
+			keepNavigationVisible.setChecked( preferencesService.isNavigationBarKeptVisible() );
+			keepNavigationVisible.setOnPreferenceChangeListener( ( preference, newValue ) ->
+			{
+				preferencesService.setNavigationBarKeptVisible( !preferencesService.isNavigationBarKeptVisible() );
+				keepNavigationVisible.setChecked( preferencesService.isNavigationBarKeptVisible() );
+				
+				return true;
+			} );
+			
 			Preference proxyHost = findPreference( "proxyHost" );
 			
 			proxyHost.setDefaultValue( preferencesService.getProxyHost() );
@@ -151,7 +161,6 @@ public class SettingsActivity extends AppCompatActivity
 				
 				return true;
 			} );
-			
 			
 			final ListPreference imageGesturePref = (ListPreference) findPreference( "gestureImageView" );
 			imageGesturePref.setValue( preferencesService.getGesturesImageView() );
