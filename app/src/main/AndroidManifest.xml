@@ -18,7 +18,7 @@
             android:name="com.ensoft.imgurviewer.view.activity.ImageViewer"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/AppThemeFull" >
+            android:theme="@style/AppThemeSemiFull" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

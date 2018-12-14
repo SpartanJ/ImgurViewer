@@ -21,6 +21,7 @@ public class PreferencesService extends NetworkPreferencesService
 	private static final String GRID_VIEW_IMAGE_SCALE_TYPE = "gridViewImageScaleType";
 	private static final String THUMBNAIL_SIZE_ON_GALLERY = "thumbnailSizeOnGallery";
 	private static final String HIDE_NAVIGATION_= "keepNavigationButtonsVisible";
+	private static final String DISABLE_WINDOW_TRANSPARENCY = "disableWindowTransparency";
 	
 	public PreferencesService( Context context )
 	{
@@ -40,6 +41,16 @@ public class PreferencesService extends NetworkPreferencesService
 	public void setMuteVideos( boolean muteVideos )
 	{
 		getDefaultSharedPreferences().edit().putBoolean( MUTE_VIDEOS, muteVideos ).apply();
+	}
+	
+	public boolean getDisableWindowTransparency()
+	{
+		return getDefaultSharedPreferences().getBoolean( DISABLE_WINDOW_TRANSPARENCY, false );
+	}
+	
+	public void setDisableWindowTransparency( boolean disableWindowTransparency )
+	{
+		getDefaultSharedPreferences().edit().putBoolean( DISABLE_WINDOW_TRANSPARENCY, disableWindowTransparency ).apply();
 	}
 	
 	public boolean isNavigationBarKeptVisible()

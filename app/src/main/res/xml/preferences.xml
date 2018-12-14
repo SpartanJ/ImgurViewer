@@ -121,4 +121,13 @@
 
 	</PreferenceCategory>
 
+	<PreferenceCategory android:title="@string/hacks">
+
+		<CheckBoxPreference
+			android:key="disableWindowTransparency"
+			android:title="@string/disableWindowTransparency"
+			android:summary="@string/disableWindowTransparencyConf" />
+
+	</PreferenceCategory>
+
 </PreferenceScreen>
