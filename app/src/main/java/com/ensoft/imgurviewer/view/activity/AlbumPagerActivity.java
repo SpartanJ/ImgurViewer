@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.service.PreferencesService;
+import com.ensoft.imgurviewer.service.TransparencyUtils;
 import com.ensoft.imgurviewer.service.listener.AlbumPagerProvider;
 import com.ensoft.imgurviewer.view.adapter.ImagesAlbumPagerAdapter;
 import com.ensoft.imgurviewer.view.fragment.ImageViewerFragment;
@@ -87,6 +88,9 @@ public class AlbumPagerActivity extends AppActivity implements AlbumPagerProvide
 	protected void onPostCreate( @Nullable Bundle savedInstanceState )
 	{
 		super.onPostCreate( savedInstanceState );
+		
+		if ( App.getInstance().getPreferencesService().getDisableWindowTransparency() )
+			TransparencyUtils.convertActivityFromTranslucent( this );
 		
 		Bundle bundle = getIntent().getExtras();
 		
