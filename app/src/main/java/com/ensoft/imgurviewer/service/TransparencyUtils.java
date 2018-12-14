@@ -2,6 +2,8 @@ package com.ensoft.imgurviewer.service;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 
 import java.lang.reflect.Method;
@@ -23,6 +25,12 @@ public class TransparencyUtils
 	
 	public static void convertActivityToTranslucent( Activity activity )
 	{
+		if ( null == activity )
+			return;
+		
+		activity.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+		activity.getWindow().getDecorView().setBackgroundDrawable(null);
+		
 		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP )
 		{
 			convertActivityToTranslucentAfterL( activity );

@@ -30,6 +30,7 @@ import com.ensoft.imgurviewer.service.DownloadService;
 import com.ensoft.imgurviewer.service.IntentUtils;
 import com.ensoft.imgurviewer.service.PermissionService;
 import com.ensoft.imgurviewer.service.PreferencesService;
+import com.ensoft.imgurviewer.service.TransparencyUtils;
 import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
 import com.ensoft.imgurviewer.service.listener.ImgurGalleryResolverListener;
 import com.ensoft.imgurviewer.service.listener.InstagramProfileResolverListener;
@@ -110,6 +111,9 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		super.onPostCreate( savedInstanceState );
 		
 		statusBarTint();
+		
+		if ( App.getInstance().getPreferencesService().getDisableWindowTransparency() )
+			TransparencyUtils.convertActivityFromTranslucent( this );
 		
 		Log.v( TAG, "Data is: " + albumData.toString() );
 		

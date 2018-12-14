@@ -37,6 +37,7 @@ import com.ensoft.imgurviewer.service.MediaSourceHelper;
 import com.ensoft.imgurviewer.service.PermissionService;
 import com.ensoft.imgurviewer.service.PreferencesService;
 import com.ensoft.imgurviewer.service.ResourceSolver;
+import com.ensoft.imgurviewer.service.TransparencyUtils;
 import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.event.OnViewLockStateChange;
 import com.ensoft.imgurviewer.service.listener.AlbumPagerProvider;
@@ -245,12 +246,18 @@ public class ImageViewerFragment extends Fragment
 			public void loadVideo( Uri uri, MediaType mediaType, Uri referer )
 			{
 				ImageViewerFragment.this.loadVideo( uri, mediaType );
+				
+				if ( App.getInstance().getPreferencesService().getDisableWindowTransparency() )
+					TransparencyUtils.convertActivityFromTranslucent( getActivity() );
 			}
 			
 			@Override
 			public void loadImage( Uri uri, Uri thumbnail )
 			{
 				ImageViewerFragment.this.loadImage( uri, thumbnail );
+				
+				if ( App.getInstance().getPreferencesService().getDisableWindowTransparency() )
+					TransparencyUtils.convertActivityFromTranslucent( getActivity() );
 			}
 			
 			@Override
