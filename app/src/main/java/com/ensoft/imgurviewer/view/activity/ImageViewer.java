@@ -1,11 +1,16 @@
 package com.ensoft.imgurviewer.view.activity;
 
+import android.content.pm.ActivityInfo;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
+import com.ensoft.imgurviewer.App;
+import com.ensoft.imgurviewer.service.TransparencyUtils;
 import com.ensoft.imgurviewer.view.fragment.ImageViewerFragment;
 import com.imgurviewer.R;
 
@@ -21,13 +26,21 @@ public class ImageViewer extends AppActivity
 	{
 		super.onCreate( savedInstanceState );
 		
+		setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_SENSOR );
+		
 		setContentView( R.layout.activity_imageviewer );
+		
+		getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+		getWindow().getDecorView().setBackgroundDrawable(null);
 	}
 	
 	@Override
 	protected void onPostCreate( @Nullable Bundle savedInstanceState )
 	{
 		super.onPostCreate( savedInstanceState );
+		
+		if ( !App.getInstance().getPreferencesService().getDisableWindowTransparency() )
+			TransparencyUtils.convertActivityToTranslucent( this );
 		
 		loadResource();
 	}

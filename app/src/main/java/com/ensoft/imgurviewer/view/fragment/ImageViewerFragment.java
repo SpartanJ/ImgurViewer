@@ -146,7 +146,7 @@ public class ImageViewerFragment extends Fragment
 		
 		if ( null != getResources().getConfiguration() )
 		{
-			setFloatingMenuOrientation( getResources().getConfiguration().orientation );
+			setOrientation( getResources().getConfiguration().orientation );
 		}
 		
 		contentView.setClickable( true );
@@ -208,6 +208,33 @@ public class ImageViewerFragment extends Fragment
 		
 		if ( null != videoView )
 			videoView.release();
+	}
+	
+	public void setViewsMargins( int orientation )
+	{
+		if ( App.getInstance().getPreferencesService().isNavigationBarKeptVisible() )
+		{
+			int navigationBarWidth = MetricsHelper.getNavigationBarWidth( context );
+			
+			if ( orientation == Configuration.ORIENTATION_PORTRAIT )
+			{
+				ViewHelper.setMargins( imageView, 0, 0, 0, navigationBarWidth );
+				ViewHelper.setMargins( imageViewFallback, 0, 0, 0, navigationBarWidth );
+				ViewHelper.setMargins( videoView, 0, 0, 0, navigationBarWidth );
+			}
+			else if ( orientation == Configuration.ORIENTATION_LANDSCAPE )
+			{
+				ViewHelper.setMargins( imageView, navigationBarWidth, 0, navigationBarWidth, 0 );
+				ViewHelper.setMargins( imageViewFallback, navigationBarWidth, 0, navigationBarWidth, 0 );
+				ViewHelper.setMargins( videoView, navigationBarWidth, 0, navigationBarWidth, 0 );
+			}
+		}
+		else
+		{
+			ViewHelper.setMargins( imageView, 0, 0, 0, 0 );
+			ViewHelper.setMargins( imageViewFallback, 0, 0, 0, 0 );
+			ViewHelper.setMargins( videoView, 0, 0, 0, 0 );
+		}
 	}
 	
 	public void loadResource( Uri uri )
@@ -670,7 +697,7 @@ public class ImageViewerFragment extends Fragment
 	@SuppressLint( "InlinedApi" )
 	private void show()
 	{
-		contentView.setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_STABLE );
+		contentView.setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN );
 		
 		visible = true;
 		hideHandler.removeCallbacks( hidePart2Runnable );
@@ -708,12 +735,18 @@ public class ImageViewerFragment extends Fragment
 	{
 		super.onConfigurationChanged( newConfig );
 		
+		setOrientation( newConfig.orientation );
+	}
+	
+	protected void setOrientation( int orientation )
+	{
+		setFloatingMenuOrientation( orientation );
+		setViewsMargins( orientation );
+		
 		if ( null != mediaPlayerFragment )
 		{
-			mediaPlayerFragment.setOrientationMargins( newConfig.orientation );
+			mediaPlayerFragment.setOrientationMargins( orientation );
 		}
-		
-		setFloatingMenuOrientation( newConfig.orientation );
 	}
 	
 	protected void setFloatingMenuOrientation( int orientation )

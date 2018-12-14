@@ -66,6 +66,16 @@ public class SettingsActivity extends AppCompatActivity
 				return true;
 			} );
 			
+			final CheckBoxPreference disableWindowTransparency = (CheckBoxPreference) findPreference( "disableWindowTransparency" );
+			disableWindowTransparency.setChecked( preferencesService.getDisableWindowTransparency() );
+			disableWindowTransparency.setOnPreferenceChangeListener( ( preference, newValue ) ->
+			{
+				preferencesService.setDisableWindowTransparency( !preferencesService.getDisableWindowTransparency() );
+				keepNavigationVisible.setChecked( preferencesService.getDisableWindowTransparency() );
+				
+				return true;
+			} );
+			
 			Preference proxyHost = findPreference( "proxyHost" );
 			
 			proxyHost.setDefaultValue( preferencesService.getProxyHost() );
