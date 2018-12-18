@@ -19,6 +19,7 @@
 	<string name="videoUrlNotFound">Video url not found.</string>
 	<string name="could_not_resolve_url">Couldn\'t resolve image url.</string>
 	<string name="could_not_resolve_video_url">Couldn\'t resolve video url.</string>
+	<string name="could_not_resolve_album_url">Couldn\'t resolve album url.</string>
 	<string name="seconds_abbr">s</string>
 	<string name="tutorial">How to use ImgurViewer?</string>
 	<string name="tutorial_open">Tap on any image, imgur album or clip video link from an external application.</string>

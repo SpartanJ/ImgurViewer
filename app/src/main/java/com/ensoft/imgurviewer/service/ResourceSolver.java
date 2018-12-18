@@ -69,7 +69,7 @@ public class ResourceSolver
 		addSolver( new TwitchClipsService() );
 		addSolver( new InstagramService(), ImgurAlbumGalleryViewer.class );
 		addSolver( new VidmeService() );
-		addSolver( new FlickrService() );
+		addSolver( new FlickrService(), ImgurAlbumGalleryViewer.class );
 		addSolver( new GiphyService() );
 		addSolver( new RedditVideoService() );
 		addSolver( new StreamjaService() );

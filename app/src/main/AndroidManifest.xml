@@ -104,12 +104,26 @@
 				<data android:scheme="http" />
 
 				<data android:pathPattern="/photos/.*" />
+				<data android:pathPattern="/set/.*" />
 			</intent-filter>
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
 
+				<data android:host="flic.kr" />
+				<data android:host="www.flic.kr" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/s/.*" />
+				<data android:pathPattern="/p/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
 
 				<data android:scheme="https" />
 				<data android:scheme="http" />
@@ -124,7 +138,6 @@
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
-
 
 				<data android:scheme="https" />
 				<data android:scheme="http" />

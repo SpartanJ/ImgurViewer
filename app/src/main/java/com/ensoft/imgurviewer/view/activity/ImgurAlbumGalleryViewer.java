@@ -31,9 +31,11 @@ import com.ensoft.imgurviewer.service.IntentUtils;
 import com.ensoft.imgurviewer.service.PermissionService;
 import com.ensoft.imgurviewer.service.PreferencesService;
 import com.ensoft.imgurviewer.service.TransparencyUtils;
+import com.ensoft.imgurviewer.service.listener.AlbumResolverListener;
 import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
 import com.ensoft.imgurviewer.service.listener.ImgurGalleryResolverListener;
 import com.ensoft.imgurviewer.service.listener.InstagramProfileResolverListener;
+import com.ensoft.imgurviewer.service.resource.FlickrService;
 import com.ensoft.imgurviewer.service.resource.ImgurAlbumService;
 import com.ensoft.imgurviewer.service.resource.ImgurGalleryService;
 import com.ensoft.imgurviewer.service.resource.ImgurService;
@@ -167,6 +169,28 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		{
 			loadInstagramProfile();
 		}
+		else if ( new FlickrService().isGallery( albumData ) )
+		{
+			loadFlickrAlbum();
+		}
+	}
+	
+	protected void loadFlickrAlbum()
+	{
+		new FlickrService().getGallery( albumData, new AlbumResolverListener()
+		{
+			@Override
+			public void onAlbumResolved( ImgurImage[] album )
+			{
+				create( album );
+			}
+			
+			@Override
+			public void onAlbumError( String error )
+			{
+				Toast.makeText( ImgurAlbumGalleryViewer.this, error, Toast.LENGTH_SHORT ).show();
+			}
+		} );
 	}
 	
 	protected void loadInstagramProfile()

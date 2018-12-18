@@ -26,7 +26,7 @@ public class ImagesAlbumPagerAdapter extends FragmentPagerAdapter
 	{
 		ImgurImage image = images[ position ];
 		
-		fragments[ position ] = ImageViewerFragment.newInstance( image.hasVideo() ? image.getVideoUri().toString() : image.getLink(), position );
+		fragments[ position ] = ImageViewerFragment.newInstance( image.hasVideo() ? image.getVideoUri().toString() : ( null != image.getFullSizeLink() ? image.getFullSizeLink() : image.getLink() ), position );
 		
 		return fragments[ position ];
 	}

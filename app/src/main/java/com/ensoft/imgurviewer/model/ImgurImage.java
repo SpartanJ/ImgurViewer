@@ -45,6 +45,8 @@ public class ImgurImage implements Parcelable
 	
 	protected Uri videoUri;
 	
+	protected String fullSizeLink;
+	
 	public ImgurImage( String id, String link )
 	{
 		this.id = id;
@@ -66,6 +68,14 @@ public class ImgurImage implements Parcelable
 		this.link = link;
 		this.thumbnailUri = thumbnailUri;
 		this.title = title;
+	}
+	
+	public ImgurImage( String link, Uri thumbnailUri, String title, String description )
+	{
+		this.link = link;
+		this.thumbnailUri = thumbnailUri;
+		this.title = title;
+		this.description = description;
 	}
 	
 	public String getId()
@@ -170,6 +180,16 @@ public class ImgurImage implements Parcelable
 		return null;
 	}
 	
+	public String getFullSizeLink()
+	{
+		return fullSizeLink;
+	}
+	
+	public void setFullSizeLink( String fullSizeLink )
+	{
+		this.fullSizeLink = fullSizeLink;
+	}
+	
 	@Override
 	public int describeContents()
 	{
@@ -191,6 +211,7 @@ public class ImgurImage implements Parcelable
 		dest.writeString( this.hls );
 		dest.writeParcelable( this.thumbnailUri, flags );
 		dest.writeParcelable( this.videoUri, flags );
+		dest.writeString( this.fullSizeLink );
 	}
 	
 	protected ImgurImage( Parcel in )
@@ -207,6 +228,7 @@ public class ImgurImage implements Parcelable
 		this.hls = in.readString();
 		this.thumbnailUri = in.readParcelable( Uri.class.getClassLoader() );
 		this.videoUri = in.readParcelable( Uri.class.getClassLoader() );
+		this.fullSizeLink = in.readString();
 	}
 	
 	public static final Creator<ImgurImage> CREATOR = new Creator<ImgurImage>()
