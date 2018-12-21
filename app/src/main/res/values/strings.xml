@@ -63,6 +63,12 @@
 	<string name="bottom">BOTTOM</string>
 	<string name="listView">List View</string>
 	<string name="gridView">Grid View</string>
+	<string name="share_as">Share as…</string>
+	<string name="could_not_detect_mime_type">Sorry, could not detect the resource mime/type, can\'t share as media. Please share as Text.</string>
+	<string-array name="share_as_type">
+		<item>Media ( send image or video )</item>
+		<item>Text ( send link )</item>
+	</string-array>
 	<string-array name="gallery_view_arr">
 		<item>@string/listView</item>
 		<item>@string/gridView</item>
