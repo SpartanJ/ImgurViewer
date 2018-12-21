@@ -402,7 +402,7 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 	{
 		if ( albumData != null )
 		{
-			IntentUtils.shareMessage( this, getString( R.string.share ), albumData.toString(), getString( R.string.shareUsing ) );
+			IntentUtils.shareAsTextMessage( this, getString( R.string.share ), albumData.toString(), getString( R.string.shareUsing ) );
 		}
 	}
 	

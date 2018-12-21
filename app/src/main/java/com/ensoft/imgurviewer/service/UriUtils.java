@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import com.ensoft.imgurviewer.model.MediaType;
 
@@ -97,6 +98,19 @@ public class UriUtils
 		}
 		
 		return false;
+	}
+	
+	public static String getMimeType( String url )
+	{
+		String type = null;
+		String extension = MimeTypeMap.getFileExtensionFromUrl( url );
+		
+		if ( extension != null )
+		{
+			type = MimeTypeMap.getSingleton().getMimeTypeFromExtension( extension );
+		}
+		
+		return type;
 	}
 	
 	public static MediaType guessMediaTypeFromUri( Uri uri )
