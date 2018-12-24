@@ -95,6 +95,7 @@ public class ImageViewerFragment extends Fragment
 	private int adapterPosition = 0;
 	protected MediaPlayerFragment mediaPlayerFragment;
 	private AlbumPagerProvider albumPagerProvider;
+	private boolean requestingPermissionFromShare = false;
 	
 	public static ImageViewerFragment newInstance( String resource )
 	{
@@ -127,9 +128,11 @@ public class ImageViewerFragment extends Fragment
 		
 		adapterPosition = args != null ? args.getInt( PARAM_ADAPTER_POSITION, 0 ) : 0;
 		
-		context = (AppActivity)getActivity();
+		context = (AppActivity) getActivity();
+		
 		if ( null != context )
 			context.statusBarTint();
+		
 		visible = true;
 		contentContainer = view.findViewById( R.id.content_container );
 		
@@ -178,7 +181,7 @@ public class ImageViewerFragment extends Fragment
 		
 		if ( context instanceof AlbumPagerProvider )
 		{
-			albumPagerProvider = (AlbumPagerProvider)context;
+			albumPagerProvider = (AlbumPagerProvider) context;
 		}
 	}
 	
@@ -186,6 +189,8 @@ public class ImageViewerFragment extends Fragment
 	{
 		try
 		{
+			requestingPermissionFromShare = false;
+			
 			if ( !new PermissionService().askReadExternalStorageAccess( this ) )
 			{
 				loadResource( UriUtils.contentUriToFileUri( context, uri ) );
@@ -375,7 +380,7 @@ public class ImageViewerFragment extends Fragment
 				
 				Toast.makeText( context, throwable.toString(), Toast.LENGTH_SHORT ).show();
 			}
-		}, new Point( 0,0 ) );
+		}, new Point( 0, 0 ) );
 	}
 	
 	public void loadImage( Uri uri, Uri thumbnail )
@@ -406,17 +411,15 @@ public class ImageViewerFragment extends Fragment
 			@Override
 			public void onProgress( int progress )
 			{
-				progressLine.getLayoutParams().width = ( (int)( ((View)progressLine.getParent()).getWidth() * ( progress / 100.f ) ) );
+				progressLine.getLayoutParams().width = ( (int) ( ( (View) progressLine.getParent() ).getWidth() * ( progress / 100.f ) ) );
 				progressLine.requestLayout();
 			}
 			
 			@Override
-			public void onFinish()
-			{}
+			public void onFinish() {}
 			
 			@Override
-			public void onSuccess( File image )
-			{}
+			public void onSuccess( File image ) {}
 			
 			@Override
 			public void onFail( Exception error )
@@ -430,8 +433,7 @@ public class ImageViewerFragment extends Fragment
 		imageView.setOnImageEventListener( new SubsamplingScaleImageView.OnImageEventListener()
 		{
 			@Override
-			public void onReady()
-			{}
+			public void onReady() {}
 			
 			@Override
 			public void onImageLoaded()
@@ -530,24 +532,31 @@ public class ImageViewerFragment extends Fragment
 		
 		if ( requestCode == PermissionService.REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION )
 		{
-			if ( grantResults[0] == 0 )
+			if ( grantResults[ 0 ] == 0 )
 			{
-				download();
+				if ( requestingPermissionFromShare )
+				{
+					shareImageAsBitmap();
+				}
+				else
+				{
+					download();
+				}
 			}
 			else
 			{
-				Toast.makeText( getActivity(), R.string.cantDownloadNoPermission, Toast.LENGTH_LONG ).show();
+				Toast.makeText( getActivity(), requestingPermissionFromShare ? R.string.cantShareNoPermission :  R.string.cantDownloadNoPermission, Toast.LENGTH_LONG ).show();
 			}
 		}
 		else if ( requestCode == PermissionService.REQUEST_READ_EXTERNAL_STORAGE_PERMISSION )
 		{
-			if ( grantResults[0] == 0 )
+			if ( grantResults[ 0 ] == 0 )
 			{
 				loadResource( UriUtils.contentUriToFileUri( context, currentResource ) );
 			}
 			else
 			{
-				Toast.makeText( getActivity(), R.string.cantDisplayResourceNoPermission, Toast.LENGTH_LONG ).show();
+				Toast.makeText( context, R.string.cantDisplayResourceNoPermission, Toast.LENGTH_LONG ).show();
 				
 				if ( null != context )
 					context.finish();
@@ -572,9 +581,30 @@ public class ImageViewerFragment extends Fragment
 	
 	public void downloadImage()
 	{
+		requestingPermissionFromShare = false;
+		
 		if ( !new PermissionService().askExternalStorageAccess( this ) )
 		{
 			download();
+		}
+		else
+		{
+			skipDettaching = true;
+		}
+	}
+	
+	public void shareImageAsBitmap()
+	{
+		IntentUtils.shareAsBitmapFromUri( context, currentResource, context.getString( R.string.shareUsing ) );
+	}
+	
+	public void shareImageFromBitmap()
+	{
+		requestingPermissionFromShare = true;
+		
+		if ( !new PermissionService().askExternalStorageAccess( this ) )
+		{
+			shareImageAsBitmap();
 		}
 		else
 		{
@@ -591,9 +621,13 @@ public class ImageViewerFragment extends Fragment
 				.setItems( R.array.share_as_type, ( dialog, which ) -> {
 					if ( 0 == which )
 					{
-						if ( !IntentUtils.shareAsMedia( context, currentResource, getString( R.string.shareUsing ) ) )
+						if ( UriUtils.getMimeType( currentResource.toString() ).contains( "image" ) )
 						{
-							Toast.makeText( context, R.string.could_not_detect_mime_type, Toast.LENGTH_LONG ).show();
+							shareImageFromBitmap();
+						}
+						else
+						{
+							IntentUtils.shareAsMedia( context, currentResource, getString( R.string.shareUsing ) );
 						}
 					}
 					else
@@ -642,7 +676,7 @@ public class ImageViewerFragment extends Fragment
 				flags |= View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
 			
 			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT )
-				flags |=  View.SYSTEM_UI_FLAG_IMMERSIVE;
+				flags |= View.SYSTEM_UI_FLAG_IMMERSIVE;
 			
 			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN )
 				flags |= View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
@@ -686,9 +720,7 @@ public class ImageViewerFragment extends Fragment
 			alphaAnimation.setAnimationListener( new Animation.AnimationListener()
 			{
 				@Override
-				public void onAnimationStart( Animation animation )
-				{
-				}
+				public void onAnimationStart( Animation animation ) {}
 				
 				@Override
 				public void onAnimationEnd( Animation animation )
@@ -704,9 +736,7 @@ public class ImageViewerFragment extends Fragment
 				}
 				
 				@Override
-				public void onAnimationRepeat( Animation animation )
-				{
-				}
+				public void onAnimationRepeat( Animation animation ) {}
 			} );
 			
 			floatingMenu.startAnimation( alphaAnimation );
@@ -795,13 +825,13 @@ public class ImageViewerFragment extends Fragment
 	{
 		super.onStart();
 		
-		EventBus.getDefault().register(this);
+		EventBus.getDefault().register( this );
 	}
 	
 	@Override
 	public void onStop()
 	{
-		EventBus.getDefault().unregister(this);
+		EventBus.getDefault().unregister( this );
 		
 		super.onStop();
 	}
