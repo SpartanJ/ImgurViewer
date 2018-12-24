@@ -64,7 +64,7 @@
 	<string name="listView">List View</string>
 	<string name="gridView">Grid View</string>
 	<string name="share_as">Share as…</string>
-	<string name="could_not_detect_mime_type">Sorry, could not detect the resource mime/type, can\'t share as media. Please share as Text.</string>
+	<string name="could_not_detect_mime_type">Sorry, something went wrong, can\'t share as media. Please share as Text.</string>
 	<string-array name="share_as_type">
 		<item>Media ( send image or video )</item>
 		<item>Text ( send link )</item>
@@ -148,5 +148,6 @@
 	<string name="fullScreenEnabledConf">Allows a fullscreen button on image/video view.</string>
 	<string name="cantDisplayResourceNoPermission">Sorry, can\'t display resource without proper permissions.</string>
 	<string name="cantDownloadNoPermission">Sorry, can\'t download resource/s without proper permissions.</string>
+	<string name="cantShareNoPermission">Sorry, can\'t share resource/s without proper permissions.</string>
 	<string name="couldNotReproduceVideo">Sorry, video reproduction failed.</string>
 </resources>
