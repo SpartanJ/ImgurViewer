@@ -12,7 +12,7 @@ import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
 
 @ReportsCrashes(
-	formUri = "http://imgurviewer.ensoft-dev.com/"
+	formUri = "http://imgurviewer.ensoft.dev"
 )
 public class App extends Application
 {
