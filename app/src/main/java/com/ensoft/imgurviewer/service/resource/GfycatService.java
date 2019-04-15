@@ -21,17 +21,13 @@ public class GfycatService extends MediaServiceSolver
 	{
 		String resourceName = uri.getLastPathSegment();
 		
-		String[] strings = { "-mobile.mp4", "-mobile.jpg", "-poster.jpg", "-360.mp4", "-thumb360.jpg", "-thumb100.jpg",
-			"-size_restricted.gif", "-small.gif", "-mini.mp4", "-mini.jpg", "-max-14mb.gif"
-		};
-		
-		for ( String string : strings )
+		if ( null != resourceName )
 		{
-			if ( resourceName.contains( string ) )
+			int index = resourceName.indexOf( '-' );
+			
+			if ( -1 != index )
 			{
-				resourceName = resourceName.replace( string, "" );
-				
-				break;
+				return resourceName.substring( 0, index );
 			}
 		}
 		

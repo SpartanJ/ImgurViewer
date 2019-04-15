@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 def versionMajor = 2
 def versionMinor = 0
-def versionPatch = 2
+def versionPatch = 3
 
 android {
     compileSdkVersion 28
@@ -40,7 +40,7 @@ dependencies {
     implementation 'com.facebook.fresco:animated-webp:1.11.0'
     implementation 'com.facebook.fresco:webpsupport:1.11.0'
     implementation 'ch.acra:acra:4.9.2'
-    implementation 'com.ensoft-dev.restafari:restafari:0.3.21'
+    implementation 'com.ensoft-dev.restafari:restafari:0.3.40'
     implementation 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     implementation 'com.devbrackets.android:exomedia:4.3.0'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
