@@ -16,6 +16,8 @@ public class RedditVideoService extends MediaServiceSolver
 {
 	public static final String TAG = RedditVideoService.class.getCanonicalName();
 	private static final String V_REDD_IT_DOMAIN = "v.redd.it";
+	private static final String I_REDD_IT_DOMAIN = "i.redd.it";
+	private static final String PREVIEW_REDD_IT_DOMAIN = "preview.redd.it";
 	private static final String V_REDD_IT_VIDEO_URL_M38U = "https://v.redd.it/%s/HLSPlaylist.m3u8";
 	private static final String V_REDD_IT_VIDEO_URL = "https://v.redd.it/%s/DASH_2_4_M";
 	private static final String V_REDD_IT_VIDEO_URL_2 = "https://v.redd.it/%s/DASH_600_K";
@@ -70,6 +72,12 @@ public class RedditVideoService extends MediaServiceSolver
 	@Override
 	public void getPath( Uri uri, final PathResolverListener pathResolverListener )
 	{
+		if ( isGifVideo( uri ) )
+		{
+			sendPathResolved( pathResolverListener, uri, MediaType.VIDEO_MP4, uri );
+			return;
+		}
+		
 		final String id = getId( uri );
 		
 		if ( id != null )
@@ -122,10 +130,16 @@ public class RedditVideoService extends MediaServiceSolver
 		}
 	}
 	
+	protected boolean isGifVideo( Uri uri )
+	{
+		return ( uri.toString().contains( PREVIEW_REDD_IT_DOMAIN ) || uri.toString().contains( I_REDD_IT_DOMAIN ) ) &&
+				null != uri.getLastPathSegment() && uri.getLastPathSegment().endsWith( ".gif" ) && "mp4".equals( uri.getQueryParameter( "format" ) );
+	}
+	
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
-		return uri.toString().contains( V_REDD_IT_DOMAIN );
+		return uri.toString().contains( V_REDD_IT_DOMAIN ) || isGifVideo( uri );
 	}
 	
 	@Override
