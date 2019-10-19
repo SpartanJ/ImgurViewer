@@ -11,9 +11,9 @@ public class PornHubService extends BasicVideoServiceSolver
 	}
 	
 	@Override
-	public String getDomainPath()
+	public String[] getDomainPath()
 	{
-		return "/view_video.php?";
+		return new String[] { "/view_video.php?" };
 	}
 	
 	@Override

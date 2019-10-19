@@ -9,8 +9,8 @@ public class XnxxService extends XVideosService
 	}
 	
 	@Override
-	public String getDomainPath()
+	public String[] getDomainPath()
 	{
-		return "/video";
+		return new String[] { "/video" };
 	}
 }

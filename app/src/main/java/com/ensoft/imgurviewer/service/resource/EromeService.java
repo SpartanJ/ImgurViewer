@@ -1,5 +1,7 @@
 package com.ensoft.imgurviewer.service.resource;
 
+import android.net.Uri;
+
 public class EromeService extends BasicVideoServiceSolver
 {
 	@Override
@@ -9,9 +11,9 @@ public class EromeService extends BasicVideoServiceSolver
 	}
 	
 	@Override
-	public String getDomainPath()
+	public String[] getDomainPath()
 	{
-		return "/a/";
+		return new String[] { "/a/", "/i/" };
 	}
 	
 	@Override
@@ -29,6 +31,12 @@ public class EromeService extends BasicVideoServiceSolver
 	@Override
 	protected String parseUrlString( String urlString )
 	{
-		return "https:" + urlString;
+		return urlString;
+	}
+	
+	@Override
+	protected Uri getVideoUrlFromResponse( String response )
+	{
+		return getFirstVideoUrlFromResponse( response );
 	}
 }
