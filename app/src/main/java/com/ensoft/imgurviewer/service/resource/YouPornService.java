@@ -9,8 +9,8 @@ public class YouPornService extends RedTubeService
 	}
 	
 	@Override
-	public String getDomainPath()
+	public String[] getDomainPath()
 	{
-		return "/watch/";
+		return new String[] { "/watch/" };
 	}
 }

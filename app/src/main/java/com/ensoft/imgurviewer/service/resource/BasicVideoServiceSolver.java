@@ -52,8 +52,26 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 		headers.put( "Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7" );
 		headers.put( "Accept-Language", "en-us,en;q=0.5" );
 		headers.put( "Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" );
-		headers.put( "User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0 (Chrome)" );
+		headers.put( "User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:69.0) Gecko/20100101 Firefox/69.0" );
 		return headers;
+	}
+	
+	protected Uri getFirstVideoUrlFromResponse( String response )
+	{
+		String[] needleStart = getNeedleStart();
+		String[] needleEnd = getNeedleEnd();
+		
+		for ( int i = 0; i < needleStart.length; i++ )
+		{
+			String qualityUrl = StringUtils.getFirstStringMatch( response, needleStart[i], ( i < needleEnd.length ) ? needleEnd[i] : needleEnd[0] );
+			
+			if ( !TextUtils.isEmpty( qualityUrl ) )
+			{
+				return Uri.parse( parseUrlString( qualityUrl ) );
+			}
+		}
+		
+		return null;
 	}
 	
 	protected Uri getVideoUrlFromResponse( String response )
@@ -123,15 +141,21 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 		RequestService.getInstance().makeStringRequest( getRequestMethod(), parseReferer( uri ), getResponseListener( pathResolverListener ), getParameters(), getHeaders( uri ) );
 	}
 	
-	public String getDomainPath()
+	public String[] getDomainPath()
 	{
-		return "";
+		return new String[] { "" };
 	}
 	
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
-		return UriUtils.uriMatchesDomain( uri, getDomain(), getDomainPath() );
+		for ( String path : getDomainPath() )
+		{
+			if ( UriUtils.uriMatchesDomain( uri, getDomain(), path ) )
+				return  true;
+		}
+		
+		return false;
 	}
 	
 	@Override

@@ -28,66 +28,249 @@
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
 
-				<data android:host="www.imgur.com" />
-				<data android:host="imgur.com" />
-				<data android:host="i.imgur.com" />
-				<data android:host="m.imgur.com" />
+				<data android:host="porntube.com" />
+				<data android:host="www.porntube.com" />
+				<data android:host="m.porntube.com" />
 
-				<data android:host="reddituploads.com" />
-				<data android:host="i.reddituploads.com" />
+				<data android:scheme="https" />
+				<data android:scheme="http" />
 
-				<data android:host="streamable.com" />
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
 
-				<data android:host="gyazo.com" />
+				<data android:host="tube8.com" />
+				<data android:host="www.tube8.com" />
+				<data android:host="m.tube8.com" />
 
-				<data android:host="gfycat.com" />
+				<data android:scheme="https" />
+				<data android:scheme="http" />
 
-				<data android:host="clips.twitch.tv" />
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
 
-				<data android:host="instagram.com" />
-				<data android:host="www.instagram.com" />
+				<data android:host="redtube.com" />
+				<data android:host="www.redtube.com" />
+				<data android:host="m.redtube.com" />
 
-				<data android:host="vid.me" />
+				<data android:scheme="https" />
+				<data android:scheme="http" />
 
-				<data android:host="v.redd.it" />
-				<data android:host="i.redd.it" />
-				<data android:host="preview.redd.it" />
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
 
-				<data android:host="streamja.com" />
-				<data android:host="vimeo.com" />
-				<data android:host="player.vimeo.com" />
+				<data android:host="youporn.com" />
+				<data android:host="www.youporn.com" />
+				<data android:host="m.youporn.com" />
 
-				<data android:host="clippituser.tv" />
-				<data android:host="www.clippituser.tv" />
+				<data android:scheme="https" />
+				<data android:scheme="http" />
 
-				<data android:host="pornhub.com" />
-				<data android:host="www.pornhub.com" />
-				<data android:host="m.pornhub.com" />
-
-				<data android:host="xvideos.com" />
-				<data android:host="www.xvideos.com" />
-				<data android:host="m.xvideos.com" />
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
 
 				<data android:host="spankbang.com" />
 				<data android:host="www.spankbang.com" />
 				<data android:host="la.spankbang.com" />
 				<data android:host="*.spankbang.com" />
 
-				<data android:host="youporn.com" />
-				<data android:host="www.youporn.com" />
-				<data android:host="m.youporn.com" />
+				<data android:scheme="https" />
+				<data android:scheme="http" />
 
-				<data android:host="redtube.com" />
-				<data android:host="www.redtube.com" />
-				<data android:host="m.redtube.com" />
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
 
-				<data android:host="tube8.com" />
-				<data android:host="www.tube8.com" />
-				<data android:host="m.tube8.com" />
+				<data android:host="xvideos.com" />
+				<data android:host="www.xvideos.com" />
+				<data android:host="m.xvideos.com" />
 
-				<data android:host="porntube.com" />
-				<data android:host="www.porntube.com" />
-				<data android:host="m.porntube.com" />
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<!--
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="pornhub.com" />
+				<data android:host="www.pornhub.com" />
+				<data android:host="m.pornhub.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/view_video.php.*" />
+			</intent-filter>
+			-->
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="clippituser.tv" />
+				<data android:host="www.clippituser.tv" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="vimeo.com" />
+				<data android:host="player.vimeo.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="streamja.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="v.redd.it" />
+				<data android:host="i.redd.it" />
+				<data android:host="preview.redd.it" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="vid.me" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="instagram.com" />
+				<data android:host="www.instagram.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="clips.twitch.tv" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="gfycat.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="www.imgur.com" />
+				<data android:host="imgur.com" />
+				<data android:host="i.imgur.com" />
+				<data android:host="m.imgur.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="reddituploads.com" />
+				<data android:host="i.reddituploads.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="streamable.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="gyazo.com" />
 
 				<data android:scheme="https" />
 				<data android:scheme="http" />
@@ -175,6 +358,7 @@
 				<data android:scheme="http" />
 
 				<data android:pathPattern="/a/.*" />
+				<data android:pathPattern="/i/.*" />
 			</intent-filter>
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />

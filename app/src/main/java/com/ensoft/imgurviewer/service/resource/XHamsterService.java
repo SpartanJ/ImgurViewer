@@ -17,9 +17,9 @@ public class XHamsterService extends BasicVideoServiceSolver
 	}
 	
 	@Override
-	public String getDomainPath()
+	public String[] getDomainPath()
 	{
-		return "/videos";
+		return new String[] { "/videos" };
 	}
 	
 	@Override
