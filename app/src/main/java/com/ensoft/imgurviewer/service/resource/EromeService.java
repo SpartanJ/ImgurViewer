@@ -10,6 +10,7 @@ import com.android.volley.Request;
 import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.service.StringUtils;
 import com.ensoft.imgurviewer.service.UriUtils;
+import com.ensoft.imgurviewer.service.listener.AlbumProvider;
 import com.ensoft.imgurviewer.service.listener.AlbumSolverListener;
 import com.ensoft.restafari.helper.ThreadMode;
 import com.ensoft.restafari.network.processor.ResponseListener;
@@ -19,7 +20,7 @@ import com.imgurviewer.R;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
-public class EromeService extends BasicVideoServiceSolver
+public class EromeService extends BasicVideoServiceSolver implements AlbumProvider
 {
 	@Override
 	public String getDomain()
@@ -87,7 +88,7 @@ public class EromeService extends BasicVideoServiceSolver
 		return mediaList.toArray( new ImgurImage[ 0 ] );
 	}
 	
-	public void getGallery( Uri uri, final AlbumSolverListener albumSolverListener )
+	public void getAlbum( Uri uri, final AlbumSolverListener albumSolverListener )
 	{
 		RequestService.getInstance().makeStringRequest( Request.Method.GET, uri.toString(), new ResponseListener<String>()
 		{
@@ -127,5 +128,11 @@ public class EromeService extends BasicVideoServiceSolver
 				new Handler( Looper.getMainLooper() ).post( () -> albumSolverListener.onAlbumError( null != errorMessage ? errorMessage : "" ) );
 			}
 		} );
+	}
+	
+	@Override
+	public boolean isAlbum( Uri uri )
+	{
+		return isGallery( uri );
 	}
 }

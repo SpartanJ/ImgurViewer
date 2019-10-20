@@ -3,7 +3,10 @@ package com.ensoft.imgurviewer.service;
 import android.net.Uri;
 import android.util.Log;
 
+import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.model.MediaType;
+import com.ensoft.imgurviewer.service.listener.AlbumProvider;
+import com.ensoft.imgurviewer.service.listener.AlbumSolverListener;
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
 
 import org.junit.Assert;
@@ -16,6 +19,7 @@ import androidx.test.runner.AndroidJUnit4;
 public class ResourceSolverTest
 {
 	private static final String TAG = ResourceSolverTest.class.getCanonicalName();
+	private static final AlbumProvider[] ALBUM_PROVIDERS = AlbumProvider.getProviders();
 	private boolean waitResponse;
 	
 	@Test
@@ -42,8 +46,52 @@ public class ResourceSolverTest
 			@Override
 			public void loadAlbum( Uri uri, Class<?> view )
 			{
-				waitResponse = false;
 				Assert.assertNotNull(uri);
+				
+				for ( AlbumProvider albumProvider : ALBUM_PROVIDERS )
+				{
+					if ( albumProvider.isAlbum( uri ) )
+					{
+						albumProvider.getAlbum( uri, new AlbumSolverListener()
+						{
+							@Override
+							public void onAlbumResolved( ImgurImage[] album )
+							{
+								waitResponse = false;
+								
+								for ( ImgurImage image : album )
+								{
+									if ( image.getLink() != null )
+									{
+										Log.v( TAG, image.getLink() );
+									}
+								}
+							}
+							
+							@Override
+							public void onImageResolved( ImgurImage image )
+							{
+								waitResponse = false;
+								
+								if ( image.getLink() != null )
+								{
+									Log.v( TAG, image.getLink() );
+								}
+							}
+							
+							@Override
+							public void onAlbumError( String error )
+							{
+								waitResponse = false;
+								Log.e( TAG, error );
+								Assert.fail();
+							}
+						} );
+						
+						break;
+					}
+				}
+				
 				Log.v(TAG, uri.toString());
 			}
 			
@@ -78,6 +126,8 @@ public class ResourceSolverTest
 			"https://instagram.com/p/aye83DjauH/?foo=bar#abc",
 			"https://www.instagram.com/p/BQ0eAlwhDrw/",
 			"http://www.flickr.com/photos/forestwander-nature-pictures/5645318632/in/photostream/",
+			"https://www.flickr.com/photos/10795027@N08/37124872560/in/photostream/lightbox/",
+			"https://www.flickr.com/photos/wernerkrause/albums/72157649599416957",
 			"https://media.giphy.com/media/9r1gg8vm3lbTcQI1Gw/giphy.gif",
 			"https://media.giphy.com/media/l4EoMdmBWzc69MSm4/giphy.gif",
 			"https://streamja.com/ggz",

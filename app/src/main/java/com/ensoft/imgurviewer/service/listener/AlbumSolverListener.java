@@ -6,5 +6,7 @@ public interface AlbumSolverListener
 {
 	void onAlbumResolved( ImgurImage[] album );
 	
+	void onImageResolved( ImgurImage image );
+	
 	void onAlbumError( String error );
 }

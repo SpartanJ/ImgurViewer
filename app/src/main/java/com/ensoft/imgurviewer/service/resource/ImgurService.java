@@ -6,8 +6,8 @@ import com.ensoft.imgurviewer.model.ImgurAlbum;
 import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.model.ThumbnailSize;
 import com.ensoft.imgurviewer.service.UriUtils;
+import com.ensoft.imgurviewer.service.listener.AlbumSolverListener;
 import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
-import com.ensoft.imgurviewer.service.listener.ImgurGalleryResolverListener;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 
 public class ImgurService extends MediaServiceSolver
@@ -30,7 +30,7 @@ public class ImgurService extends MediaServiceSolver
 			}
 			
 			@Override
-			public void onError( String error )
+			public void onAlbumError( String error )
 			{
 				pathResolverListener.onPathError( url, error );
 			}
@@ -39,12 +39,12 @@ public class ImgurService extends MediaServiceSolver
 	
 	protected void getFirstGalleryImage( final Uri url, final PathResolverListener pathResolverListener )
 	{
-		new ImgurGalleryService().getGallery( url, new ImgurGalleryResolverListener()
+		new ImgurAlbumService().getAlbum( url, new AlbumSolverListener()
 		{
 			@Override
-			public void onAlbumResolved( ImgurAlbum album )
+			public void onAlbumResolved( ImgurImage[] images )
 			{
-				Uri uri = Uri.parse( album.getImage( 0 ).getLink() );
+				Uri uri = Uri.parse( images[0].getLink() );
 				
 				pathResolverListener.onPathResolved( uri, UriUtils.guessMediaTypeFromUri( uri ), isVideo( uri ) ? url : getThumbnailPath( uri ) );
 			}
@@ -58,7 +58,7 @@ public class ImgurService extends MediaServiceSolver
 			}
 			
 			@Override
-			public void onError( String error )
+			public void onAlbumError( String error )
 			{
 				pathResolverListener.onPathError( url, error );
 			}
@@ -135,7 +135,7 @@ public class ImgurService extends MediaServiceSolver
 		{
 			getFirstAlbumImage( uri, pathResolverListener );
 		}
-		else if ( new ImgurGalleryService().isImgurGallery( uri ) )
+		else if ( new ImgurAlbumService().isAlbum( uri ) )
 		{
 			getFirstGalleryImage( uri, pathResolverListener );
 		}
@@ -156,7 +156,7 @@ public class ImgurService extends MediaServiceSolver
 	@Override
 	public boolean isGallery( Uri uri )
 	{
-		return new ImgurAlbumService().isImgurAlbum( uri ) || new ImgurGalleryService().isImgurGallery( uri ) || isMultiImageUri( uri );
+		return new ImgurAlbumService().isImgurAlbum( uri ) || new ImgurAlbumService().isAlbum( uri ) || isMultiImageUri( uri );
 	}
 	
 	public String getImageId( Uri uri )
@@ -178,7 +178,7 @@ public class ImgurService extends MediaServiceSolver
 	
 	public boolean isMultiImageUri( Uri uri )
 	{
-		if ( isServicePath( uri ) && !new ImgurAlbumService().isImgurAlbum( uri ) && !new ImgurGalleryService().isImgurGallery( uri ) )
+		if ( isServicePath( uri ) )
 		{
 			String id = getImageId( uri );
 			
