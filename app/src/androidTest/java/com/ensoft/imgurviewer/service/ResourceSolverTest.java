@@ -47,11 +47,14 @@ public class ResourceSolverTest
 			public void loadAlbum( Uri uri, Class<?> view )
 			{
 				Assert.assertNotNull(uri);
+				boolean providerFound = false;
 				
 				for ( AlbumProvider albumProvider : ALBUM_PROVIDERS )
 				{
 					if ( albumProvider.isAlbum( uri ) )
 					{
+						providerFound = true;
+						
 						albumProvider.getAlbum( uri, new AlbumSolverListener()
 						{
 							@Override
@@ -91,6 +94,8 @@ public class ResourceSolverTest
 						break;
 					}
 				}
+				
+				Assert.assertTrue( providerFound );
 				
 				Log.v(TAG, uri.toString());
 			}
