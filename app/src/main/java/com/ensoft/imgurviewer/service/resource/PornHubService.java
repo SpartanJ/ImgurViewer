@@ -1,5 +1,9 @@
 package com.ensoft.imgurviewer.service.resource;
 
+import android.net.Uri;
+
+import java.util.Map;
+
 public class PornHubService extends BasicVideoServiceSolver
 {
 	public static final String PORNHUB_DOMAIN = "pornhub.com";
@@ -17,20 +21,28 @@ public class PornHubService extends BasicVideoServiceSolver
 	}
 	
 	@Override
+	protected Map<String, String> getHeaders( Uri referer )
+	{
+		Map<String, String> headers = super.getHeaders( referer );
+		headers.put( "Cookie", "age_verified: 1; platform: tv;" );
+		return headers;
+	}
+	
+	@Override
 	public String[] getNeedleStart()
 	{
-		return new String[] { "\"quality\":\"1440\",\"videoUrl\":\"", "\"quality\":\"1080\",\"videoUrl\":\"", "\"quality\":\"720\",\"videoUrl\":\"", "\"quality\":\"480\",\"videoUrl\":\"", "\"quality\":\"240\",\"videoUrl\":\"" };
+		return new String[] {};
 	}
 	
 	@Override
 	public String[] getNeedleEnd()
 	{
-		return new String[] { "\"}" };
+		return new String[] {};
 	}
 	
 	@Override
-	protected String parseUrlString( String urlString )
+	protected Uri getVideoUrlFromResponse( String response )
 	{
-		return urlString.replaceAll( "\\\\", "" );
+		return Uri.EMPTY;
 	}
 }

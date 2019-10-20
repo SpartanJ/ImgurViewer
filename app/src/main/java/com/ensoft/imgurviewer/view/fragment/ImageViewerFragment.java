@@ -276,6 +276,13 @@ public class ImageViewerFragment extends Fragment
 				if ( null != context )
 					context.finish();
 			}
+			
+			@Override
+			public void loadFailed( Uri uri, String error )
+			{
+				Log.v( TAG, error );
+				Toast.makeText( getActivity(), error, Toast.LENGTH_SHORT ).show();
+			}
 		} ).solve( uri );
 	}
 	

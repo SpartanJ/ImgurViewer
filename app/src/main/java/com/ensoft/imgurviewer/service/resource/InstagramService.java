@@ -69,14 +69,14 @@ public class InstagramService extends MediaServiceSolver
 				}
 				else
 				{
-					pathResolverListener.onPathError( App.getInstance().getString( R.string.could_not_resolve_url ) );
+					pathResolverListener.onPathError( uri, App.getInstance().getString( R.string.could_not_resolve_url ) );
 				}
 			}
 		}, error ->
 		{
 			Log.v( TAG, error.toString() );
 			
-			pathResolverListener.onPathError( error.toString() );
+			pathResolverListener.onPathError( uri, error.toString() );
 		} );
 		
 		RequestService.getInstance().addToRequestQueue( stringRequest );

@@ -28,18 +28,18 @@ public abstract class MediaServiceSolver
 		new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( uri, mediaType, referer ) );
 	}
 	
-	protected void sendPathError( final PathResolverListener pathResolverListener, String errorMessage )
+	protected void sendPathError( Uri uri, final PathResolverListener pathResolverListener, String errorMessage )
 	{
-		new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( errorMessage ) );
+		new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( uri, errorMessage ) );
 	}
 	
-	protected void sendPathError( final PathResolverListener pathResolverListener, int errorMessage )
+	protected void sendPathError( Uri uri, final PathResolverListener pathResolverListener, int errorMessage )
 	{
-		sendPathError( pathResolverListener, App.getInstance().getString( errorMessage ) );
+		sendPathError( uri, pathResolverListener, App.getInstance().getString( errorMessage ) );
 	}
 	
-	protected void sendPathError( final PathResolverListener pathResolverListener )
+	protected void sendPathError( Uri uri, final PathResolverListener pathResolverListener )
 	{
-		sendPathError( pathResolverListener, R.string.could_not_resolve_video_url );
+		sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
 	}
 }

@@ -74,12 +74,12 @@ public class FlickrService extends MediaServiceSolver
 				}
 				else
 				{
-					sendPathError( pathResolverListener, App.getInstance().getString( R.string.unknown_error ) );
+					sendPathError( uri, pathResolverListener, App.getInstance().getString( R.string.unknown_error ) );
 				}
 			}
 			else
 			{
-				sendPathError( pathResolverListener, App.getInstance().getString( R.string.unknown_error ) );
+				sendPathError( uri, pathResolverListener, App.getInstance().getString( R.string.unknown_error ) );
 			}
 		} ) );
 	}
@@ -126,8 +126,6 @@ public class FlickrService extends MediaServiceSolver
 			{
 				try
 				{
-					Log.v( TAG, response.toString() );
-					
 					FlickrImage flickrImage = new Gson().fromJson( response.toString(), FlickrImage.class );
 					
 					if ( "ok".equals( flickrImage.getStat() ) )
@@ -136,27 +134,27 @@ public class FlickrService extends MediaServiceSolver
 					}
 					else
 					{
-						sendPathError( pathResolverListener, App.getInstance().getString( R.string.unknown_error ) );
+						sendPathError( uri, pathResolverListener, App.getInstance().getString( R.string.unknown_error ) );
 					}
 				}
 				catch ( Exception e )
 				{
 					Log.v( TAG, e.getMessage() );
 					
-					sendPathError( pathResolverListener, e.toString() );
+					sendPathError( uri, pathResolverListener, e.toString() );
 				}
 			}, error ->
 			{
 				Log.v( TAG, error.toString() );
 				
-				sendPathError( pathResolverListener, error.toString() );
+				sendPathError( uri, pathResolverListener, error.toString() );
 			} );
 			
 			RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
 		}
 		catch ( Exception e )
 		{
-			pathResolverListener.onPathError( App.getInstance().getString( R.string.unknown_error ) );
+			pathResolverListener.onPathError( uri, App.getInstance().getString( R.string.unknown_error ) );
 		}
 	}
 	

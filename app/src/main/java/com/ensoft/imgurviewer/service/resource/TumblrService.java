@@ -34,26 +34,40 @@ public class TumblrService extends MediaServiceSolver
 				
 				if ( !TextUtils.isEmpty( jsonData ) )
 				{
+					String browserRegexp = "\"supportedBrowserRegexp\":";
+					int browserRegexpPos = jsonData.indexOf( browserRegexp );
+					if ( -1 != browserRegexpPos )
+					{
+						int endBrowserRegexp = jsonData.indexOf( "/,\"" );
+						
+						if ( -1 != endBrowserRegexp )
+						{
+							String firstPart = jsonData.substring( 0, browserRegexpPos );
+							String secondPart = jsonData.substring( endBrowserRegexp + 2 );
+							jsonData = firstPart + secondPart;
+						}
+					}
+					
 					try
 					{
 						tumblrMedia = new Gson().fromJson( jsonData + "}", TumblrMedia.class );
 					}
 					catch ( JsonSyntaxException e )
 					{
-						sendPathError( pathResolverListener, e.toString() );
+						sendPathError( uri, pathResolverListener, e.toString() );
 						return;
 					}
 				}
 				
-				if ( null != tumblrMedia && null != tumblrMedia.imagePage && null != tumblrMedia.imagePage.photo )
+				if ( null != tumblrMedia && null != tumblrMedia.imagePage && null != tumblrMedia.imagePage.photo && null != tumblrMedia.imagePage.photo.photos && tumblrMedia.imagePage.photo.photos.length > 0 )
 				{
-					TumblrPhoto photo = tumblrMedia.imagePage.photo;
+					TumblrPhoto photo = tumblrMedia.imagePage.photo.photos[0];
 					
 					sendPathResolved( pathResolverListener, photo.getUri(), photo.getType().contains( "image" ) ? MediaType.IMAGE : MediaType.VIDEO_MP4, null );
 				}
 				else
 				{
-					sendPathError( pathResolverListener, R.string.unknown_error );
+					sendPathError( uri, pathResolverListener, R.string.unknown_error );
 				}
 			}
 			
@@ -62,7 +76,7 @@ public class TumblrService extends MediaServiceSolver
 			{
 				Log.v( TAG, errorMessage );
 				
-				sendPathError( pathResolverListener, errorMessage );
+				sendPathError( uri, pathResolverListener, errorMessage );
 			}
 		} );
 	}

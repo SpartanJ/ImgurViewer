@@ -61,8 +61,6 @@ public class VimeoService extends MediaServiceSolver
 				{
 					try
 					{
-						Log.v( TAG, response.toString() );
-						
 						Uri video = getVideo( new Gson().fromJson( response.getJSONObject( "request" ).getJSONObject( "files" ).getJSONArray( "progressive" ).toString(), VimeoVideo[].class ) );
 						
 						if ( null != video )
@@ -71,20 +69,20 @@ public class VimeoService extends MediaServiceSolver
 						}
 						else
 						{
-							pathResolverListener.onPathError( App.getInstance().getString( R.string.could_not_resolve_video_url ) );
+							pathResolverListener.onPathError( uri, App.getInstance().getString( R.string.could_not_resolve_video_url ) );
 						}
 					}
 					catch ( Exception e )
 					{
 						Log.v( TAG, e.getMessage() );
 						
-						pathResolverListener.onPathError( e.toString() );
+						pathResolverListener.onPathError( uri, e.toString() );
 					}
 				}, error ->
 				{
 					Log.v( TAG, error.toString() );
 					
-					pathResolverListener.onPathError( error.toString() );
+					pathResolverListener.onPathError( uri, error.toString() );
 				} );
 				
 				RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
@@ -94,7 +92,7 @@ public class VimeoService extends MediaServiceSolver
 		{
 			Log.v( TAG, e.getMessage() );
 			
-			pathResolverListener.onPathError( e.toString() );
+			pathResolverListener.onPathError( uri, e.toString() );
 		}
 	}
 	

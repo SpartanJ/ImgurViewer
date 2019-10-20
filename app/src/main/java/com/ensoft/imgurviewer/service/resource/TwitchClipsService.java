@@ -77,14 +77,14 @@ public class TwitchClipsService extends MediaServiceSolver
 				}
 				else
 				{
-					pathResolverListener.onPathError( App.getInstance().getString( R.string.videoUrlNotFound ) );
+					pathResolverListener.onPathError( uri, App.getInstance().getString( R.string.videoUrlNotFound ) );
 				}
 			}
 			
 			@Override
 			public void onRequestError( Context context, int errorCode, String errorMessage )
 			{
-				pathResolverListener.onPathError( errorMessage );
+				pathResolverListener.onPathError( uri, errorMessage );
 			}
 		} );
 	}
