@@ -28,7 +28,7 @@ public class UriUtils
 {
 	public static Uri getUriMatch( String haystack, String needleStart, String needleEnds )
 	{
-		String uriString = StringUtils.getStringMatch( haystack, needleStart, needleEnds );
+		String uriString = StringUtils.getLastStringMatch( haystack, needleStart, needleEnds );
 		
 		return !TextUtils.isEmpty( uriString ) ? Uri.parse( uriString ) : null;
 	}

@@ -110,7 +110,8 @@ public class ResourceSolverTest
 			waitResponse = true;
 			resourceSolver.solve( uri );
 			
-			while (waitResponse) {
+			while (waitResponse)
+			{
 				Thread.sleep(10);
 			}
 		}

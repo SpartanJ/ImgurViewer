@@ -195,7 +195,7 @@ public class FlickrService extends MediaServiceSolver
 			{
 				try
 				{
-					String imagesList = StringUtils.getStringMatch( response, "\"photoPageList\":{\"_data\":", ",\"fetchedStart\":" );
+					String imagesList = StringUtils.getLastStringMatch( response, "\"photoPageList\":{\"_data\":", ",\"fetchedStart\":" );
 					
 					FlickrAlbumImage[] images = new Gson().fromJson( imagesList, FlickrAlbumImage[].class );
 					

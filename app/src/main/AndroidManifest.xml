@@ -110,7 +110,6 @@
 
 				<data android:pathPattern="/video.*" />
 			</intent-filter>
-			<!--
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
@@ -125,7 +124,6 @@
 
 				<data android:pathPattern="/view_video.php.*" />
 			</intent-filter>
-			-->
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
