@@ -74,7 +74,7 @@ public class ResourceSolverTest
 			"https://streamable.com/dnd1",
 			"https://streamable.com/moo",
 			"https://clips.twitch.tv/FaintLightGullWholeWheat",
-			//"https://clips.twitch.tv/rflegendary/UninterestedBeeDAESuppy"
+			//"https://clips.twitch.tv/rflegendary/UninterestedBeeDAESuppy" // TODO: FIX REDIRECTION
 			"https://instagram.com/p/aye83DjauH/?foo=bar#abc",
 			"https://www.instagram.com/p/BQ0eAlwhDrw/",
 			"http://www.flickr.com/photos/forestwander-nature-pictures/5645318632/in/photostream/",
@@ -87,9 +87,9 @@ public class ResourceSolverTest
 			"https://www.clippituser.tv/c/apdmxa",
 			"http://abelvera.deviantart.com/art/Roadhog-Vs-Reinhardt-660542128?ga_submit_new=10%3A1485794341&ga_type=edit&ga_changes=1&ga_recent=1",
 			"https://dragonitearmy.deviantart.com/art/Pinyatta-751121451?ga_submit_new=10%3A1529760214",
-			//"http://www.pornhub.com/view_video.php?viewkey=648719015", // TODO: FIX SERVICE
+			"https://www.pornhub.com/view_video.php?viewkey=648719015",
 			"https://www.xvideos.com/video4588838/biker_takes_his_girl",
-			//"http://www.xvideos.com/video4588838/biker_takes_his_girl",
+			//"http://www.xvideos.com/video4588838/biker_takes_his_girl", // TODO: FIX REDIRECTION
 			//"https://spankbang.com/3vvn/video/fantasy+solo", // TODO: FIX SERVICE
 			"https://www.youporn.com/watch/505835/sex-ed-is-it-safe-to-masturbate-daily/",
 			"https://www.youporn.com/watch/561726/big-tits-awesome-brunette-on-amazing-webcam-show/?from=related3&al=2&from_id=561726&pos=4",

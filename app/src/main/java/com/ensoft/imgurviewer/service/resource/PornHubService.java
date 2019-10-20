@@ -2,7 +2,11 @@ package com.ensoft.imgurviewer.service.resource;
 
 import android.net.Uri;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PornHubService extends BasicVideoServiceSolver
 {
@@ -24,7 +28,7 @@ public class PornHubService extends BasicVideoServiceSolver
 	protected Map<String, String> getHeaders( Uri referer )
 	{
 		Map<String, String> headers = super.getHeaders( referer );
-		headers.put( "Cookie", "age_verified: 1; platform: tv;" );
+		headers.put( "Cookie", "platform=tv;" );
 		return headers;
 	}
 	
@@ -40,9 +44,57 @@ public class PornHubService extends BasicVideoServiceSolver
 		return new String[] {};
 	}
 	
+	private List<String> getJsVars(String mediaString)
+	{
+		ArrayList<String> list = new ArrayList<>();
+		
+		if ( mediaString != null )
+		{
+			String cleanString = mediaString.replaceAll( "[^:]//.*|/\\\\*((?!=*/)(?s:.))+\\\\*/", "" );
+			String[] vars = cleanString.split( "\\+" );
+			for ( String var : vars )
+			{
+				list.add( var.trim() );
+			}
+		}
+		
+		return list;
+	}
+	
+	private String getJsVarValue(String response, String varName)
+	{
+		StringBuilder varValue = new StringBuilder();
+		String varDefinition = String.format( "var %s=", varName );
+		Pattern regex = Pattern.compile( String.format( "%s(.*?)\";", varDefinition ) );
+		Matcher m = regex.matcher(response);
+		
+		if ( m.find() )
+		{
+			String varDeclaration = m.group();
+			String varValues = varDeclaration.substring( varDefinition.length(), varDeclaration.length() - 1 );
+			String[] values = varValues.split( "\\+" );
+			
+			for ( String val : values )
+			{
+				val = val.trim().replaceAll( "\"", "" );
+				varValue.append( val );
+			}
+		}
+		
+		return varValue.toString();
+	}
+	
 	@Override
 	protected Uri getVideoUrlFromResponse( String response )
 	{
-		return Uri.EMPTY;
+		List<String> vars = getJsVars(getStringMatch( response, "var mediastring=", ";</script>" ));
+		StringBuilder url = new StringBuilder();
+		
+		for ( String var : vars )
+		{
+			url.append( getJsVarValue( response, var ) );
+		}
+		
+		return !url.toString().isEmpty() ? Uri.parse( url.toString() ) : null;
 	}
 }
