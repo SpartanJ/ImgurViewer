@@ -25,6 +25,7 @@
 package com.github.piasy.biv;
 
 import android.net.Uri;
+
 import com.github.piasy.biv.loader.ImageLoader;
 
 /**

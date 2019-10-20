@@ -27,6 +27,7 @@ package com.github.piasy.biv.view;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Keep;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;

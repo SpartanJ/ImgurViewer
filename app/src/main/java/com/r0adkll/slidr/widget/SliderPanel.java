@@ -6,14 +6,13 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewGroupCompat;
-
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import com.r0adkll.slidr.model.SlidrConfig;
-import com.r0adkll.slidr.util.ViewDragHelper;
 import com.r0adkll.slidr.model.SlidrInterface;
+import com.r0adkll.slidr.util.ViewDragHelper;
 
 
 public class SliderPanel extends FrameLayout {

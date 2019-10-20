@@ -2,7 +2,7 @@ package com.ensoft.imgurviewer.service.listener;
 
 import com.ensoft.imgurviewer.model.ImgurImage;
 
-public interface AlbumResolverListener
+public interface AlbumSolverListener
 {
 	void onAlbumResolved( ImgurImage[] album );
 	

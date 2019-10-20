@@ -30,6 +30,7 @@ import android.view.View;
 
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.github.piasy.biv.view.BigImageView;
+
 import java.io.File;
 
 /**

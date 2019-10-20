@@ -81,7 +81,7 @@ public class ResourceSolver
 		addSolver( new RedTubeService() );
 		addSolver( new Tube8Service() );
 		addSolver( new PornTubeService() );
-		addSolver( new EromeService() );
+		addSolver( new EromeService(), ImgurAlbumGalleryViewer.class );
 		addSolver( new XnxxService() );
 		addSolver( new XHamsterService() );
 		addSolver( new TumblrService() );

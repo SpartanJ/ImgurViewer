@@ -5,7 +5,6 @@ import android.text.TextUtils;
 
 import com.ensoft.imgurviewer.model.XHamsterVideo;
 import com.ensoft.imgurviewer.model.XHamsterVideoMp4;
-import com.ensoft.imgurviewer.service.StringUtils;
 import com.google.gson.Gson;
 
 public class XHamsterService extends BasicVideoServiceSolver
