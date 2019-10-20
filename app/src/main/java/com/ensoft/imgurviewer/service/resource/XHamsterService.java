@@ -29,7 +29,7 @@ public class XHamsterService extends BasicVideoServiceSolver
 		{
 			String needleStart = getNeedleStart()[0];
 			String needleEnd = getNeedleEnd()[0];
-			String jsonString = StringUtils.getStringMatch( response, needleStart, needleEnd );
+			String jsonString = getStringMatch( response, needleStart, needleEnd );
 			
 			if ( !TextUtils.isEmpty( jsonString ) )
 			{

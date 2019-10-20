@@ -76,7 +76,7 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 	
 	protected String getStringMatch( String haystack, String needleStart, String needleEnds )
 	{
-		return StringUtils.getStringMatch( haystack, needleStart, needleEnds );
+		return StringUtils.getLastStringMatch( haystack, needleStart, needleEnds );
 	}
 	
 	protected Uri getVideoUrlFromResponse( String response )

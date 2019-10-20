@@ -24,9 +24,10 @@ public class Tube8Service extends RedTubeService
 		return new String[] { "\"," };
 	}
 	
+	@Override
 	protected String getStringMatch( String haystack, String needleStart, String needleEnds )
 	{
-		String match = StringUtils.getStringMatch( haystack, needleStart, needleEnds );
+		String match = StringUtils.getLastStringMatch( haystack, needleStart, needleEnds );
 		
 		if ( "false".equals( match ) )
 		{

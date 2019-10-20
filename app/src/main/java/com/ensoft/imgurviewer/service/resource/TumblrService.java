@@ -29,7 +29,7 @@ public class TumblrService extends MediaServiceSolver
 			@Override
 			public void onRequestSuccess( Context context, String response )
 			{
-				String jsonData = StringUtils.getStringMatch( response, "window['___INITIAL_STATE___'] = ", "};" );
+				String jsonData = StringUtils.getLastStringMatch( response, "window['___INITIAL_STATE___'] = ", "};" );
 				TumblrMedia tumblrMedia = null;
 				
 				if ( !TextUtils.isEmpty( jsonData ) )
