@@ -97,7 +97,7 @@ public class ResourceSolverTest
 			"https://www.tube8.com/teen/kasia-music-video/229795/",
 			"https://www.porntube.com/videos/porn-surfing-guide-porn-experts_1134180",
 			"https://www.erome.com/a/bEFp5geB",
-			//"https://www.erome.com/a/9GFbNGCS", // TODO: ADD SUPPORT
+			"https://www.erome.com/a/9GFbNGCS",
 			"https://www.xnxx.com/video-55awb78/skyrim_test_video",
 			"https://xhamster.com/videos/femaleagent-shy-beauty-takes-the-bait-1509445",
 			"https://pasaje13.tumblr.com/image/188445492882",

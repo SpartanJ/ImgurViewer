@@ -3,10 +3,6 @@ package com.ensoft.imgurviewer.model;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.google.gson.annotations.SerializedName;
-
-import java.util.HashMap;
-
 public class TumblrPhoto
 {
 	protected String url;

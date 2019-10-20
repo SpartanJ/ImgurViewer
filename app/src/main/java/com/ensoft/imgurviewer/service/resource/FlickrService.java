@@ -20,7 +20,7 @@ import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.model.MediaType;
 import com.ensoft.imgurviewer.service.StringUtils;
 import com.ensoft.imgurviewer.service.UriUtils;
-import com.ensoft.imgurviewer.service.listener.AlbumResolverListener;
+import com.ensoft.imgurviewer.service.listener.AlbumSolverListener;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.helper.ThreadMode;
 import com.ensoft.restafari.network.processor.ResponseListener;
@@ -181,7 +181,7 @@ public class FlickrService extends MediaServiceSolver
 		return false;
 	}
 	
-	public void getGallery( Uri uri, final AlbumResolverListener albumResolverListener )
+	public void getGallery( Uri uri, final AlbumSolverListener albumSolverListener )
 	{
 		RequestService.getInstance().makeStringRequest( Request.Method.GET, uri.toString(), new ResponseListener<String>()
 		{
@@ -214,16 +214,16 @@ public class FlickrService extends MediaServiceSolver
 							i++;
 						}
 						
-						new Handler( Looper.getMainLooper() ).post( () -> albumResolverListener.onAlbumResolved( imgurImages ) );
+						new Handler( Looper.getMainLooper() ).post( () -> albumSolverListener.onAlbumResolved( imgurImages ) );
 					}
 					else
 					{
-						new Handler( Looper.getMainLooper() ).post( () -> albumResolverListener.onAlbumError( context.getString( R.string.could_not_resolve_album_url ) ) );
+						new Handler( Looper.getMainLooper() ).post( () -> albumSolverListener.onAlbumError( context.getString( R.string.could_not_resolve_album_url ) ) );
 					}
 				}
 				catch ( Exception ignored )
 				{
-					new Handler( Looper.getMainLooper() ).post( () -> albumResolverListener.onAlbumError( context.getString( R.string.could_not_resolve_album_url ) ) );
+					new Handler( Looper.getMainLooper() ).post( () -> albumSolverListener.onAlbumError( context.getString( R.string.could_not_resolve_album_url ) ) );
 				}
 			}
 			
@@ -233,7 +233,7 @@ public class FlickrService extends MediaServiceSolver
 				if ( null != errorMessage )
 					Log.v( FLICKR_DOMAIN, errorMessage );
 				
-				new Handler( Looper.getMainLooper() ).post( () -> albumResolverListener.onAlbumError( null != errorMessage ? errorMessage : "" ) );
+				new Handler( Looper.getMainLooper() ).post( () -> albumSolverListener.onAlbumError( null != errorMessage ? errorMessage : "" ) );
 			}
 		} );
 	}

@@ -28,7 +28,13 @@ public class StringUtils
 		
 		if ( m.find() )
 		{
-			String res = m.group( m.groupCount() - 1 );
+			String res;
+			
+			do
+			{
+				res = m.group();
+			} while ( m.find() );
+			
 			return res.substring( needleStart.length(), res.length() - needleEnds.length() );
 		}
 		
