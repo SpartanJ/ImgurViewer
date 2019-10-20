@@ -26,7 +26,6 @@ import com.ensoft.imgurviewer.service.resource.StreamjaService;
 import com.ensoft.imgurviewer.service.resource.Tube8Service;
 import com.ensoft.imgurviewer.service.resource.TumblrService;
 import com.ensoft.imgurviewer.service.resource.TwitchClipsService;
-import com.ensoft.imgurviewer.service.resource.VidmeService;
 import com.ensoft.imgurviewer.service.resource.VimeoService;
 import com.ensoft.imgurviewer.service.resource.XHamsterService;
 import com.ensoft.imgurviewer.service.resource.XVideosService;
@@ -68,7 +67,6 @@ public class ResourceSolver
 		addSolver( new StreamableService() );
 		addSolver( new TwitchClipsService() );
 		addSolver( new InstagramService(), ImgurAlbumGalleryViewer.class );
-		addSolver( new VidmeService() );
 		addSolver( new FlickrService(), ImgurAlbumGalleryViewer.class );
 		addSolver( new GiphyService() );
 		addSolver( new RedditVideoService() );

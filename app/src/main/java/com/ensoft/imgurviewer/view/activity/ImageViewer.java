@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 import com.ensoft.imgurviewer.view.fragment.ImageViewerFragment;
+import com.imgurviewer.BuildConfig;
 import com.imgurviewer.R;
 
 public class ImageViewer extends AppActivity
@@ -55,8 +56,15 @@ public class ImageViewer extends AppActivity
 		}
 		else
 		{
-			TutorialActivity.newInstance( this );
-			finish();
+			if ( BuildConfig.DEBUG )
+			{
+				loadFragment( Uri.parse( "https://media.giphy.com/media/9r1gg8vm3lbTcQI1Gw/giphy.gif" ) );
+			}
+			else
+			{
+				TutorialActivity.newInstance( this );
+				finish();
+			}
 		}
 	}
 }

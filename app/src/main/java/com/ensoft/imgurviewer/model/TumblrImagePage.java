@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName;
 public class TumblrImagePage
 {
 	@SerializedName( "photo" )
-	public TumblrPhoto photo;
+	public TumblrImageResponse photo;
 }

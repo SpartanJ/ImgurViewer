@@ -55,7 +55,7 @@ public class GfycatService extends MediaServiceSolver
 			{
 				Log.v( TAG, errorMessage );
 				
-				pathResolverListener.onPathError( errorMessage );
+				pathResolverListener.onPathError( uri, errorMessage );
 			}
 		} );
 	}

@@ -74,6 +74,11 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 		return null;
 	}
 	
+	protected String getStringMatch( String haystack, String needleStart, String needleEnds )
+	{
+		return StringUtils.getStringMatch( haystack, needleStart, needleEnds );
+	}
+	
 	protected Uri getVideoUrlFromResponse( String response )
 	{
 		String[] needleStart = getNeedleStart();
@@ -81,7 +86,7 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 		
 		for ( int i = 0; i < needleStart.length; i++ )
 		{
-			String qualityUrl = StringUtils.getStringMatch( response, needleStart[i], ( i < needleEnd.length ) ? needleEnd[i] : needleEnd[0] );
+			String qualityUrl = getStringMatch( response, needleStart[i], ( i < needleEnd.length ) ? needleEnd[i] : needleEnd[0] );
 			
 			if ( !TextUtils.isEmpty( qualityUrl ) )
 			{
@@ -92,7 +97,7 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 		return null;
 	}
 	
-	protected ResponseListener<String> getResponseListener( PathResolverListener pathResolverListener )
+	protected ResponseListener<String> getResponseListener( Uri uri, PathResolverListener pathResolverListener )
 	{
 		return new ResponseListener<String>()
 		{
@@ -113,7 +118,7 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 				}
 				else
 				{
-					sendPathError( pathResolverListener, R.string.could_not_resolve_video_url );
+					sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
 				}
 			}
 			
@@ -123,7 +128,7 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 				if ( null != getDomain() && null != errorMessage )
 					Log.v( getDomain(), errorMessage );
 				
-				sendPathError( pathResolverListener, null != errorMessage ? errorMessage : "" );
+				sendPathError( uri, pathResolverListener, null != errorMessage ? errorMessage : "" );
 			}
 		};
 	}
@@ -138,7 +143,7 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 	{
 		referer = uri;
 		
-		RequestService.getInstance().makeStringRequest( getRequestMethod(), parseReferer( uri ), getResponseListener( pathResolverListener ), getParameters(), getHeaders( uri ) );
+		RequestService.getInstance().makeStringRequest( getRequestMethod(), parseReferer( uri ), getResponseListener( uri, pathResolverListener ), getParameters(), getHeaders( uri ) );
 	}
 	
 	public String[] getDomainPath()

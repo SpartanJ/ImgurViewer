@@ -56,20 +56,20 @@ public class GiphyService extends MediaServiceSolver
 						}
 						else
 						{
-							pathResolverListener.onPathError( App.getInstance().getString( R.string.unknown_error ) );
+							pathResolverListener.onPathError( uri, App.getInstance().getString( R.string.unknown_error ) );
 						}
 					}
 					catch ( Exception e )
 					{
 						Log.v( TAG, e.getMessage() );
 						
-						pathResolverListener.onPathError( e.toString() );
+						pathResolverListener.onPathError( uri, e.toString() );
 					}
 				}, error ->
 				{
 					Log.v( TAG, error.toString() );
 					
-					pathResolverListener.onPathError( error.toString() );
+					pathResolverListener.onPathError( uri, error.toString() );
 				} );
 				
 				RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
@@ -79,7 +79,7 @@ public class GiphyService extends MediaServiceSolver
 		{
 			Log.v( TAG, e.getMessage() );
 			
-			pathResolverListener.onPathError( e.toString() );
+			pathResolverListener.onPathError( uri, e.toString() );
 		}
 	}
 	

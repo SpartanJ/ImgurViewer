@@ -49,17 +49,17 @@ public class GyazoService extends MediaServiceSolver
 						}
 						
 						@Override
-						public void onPathError( String error )
+						public void onPathError( Uri uri, String error )
 						{
 							Log.v( TAG, error );
 							
-							pathResolverListener.onPathError( error );
+							pathResolverListener.onPathError( uri, error );
 						}
 					} );
 				}
 				else
 				{
-					pathResolverListener.onPathError( App.getInstance().getString( R.string.could_not_resolve_url ) );
+					pathResolverListener.onPathError( uri, App.getInstance().getString( R.string.could_not_resolve_url ) );
 				}
 			}
 			
@@ -68,7 +68,7 @@ public class GyazoService extends MediaServiceSolver
 			{
 				Log.v( TAG, errorMessage );
 				
-				pathResolverListener.onPathError( errorMessage );
+				pathResolverListener.onPathError( uri, errorMessage );
 			}
 		} );
 	}

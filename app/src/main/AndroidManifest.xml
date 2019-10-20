@@ -35,7 +35,7 @@
 				<data android:scheme="https" />
 				<data android:scheme="http" />
 
-				<data android:pathPattern="/.*" />
+				<data android:pathPattern="/videos/.*" />
 			</intent-filter>
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
@@ -77,8 +77,9 @@
 				<data android:scheme="https" />
 				<data android:scheme="http" />
 
-				<data android:pathPattern="/.*" />
+				<data android:pathPattern="/watch/.*" />
 			</intent-filter>
+			<!--
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
@@ -94,6 +95,7 @@
 
 				<data android:pathPattern="/.*" />
 			</intent-filter>
+			-->
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
@@ -106,7 +108,7 @@
 				<data android:scheme="https" />
 				<data android:scheme="http" />
 
-				<data android:pathPattern="/.*" />
+				<data android:pathPattern="/video.*" />
 			</intent-filter>
 			<!--
 			<intent-filter>
@@ -148,7 +150,7 @@
 				<data android:scheme="https" />
 				<data android:scheme="http" />
 
-				<data android:pathPattern="/.*" />
+				<data android:pathPattern="/c/.*" />
 			</intent-filter>
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
@@ -170,18 +172,6 @@
 				<data android:host="v.redd.it" />
 				<data android:host="i.redd.it" />
 				<data android:host="preview.redd.it" />
-
-				<data android:scheme="https" />
-				<data android:scheme="http" />
-
-				<data android:pathPattern="/.*" />
-			</intent-filter>
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-				<category android:name="android.intent.category.BROWSABLE" />
-
-				<data android:host="vid.me" />
 
 				<data android:scheme="https" />
 				<data android:scheme="http" />
@@ -340,6 +330,7 @@
 
 				<data android:host="giphy.com" />
 				<data android:host="www.giphy.com" />
+				<data android:host="media.giphy.com" />
 
 				<data android:scheme="https" />
 				<data android:scheme="http" />

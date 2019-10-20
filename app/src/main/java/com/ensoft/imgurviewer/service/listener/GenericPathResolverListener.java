@@ -1,10 +1,7 @@
 package com.ensoft.imgurviewer.service.listener;
 
 import android.net.Uri;
-import android.util.Log;
-import android.widget.Toast;
 
-import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.MediaType;
 import com.ensoft.imgurviewer.service.resource.MediaServiceSolver;
 
@@ -33,10 +30,8 @@ public class GenericPathResolverListener extends PathResolverListener
 	}
 
 	@Override
-	public void onPathError( final String error )
+	public void onPathError( Uri url, final String error )
 	{
-		Log.v( TAG, error );
-
-		Toast.makeText( App.getInstance(), error, Toast.LENGTH_SHORT ).show();
+		resourceLoadListener.loadFailed( url, error );
 	}
 }

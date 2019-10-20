@@ -21,7 +21,7 @@ public class ImgFlipService extends MediaServiceSolver
 		}
 		catch ( Exception e )
 		{
-			pathResolverListener.onPathError( e.toString() );
+			pathResolverListener.onPathError( uri, e.toString() );
 		}
 	}
 	

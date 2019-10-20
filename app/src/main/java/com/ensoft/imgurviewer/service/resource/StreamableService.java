@@ -35,8 +35,6 @@ public class StreamableService extends MediaServiceSolver
 		{
 			try
 			{
-				Log.v( TAG, response.toString() );
-				
 				final StreamableVideo video = new Gson().fromJson( response.toString(), StreamableVideo.class );
 				
 				new Thread( () ->
@@ -59,12 +57,12 @@ public class StreamableService extends MediaServiceSolver
 						}
 						else
 						{
-							sendPathError( pathResolverListener, R.string.videoRemoved );
+							sendPathError( uri, pathResolverListener, R.string.videoRemoved );
 						}
 					}
 					catch ( final Exception e )
 					{
-						sendPathError( pathResolverListener, R.string.videoRemoved );
+						sendPathError( uri, pathResolverListener, R.string.videoRemoved );
 					}
 					finally
 					{
@@ -79,13 +77,13 @@ public class StreamableService extends MediaServiceSolver
 			{
 				Log.v( TAG, e.getMessage() );
 				
-				pathResolverListener.onPathError( e.toString() );
+				pathResolverListener.onPathError( uri, e.toString() );
 			}
 		}, error ->
 		{
 			Log.v( TAG, error.toString() );
 			
-			pathResolverListener.onPathError( error.toString() );
+			pathResolverListener.onPathError( uri, error.toString() );
 		} );
 		
 		RequestService.getInstance().addToRequestQueue( jsonObjectRequest );

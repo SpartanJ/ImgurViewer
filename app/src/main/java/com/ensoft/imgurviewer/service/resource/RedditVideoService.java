@@ -114,19 +114,19 @@ public class RedditVideoService extends MediaServiceSolver
 						}
 					}
 					
-					sendPathError( pathResolverListener );
+					sendPathError( uri, pathResolverListener );
 				} ).start();
 			}
 			catch ( Exception e )
 			{
 				Log.v( TAG, e.getMessage() );
 				
-				pathResolverListener.onPathError( e.toString() );
+				pathResolverListener.onPathError( uri, e.toString() );
 			}
 		}
 		else
 		{
-			pathResolverListener.onPathError( App.getInstance().getString( R.string.could_not_resolve_video_url ) );
+			pathResolverListener.onPathError( uri, App.getInstance().getString( R.string.could_not_resolve_video_url ) );
 		}
 	}
 	

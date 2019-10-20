@@ -52,7 +52,7 @@ public class PornTubeService extends BasicVideoServiceSolver
 		return "";
 	}
 	
-	protected ResponseListener<String> getResponseListener( PathResolverListener pathResolverListener )
+	protected ResponseListener<String> getResponseListener( Uri uri, PathResolverListener pathResolverListener )
 	{
 		return new ResponseListener<String>()
 		{
@@ -66,7 +66,7 @@ public class PornTubeService extends BasicVideoServiceSolver
 					if ( -1 != pos )
 					{
 						String id = StringUtils.getFirstStringMatch( response.substring( pos ), "\"mediaId\":", "," );
-						String url = "https://tkn.kodicdn.com/" + id + "/desktop/240+360+480+720+1080";
+						String url = "https://tkn.porntube.com/" + id + "/desktop/240+360+480+720+1080";
 						
 						RequestService.getInstance().makeJsonRequest( Request.Method.POST, url, new ResponseListener<PornTubeVideos>()
 						{
@@ -91,25 +91,25 @@ public class PornTubeService extends BasicVideoServiceSolver
 								}
 								else
 								{
-									sendPathError( pathResolverListener, R.string.could_not_resolve_video_url );
+									sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
 								}
 							}
 							
 							@Override
 							public void onRequestError( Context context, int errorCode, String errorMessage )
 							{
-								sendPathError( pathResolverListener, R.string.could_not_resolve_video_url );
+								sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
 							}
 						}, getParameters(), getHeaders( referer ), null );
 					}
 					else
 					{
-						sendPathError( pathResolverListener, R.string.could_not_resolve_video_url );
+						sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
 					}
 				}
 				catch ( Exception e )
 				{
-					sendPathError( pathResolverListener, R.string.could_not_resolve_video_url );
+					sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
 				}
 			}
 			
@@ -118,7 +118,7 @@ public class PornTubeService extends BasicVideoServiceSolver
 			{
 				Log.v( getDomain(), errorMessage );
 				
-				sendPathError( pathResolverListener, errorMessage );
+				sendPathError( uri, pathResolverListener, errorMessage );
 			}
 		};
 	}

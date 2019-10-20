@@ -34,7 +34,7 @@ public class DeviantArtService extends MediaServiceSolver
 			{
 				Log.v( DEVIANTART_DOMAIN, errorMessage );
 				
-				pathResolverListener.onPathError( errorMessage );
+				pathResolverListener.onPathError( uri, errorMessage );
 			}
 		} );
 	}

@@ -32,7 +32,7 @@ public class ImgurService extends MediaServiceSolver
 			@Override
 			public void onError( String error )
 			{
-				pathResolverListener.onPathError( error );
+				pathResolverListener.onPathError( url, error );
 			}
 		} );
 	}
@@ -60,7 +60,7 @@ public class ImgurService extends MediaServiceSolver
 			@Override
 			public void onError( String error )
 			{
-				pathResolverListener.onPathError( error );
+				pathResolverListener.onPathError( url, error );
 			}
 		} );
 	}

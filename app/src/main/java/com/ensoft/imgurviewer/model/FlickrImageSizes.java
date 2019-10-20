@@ -13,7 +13,15 @@ public class FlickrImageSizes
 	
 	public Uri getUri()
 	{
-		return size[ size.length - 1 ].getUri();
+		for ( int i = size.length - 1; i >= 0; i-- )
+		{
+			FlickrImageSize current = size[i];
+			
+			if ( "photo".equals( current.getMedia() ) )
+				return current.getUri();
+		}
+		
+		return Uri.EMPTY;
 	}
 	
 	public Uri getThumbnailUri()
