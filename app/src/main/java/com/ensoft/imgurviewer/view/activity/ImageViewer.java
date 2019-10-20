@@ -58,7 +58,7 @@ public class ImageViewer extends AppActivity
 		{
 			if ( BuildConfig.DEBUG )
 			{
-				loadFragment( Uri.parse( "https://www.erome.com/a/9GFbNGCS" ) );
+				loadFragment( Uri.parse( "http://imgur.com/topic/Aww/ll5Vk" ) );
 			}
 			else
 			{

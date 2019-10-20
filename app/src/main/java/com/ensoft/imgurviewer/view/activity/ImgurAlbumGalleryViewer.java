@@ -21,9 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.ensoft.imgurviewer.App;
-import com.ensoft.imgurviewer.model.ImgurAlbum;
 import com.ensoft.imgurviewer.model.ImgurImage;
-import com.ensoft.imgurviewer.model.InstagramProfileModel;
 import com.ensoft.imgurviewer.model.LayoutType;
 import com.ensoft.imgurviewer.service.DeviceService;
 import com.ensoft.imgurviewer.service.DownloadService;
@@ -31,17 +29,8 @@ import com.ensoft.imgurviewer.service.IntentUtils;
 import com.ensoft.imgurviewer.service.PermissionService;
 import com.ensoft.imgurviewer.service.PreferencesService;
 import com.ensoft.imgurviewer.service.TransparencyUtils;
+import com.ensoft.imgurviewer.service.listener.AlbumProvider;
 import com.ensoft.imgurviewer.service.listener.AlbumSolverListener;
-import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
-import com.ensoft.imgurviewer.service.listener.ImgurGalleryResolverListener;
-import com.ensoft.imgurviewer.service.listener.InstagramProfileResolverListener;
-import com.ensoft.imgurviewer.service.resource.EromeService;
-import com.ensoft.imgurviewer.service.resource.FlickrService;
-import com.ensoft.imgurviewer.service.resource.ImgurAlbumService;
-import com.ensoft.imgurviewer.service.resource.ImgurGalleryService;
-import com.ensoft.imgurviewer.service.resource.ImgurService;
-import com.ensoft.imgurviewer.service.resource.InstagramProfileService;
-import com.ensoft.imgurviewer.service.resource.InstagramService;
 import com.ensoft.imgurviewer.view.adapter.ImgurAlbumAdapter;
 import com.ensoft.imgurviewer.view.helper.MetricsHelper;
 import com.ensoft.imgurviewer.view.helper.SlidrPositionHelper;
@@ -120,69 +109,24 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		
 		Log.v( TAG, "Data is: " + albumData.toString() );
 		
-		if ( new ImgurAlbumService().isImgurAlbum( albumData ) )
+		createFromAlbum( albumData );
+	}
+	
+	protected void createFromAlbum( Uri uri )
+	{
+		for ( AlbumProvider albumProvider : AlbumProvider.getProviders() )
 		{
-			new ImgurAlbumService().getAlbum( albumData, new ImgurAlbumResolverListener()
+			if ( albumProvider.isAlbum( uri ) )
 			{
-				@Override
-				public void onAlbumResolved( ImgurAlbum album )
-				{
-					create( album.getImages() );
-				}
-				
-				@Override
-				public void onError( String error )
-				{
-					Toast.makeText( ImgurAlbumGalleryViewer.this, error, Toast.LENGTH_SHORT ).show();
-				}
-			} );
-		}
-		else if ( new ImgurGalleryService().isImgurGallery( albumData ) )
-		{
-			new ImgurGalleryService().getGallery( albumData, new ImgurGalleryResolverListener()
-			{
-				@Override
-				public void onAlbumResolved( ImgurAlbum album )
-				{
-					create( album.getImages() );
-				}
-				
-				@Override
-				public void onImageResolved( ImgurImage image )
-				{
-					ImgurImage[] images = new ImgurImage[ 1 ];
-					images[ 0 ] = image;
-					create( images );
-				}
-				
-				@Override
-				public void onError( String error )
-				{
-					Toast.makeText( ImgurAlbumGalleryViewer.this, error, Toast.LENGTH_SHORT ).show();
-				}
-			} );
-		}
-		else if ( new ImgurService().isMultiImageUri( albumData ) )
-		{
-			create( new ImgurService().getImagesFromMultiImageUri( albumData ) );
-		}
-		else if ( new InstagramService().isInstagramProfile( albumData ) )
-		{
-			loadInstagramProfile();
-		}
-		else if ( new FlickrService().isGallery( albumData ) )
-		{
-			loadFlickrAlbum();
-		}
-		else if ( new EromeService().isGallery( albumData ) )
-		{
-			loadEromeAlbum();
+				getGallery( albumProvider );
+				break;
+			}
 		}
 	}
 	
-	protected void loadEromeAlbum()
+	protected void getGallery( AlbumProvider galleryProvider )
 	{
-		new EromeService().getGallery( albumData, new AlbumSolverListener()
+		galleryProvider.getAlbum( albumData, new AlbumSolverListener()
 		{
 			@Override
 			public void onAlbumResolved( ImgurImage[] album )
@@ -191,47 +135,15 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 			}
 			
 			@Override
-			public void onAlbumError( String error )
+			public void onImageResolved( ImgurImage image )
 			{
-				Toast.makeText( ImgurAlbumGalleryViewer.this, error, Toast.LENGTH_SHORT ).show();
-			}
-		} );
-	}
-	
-	protected void loadFlickrAlbum()
-	{
-		new FlickrService().getGallery( albumData, new AlbumSolverListener()
-		{
-			@Override
-			public void onAlbumResolved( ImgurImage[] album )
-			{
-				create( album );
+				ImgurImage[] images = new ImgurImage[ 1 ];
+				images[ 0 ] = image;
+				create( images );
 			}
 			
 			@Override
 			public void onAlbumError( String error )
-			{
-				Toast.makeText( ImgurAlbumGalleryViewer.this, error, Toast.LENGTH_SHORT ).show();
-			}
-		} );
-	}
-	
-	protected void loadInstagramProfile()
-	{
-		new InstagramProfileService().getProfile( albumData, new InstagramProfileResolverListener()
-		{
-			@Override
-			public void onProfileResolved( InstagramProfileModel profile )
-			{
-				if ( profile.hasItems() )
-				{
-					ImgurImage[] images = profile.getImages();
-					create( images );
-				}
-			}
-			
-			@Override
-			public void onError( String error )
 			{
 				Toast.makeText( ImgurAlbumGalleryViewer.this, error, Toast.LENGTH_SHORT ).show();
 			}

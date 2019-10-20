@@ -20,6 +20,7 @@ import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.model.MediaType;
 import com.ensoft.imgurviewer.service.StringUtils;
 import com.ensoft.imgurviewer.service.UriUtils;
+import com.ensoft.imgurviewer.service.listener.AlbumProvider;
 import com.ensoft.imgurviewer.service.listener.AlbumSolverListener;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.helper.ThreadMode;
@@ -34,7 +35,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-public class FlickrService extends MediaServiceSolver
+public class FlickrService extends MediaServiceSolver implements AlbumProvider
 {
 	public static final String TAG = FlickrService.class.getCanonicalName();
 	protected static final String FLICKR_DOMAIN = "flickr.com";
@@ -181,7 +182,13 @@ public class FlickrService extends MediaServiceSolver
 		return false;
 	}
 	
-	public void getGallery( Uri uri, final AlbumSolverListener albumSolverListener )
+	@Override
+	public boolean isAlbum( Uri uri )
+	{
+		return isGallery( uri );
+	}
+	
+	public void getAlbum( Uri uri, final AlbumSolverListener albumSolverListener )
 	{
 		RequestService.getInstance().makeStringRequest( Request.Method.GET, uri.toString(), new ResponseListener<String>()
 		{
