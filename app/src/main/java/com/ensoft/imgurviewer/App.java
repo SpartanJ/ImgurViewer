@@ -1,6 +1,7 @@
 package com.ensoft.imgurviewer;
 
 import android.app.Application;
+import android.content.pm.PackageInfo;
 
 import com.ensoft.imgurviewer.service.PreferencesService;
 import com.ensoft.restafari.network.service.RequestService;
@@ -48,5 +49,19 @@ public class App extends Application
 	public PreferencesService getPreferencesService()
 	{
 		return preferencesService;
+	}
+	
+	public String getVersionName()
+	{
+		try
+		{
+			PackageInfo packageInfo = getPackageManager().getPackageInfo( getPackageName(), 0 );
+			
+			return packageInfo.versionName;
+		}
+		catch ( Exception e )
+		{
+			return "";
+		}
 	}
 }
