@@ -56,15 +56,8 @@ public class ImageViewer extends AppActivity
 		}
 		else
 		{
-			if ( BuildConfig.DEBUG )
-			{
-				loadFragment( Uri.parse( "http://imgur.com/topic/Aww/ll5Vk" ) );
-			}
-			else
-			{
-				TutorialActivity.newInstance( this );
-				finish();
-			}
+			TutorialActivity.newInstance( this );
+			finish();
 		}
 	}
 }

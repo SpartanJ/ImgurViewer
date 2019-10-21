@@ -181,8 +181,6 @@ public class ImgurAlbumService implements AlbumProvider
 			{
 				try
 				{
-					Log.v( TAG, response.toString() );
-					
 					JSONObject data = response.getJSONObject( "data" );
 					
 					try

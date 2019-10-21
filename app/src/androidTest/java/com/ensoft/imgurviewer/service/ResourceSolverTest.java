@@ -127,7 +127,6 @@ public class ResourceSolverTest
 			"https://streamable.com/dnd1",
 			"https://streamable.com/moo",
 			"https://clips.twitch.tv/FaintLightGullWholeWheat",
-			//"https://clips.twitch.tv/rflegendary/UninterestedBeeDAESuppy" // TODO: FIX REDIRECTION
 			"https://instagram.com/p/aye83DjauH/?foo=bar#abc",
 			"https://www.instagram.com/p/BQ0eAlwhDrw/",
 			"http://www.flickr.com/photos/forestwander-nature-pictures/5645318632/in/photostream/",
@@ -144,18 +143,20 @@ public class ResourceSolverTest
 			"https://dragonitearmy.deviantart.com/art/Pinyatta-751121451?ga_submit_new=10%3A1529760214",
 			"https://www.pornhub.com/view_video.php?viewkey=648719015",
 			"https://www.xvideos.com/video4588838/biker_takes_his_girl",
-			//"http://www.xvideos.com/video4588838/biker_takes_his_girl", // TODO: FIX REDIRECTION
-			//"https://spankbang.com/3vvn/video/fantasy+solo", // TODO: FIX SERVICE
 			"https://www.youporn.com/watch/505835/sex-ed-is-it-safe-to-masturbate-daily/",
 			"https://www.youporn.com/watch/561726/big-tits-awesome-brunette-on-amazing-webcam-show/?from=related3&al=2&from_id=561726&pos=4",
-			"https://www.redtube.com/66418",
+			"https://www.redtube.com/16962391",
 			"https://www.tube8.com/teen/kasia-music-video/229795/",
 			"https://www.porntube.com/videos/porn-surfing-guide-porn-experts_1134180",
 			"https://www.erome.com/a/bEFp5geB",
 			"https://www.erome.com/a/9GFbNGCS",
 			"https://www.xnxx.com/video-55awb78/skyrim_test_video",
-			"https://xhamster.com/videos/femaleagent-shy-beauty-takes-the-bait-1509445",
+			"https://xhamster.com/videos/erotic-asmr-2766455",
 			"https://pasaje13.tumblr.com/image/188445492882",
+			"https://spankbang.com/22xtb/video/",
+			"https://la.spankbang.com/22xtb/video/",
+			//"https://clips.twitch.tv/rflegendary/UninterestedBeeDAESuppy" // TODO: FIX REDIRECTION
+			//"http://www.xvideos.com/video4588838/biker_takes_his_girl", // TODO: FIX REDIRECTION
 		};
 		
 		for ( String testUri :testUris )
@@ -163,6 +164,7 @@ public class ResourceSolverTest
 			Uri uri = Uri.parse( testUri );
 			
 			waitResponse = true;
+			Log.v(TAG, "Testing: " + uri.toString());
 			resourceSolver.solve( uri );
 			
 			while (waitResponse)
