@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 def versionMajor = 2
-def versionMinor = 0
-def versionPatch = 5
+def versionMinor = 1
+def versionPatch = 0
 
 android {
     compileSdkVersion 28

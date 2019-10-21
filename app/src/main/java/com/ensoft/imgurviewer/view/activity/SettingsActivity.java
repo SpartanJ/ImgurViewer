@@ -236,6 +236,9 @@ public class SettingsActivity extends AppCompatActivity
 				
 				return true;
 			});
+			
+			final Preference versionPreference = findPreference( "version" );
+			versionPreference.setTitle( App.getInstance().getVersionName() );
 		}
 	}
 }

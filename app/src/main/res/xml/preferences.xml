@@ -130,4 +130,9 @@
 
 	</PreferenceCategory>
 
+	<PreferenceCategory android:title="@string/version">
+
+		<Preference android:key="version" />
+
+	</PreferenceCategory>
 </PreferenceScreen>
