@@ -24,7 +24,7 @@ import java.util.Map;
 public class SpankBangService extends BasicVideoServiceSolver
 {
 	public static final String SPANK_BANG_DOMAIN = "spankbang.com";
-	private static final String SPANK_BANG_API = "https://spankbang.com/api/videos/stream/";
+	private static final String SPANK_BANG_API = "https://spankbang.com/api/videos/stream";
 	
 	@Override
 	public String getDomain()
@@ -64,7 +64,7 @@ public class SpankBangService extends BasicVideoServiceSolver
 				
 				for ( HttpCookie cookie : cookieList )
 				{
-					if ( "sb_csrf_session".equals( cookie.getName() ) )
+					if ( "sb_session".equals( cookie.getName() ) )
 					{
 						csrfSession = cookie.getValue();
 					}
@@ -74,11 +74,10 @@ public class SpankBangService extends BasicVideoServiceSolver
 				{
 					Map<String, String> headers = new HashMap<>();
 					headers.put( "User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:69.0) Gecko/20100101 Firefox/69.0" );
-					headers.put( "X-CSRFToken", csrfSession );
 					headers.put( "Referer", uri.toString() );
-					headers.put( "Cookie", "sb_csrf_session=" + csrfSession + ";" );
+					headers.put( "Cookie", "sb_session=" + csrfSession + ";" );
 					
-					String body = "id=" + dataStreamKey + "&sb_csrf_session=" + csrfSession;
+					String body = "id=" + dataStreamKey;
 					
 					StringRequest postRequest = new StringRequest(Request.Method.POST, SPANK_BANG_API,
 						response1 -> {
