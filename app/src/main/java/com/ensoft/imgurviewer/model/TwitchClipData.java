@@ -2,8 +2,8 @@ package com.ensoft.imgurviewer.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class TumblrMedia
+public class TwitchClipData
 {
-	@SerializedName( "ImagePage" )
-	public TumblrImagePage imagePage;
+	@SerializedName( "clip" )
+	public TwitchClips clip;
 }
