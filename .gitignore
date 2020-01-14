@@ -1,16 +1,12 @@
-syntax: regexp
-^.gradle$
-^ace/build$
+.gradle/
 /local.properties
 /.idea/workspace.xml
 .DS_Store
-syntax: glob
 build/intermediates/dex-cache/cache.xml
 local.properties
 .idea
 build
 *.iml
-gradle
 *.apk
 imgurviewer.jks
 app/release/output.json
