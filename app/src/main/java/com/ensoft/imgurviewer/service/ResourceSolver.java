@@ -10,6 +10,7 @@ import com.ensoft.imgurviewer.service.resource.FlickrService;
 import com.ensoft.imgurviewer.service.resource.GfycatService;
 import com.ensoft.imgurviewer.service.resource.GiphyService;
 import com.ensoft.imgurviewer.service.resource.GyazoService;
+import com.ensoft.imgurviewer.service.resource.IbbCoService;
 import com.ensoft.imgurviewer.service.resource.ImgFlipService;
 import com.ensoft.imgurviewer.service.resource.ImgurService;
 import com.ensoft.imgurviewer.service.resource.InstagramService;
@@ -85,6 +86,7 @@ public class ResourceSolver
 		addSolver( new XnxxService() );
 		addSolver( new XHamsterService() );
 		addSolver( new TumblrService() );
+		addSolver( new IbbCoService() );
 	}
 	
 	public void solve( Uri uri )

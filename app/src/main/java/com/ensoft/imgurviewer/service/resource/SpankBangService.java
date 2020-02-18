@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.ensoft.imgurviewer.service.StringUtils;
@@ -81,23 +80,35 @@ public class SpankBangService extends BasicVideoServiceSolver
 					
 					StringRequest postRequest = new StringRequest(Request.Method.POST, SPANK_BANG_API,
 						response1 -> {
-							String[] starts = new String[] {
+							String[] starts = new String[]{
+								"\"1080p\":[\"",
+								"\"720p\":[\"",
+								"\"480p\":[\"",
+								"\"320p\":[\"",
+								"\"240p\":[\"",
 								"\"stream_url_1080p\":[\"",
 								"\"stream_url_720p\":[\"",
 								"\"stream_url_480p\":[\"",
 								"\"stream_url_320p\":[\"",
 								"\"stream_url_240p\":[\"",
 							};
+							String[] needleEnds = new String[]{
+								"\",",
+								"\"]"
+							};
 							
-							for ( String search : starts )
+							for ( String needleEnd : needleEnds )
 							{
-								String url = StringUtils.getFirstStringMatch( response1, search, "\"]" );
-								
-								if ( url != null && !url.isEmpty() )
+								for ( String search : starts )
 								{
-									Uri videoUrl = Uri.parse( url );
-									sendPathResolved( pathResolverListener, videoUrl, UriUtils.guessMediaTypeFromUri( videoUrl ), referer );
-									return;
+									String url = StringUtils.getFirstStringMatch( response1, search, needleEnd );
+									
+									if ( url != null && !url.isEmpty() )
+									{
+										Uri videoUrl = Uri.parse( url );
+										sendPathResolved( pathResolverListener, videoUrl, UriUtils.guessMediaTypeFromUri( videoUrl ), referer );
+										return;
+									}
 								}
 							}
 							

@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 import com.ensoft.imgurviewer.view.fragment.ImageViewerFragment;
-import com.imgurviewer.BuildConfig;
 import com.imgurviewer.R;
 
 public class ImageViewer extends AppActivity
