@@ -20,6 +20,11 @@ public class ResourceServiceSolver
 	
 	public boolean solve( Uri uri )
 	{
+		if ( "http".equals( uri.getScheme() ) )
+		{
+			uri = Uri.parse( uri.toString().replaceFirst( "http", "https" ) );
+		}
+		
 		if ( null != uri && serviceSolver.isServicePath( uri ) )
 		{
 			if ( serviceSolver.isGallery( uri ) )

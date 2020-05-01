@@ -13,9 +13,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import androidx.test.runner.AndroidJUnit4;
+import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith( AndroidJUnit4ClassRunner.class)
 public class ResourceSolverTest
 {
 	private static final String TAG = ResourceSolverTest.class.getCanonicalName();
@@ -156,8 +156,7 @@ public class ResourceSolverTest
 			"https://pasaje13.tumblr.com/image/188445492882",
 			"https://spankbang.com/22xtb/video/",
 			"https://la.spankbang.com/22xtb/video/",
-			//"https://clips.twitch.tv/rflegendary/UninterestedBeeDAESuppy" // TODO: FIX REDIRECTION
-			//"http://www.xvideos.com/video4588838/biker_takes_his_girl", // TODO: FIX REDIRECTION
+			"http://www.xvideos.com/video4588838/biker_takes_his_girl"
 		};
 		
 		for ( String testUri :testUris )

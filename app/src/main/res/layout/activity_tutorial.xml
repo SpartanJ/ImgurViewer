@@ -37,6 +37,28 @@
 
 	</RelativeLayout>
 
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:background="#222"
+		android:text="@string/textPastView"
+		android:id="@+id/tutorial_text_paste"
+		android:layout_gravity="center_horizontal"
+		android:textColor="@android:color/white"
+		android:gravity="center"
+		android:padding="12dp" />
+
+	<EditText
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:minHeight="48dp"
+		android:hint="@string/textPaste"
+		android:id="@+id/linkPasteInput"
+		android:textColor="@android:color/white"
+		/>
+
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
@@ -71,4 +93,5 @@
 		android:gravity="center"
 		android:layout_gravity="center"
 		android:padding="8dp" />
+
 </LinearLayout>

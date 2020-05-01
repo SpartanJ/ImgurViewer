@@ -11,11 +11,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +53,7 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.decoder.DecodeException;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.github.piasy.biv.view.BigImageView;
@@ -385,7 +386,15 @@ public class ImageViewerFragment extends Fragment
 			{
 				Log.v( TAG, throwable.toString() );
 				
-				Toast.makeText( context, throwable.toString(), Toast.LENGTH_SHORT ).show();
+				if ( throwable instanceof DecodeException )
+				{
+					Toast.makeText( context, context.getString( R.string.resourceInvalid ), Toast.LENGTH_SHORT ).show();
+				}
+				else
+				{
+					Toast.makeText( context, throwable.toString(), Toast.LENGTH_SHORT ).show();
+				}
+				
 			}
 		}, new Point( 0, 0 ) );
 	}

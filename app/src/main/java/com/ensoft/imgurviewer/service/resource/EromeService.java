@@ -80,7 +80,37 @@ public class EromeService extends BasicVideoServiceSolver implements AlbumProvid
 			{
 				String res = matcher.group();
 				String image = res.substring( needleStart[i].length(), res.length() - needleEnd[i].length() );
-				mediaList.add( new ImgurImage( String.valueOf(id), image ) );
+				ImgurImage imgurImage = new ImgurImage( String.valueOf(id), image );
+				
+				if ( imgurImage.hasVideo() )
+				{
+					int start = matcher.start();
+					int maxTry = 350;
+					
+					while ( start > 4 && maxTry > 0 ) {
+						if ( response.charAt( start - 2 ) == 'j' &&  response.charAt( start - 1 ) == 'p' && response.charAt( start ) == 'g' )
+						{
+							int startThumbIndex = start;
+							while ( startThumbIndex > 0 )
+							{
+								if ( response.charAt( startThumbIndex ) == '"' )
+								{
+									String videoThumbnail = response.substring( startThumbIndex + 1, start + 1 );
+									
+									imgurImage = new ImgurImage( String.valueOf( id ), videoThumbnail, Uri.parse( videoThumbnail ), Uri.parse( image ), ""  );
+									break;
+								}
+								
+								startThumbIndex--;
+							}
+						}
+						
+						start--;
+						maxTry--;
+					}
+				}
+				
+				mediaList.add( imgurImage );
 				id++;
 			}
 		}

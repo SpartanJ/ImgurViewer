@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 def versionMajor = 2
 def versionMinor = 1
-def versionPatch = 2
+def versionPatch = 3
 
 android {
     compileSdkVersion 28
@@ -32,16 +32,16 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 	implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
     implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
-    implementation 'com.android.support:support-v13:28.0.0'
-    implementation 'com.android.support:exifinterface:28.0.0'
-    implementation 'com.android.support:preference-v7:28.0.0'
-    implementation 'com.facebook.fresco:fresco:1.11.0'
-    implementation 'com.facebook.fresco:animated-gif:1.11.0'
-    implementation 'com.facebook.fresco:animated-webp:1.11.0'
-    implementation 'com.facebook.fresco:webpsupport:1.11.0'
-    implementation 'ch.acra:acra:4.9.2'
-    implementation 'com.ensoft-dev.restafari:restafari:0.3.40'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+    implementation 'androidx.exifinterface:exifinterface:1.2.0'
+    implementation 'androidx.preference:preference:1.1.1'
+    implementation 'com.facebook.fresco:fresco:2.2.0'
+    implementation 'com.facebook.fresco:animated-gif:2.2.0'
+    implementation 'com.facebook.fresco:animated-webp:2.2.0'
+    implementation 'com.facebook.fresco:webpsupport:2.2.0'
+    implementation 'ch.acra:acra:4.11'
+    implementation 'com.ensoft-dev.restafari:restafari:0.4.1'
     implementation 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     implementation 'com.devbrackets.android:exomedia:4.3.0'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'

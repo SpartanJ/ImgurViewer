@@ -2,8 +2,8 @@ package com.ensoft.imgurviewer.view.activity;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
 
 import com.ensoft.imgurviewer.view.fragment.ImageViewerFragment;

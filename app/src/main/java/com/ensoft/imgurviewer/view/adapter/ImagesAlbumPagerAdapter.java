@@ -1,8 +1,8 @@
 package com.ensoft.imgurviewer.view.adapter;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.view.fragment.ImageViewerFragment;

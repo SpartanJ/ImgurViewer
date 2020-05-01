@@ -100,7 +100,7 @@ public class PornTubeService extends BasicVideoServiceSolver
 							{
 								sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
 							}
-						}, getParameters(), getHeaders( referer ), null );
+						}, getParameters(), getHeaders( referer ) );
 					}
 					else
 					{
