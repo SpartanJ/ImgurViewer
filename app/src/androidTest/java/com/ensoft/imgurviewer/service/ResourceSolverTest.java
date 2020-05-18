@@ -111,6 +111,8 @@ public class ResourceSolverTest
 		});
 		
 		String[] testUris = new String[] {
+			"https://redgifs.com/watch/grimyacademicafricanbushviper-bz-beauty",
+			"https://redgifs.com/watch/calculatingsoreemperorpenguin-lauren-summer-swimsuit-bikini-beach",
 			"https://ibb.co/f2D3BNg",
 			"https://imgur.com/A61SaA1",
 			"https://i.imgur.com/crGpqCV.mp4",

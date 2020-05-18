@@ -17,6 +17,7 @@ import com.ensoft.imgurviewer.service.resource.InstagramService;
 import com.ensoft.imgurviewer.service.resource.MediaServiceSolver;
 import com.ensoft.imgurviewer.service.resource.PornHubService;
 import com.ensoft.imgurviewer.service.resource.PornTubeService;
+import com.ensoft.imgurviewer.service.resource.RedGifsService;
 import com.ensoft.imgurviewer.service.resource.RedTubeService;
 import com.ensoft.imgurviewer.service.resource.RedditUploadsService;
 import com.ensoft.imgurviewer.service.resource.RedditVideoService;
@@ -87,6 +88,7 @@ public class ResourceSolver
 		addSolver( new XHamsterService() );
 		addSolver( new TumblrService() );
 		addSolver( new IbbCoService() );
+		addSolver( new RedGifsService() );
 	}
 	
 	public void solve( Uri uri )
