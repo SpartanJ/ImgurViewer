@@ -216,6 +216,19 @@
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
 
+				<data android:host="gifdeliverynetwork.com" />
+				<data android:host="www.gifdeliverynetwork.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
 				<data android:host="www.imgur.com" />
 				<data android:host="imgur.com" />
 				<data android:host="i.imgur.com" />
@@ -314,6 +327,7 @@
 				<data android:scheme="http" />
 
 				<data android:host="redgifs.com" />
+				<data android:host="www.redgifs.com" />
 
 				<data android:pathPattern="/watch/.*" />
 			</intent-filter>

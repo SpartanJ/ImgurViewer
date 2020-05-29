@@ -111,8 +111,13 @@ public class ResourceSolverTest
 		});
 		
 		String[] testUris = new String[] {
+			"https://www.pornhub.com/view_video.php?viewkey=ph5e13f804cbf69",
+			"https://www.gifdeliverynetwork.com/unconsciouslankyivorygull",
+			"https://gfycat.com/whoppingcostlyairedale",
 			"https://redgifs.com/watch/grimyacademicafricanbushviper-bz-beauty",
 			"https://redgifs.com/watch/calculatingsoreemperorpenguin-lauren-summer-swimsuit-bikini-beach",
+			"https://www.redgifs.com/watch/grimyacademicafricanbushviper-bz-beauty",
+			"https://www.redgifs.com/watch/calculatingsoreemperorpenguin-lauren-summer-swimsuit-bikini-beach",
 			"https://ibb.co/f2D3BNg",
 			"https://imgur.com/A61SaA1",
 			"https://i.imgur.com/crGpqCV.mp4",
@@ -125,7 +130,6 @@ public class ResourceSolverTest
 			"https://imgflip.com/i/3dhvnl",
 			"http://gfycat.com/DeadlyDecisiveGermanpinscher",
 			"http://gfycat.com/ifr/JauntyTimelyAmazontreeboa",
-			"https://gfycat.com/gifs/detail/UnconsciousLankyIvorygull",
 			"https://v.redd.it/zv89llsvexdz",
 			"https://streamable.com/dnd1",
 			"https://streamable.com/moo",
@@ -144,7 +148,6 @@ public class ResourceSolverTest
 			"https://www.clippituser.tv/c/apdmxa",
 			"http://abelvera.deviantart.com/art/Roadhog-Vs-Reinhardt-660542128?ga_submit_new=10%3A1485794341&ga_type=edit&ga_changes=1&ga_recent=1",
 			"https://dragonitearmy.deviantart.com/art/Pinyatta-751121451?ga_submit_new=10%3A1529760214",
-			"https://www.pornhub.com/view_video.php?viewkey=648719015",
 			"https://www.xvideos.com/video4588838/biker_takes_his_girl",
 			"https://www.youporn.com/watch/505835/sex-ed-is-it-safe-to-masturbate-daily/",
 			"https://www.youporn.com/watch/561726/big-tits-awesome-brunette-on-amazing-webcam-show/?from=related3&al=2&from_id=561726&pos=4",

@@ -8,6 +8,7 @@ import com.ensoft.imgurviewer.service.resource.DeviantArtService;
 import com.ensoft.imgurviewer.service.resource.EromeService;
 import com.ensoft.imgurviewer.service.resource.FlickrService;
 import com.ensoft.imgurviewer.service.resource.GfycatService;
+import com.ensoft.imgurviewer.service.resource.GifDeliveryNetworkSolver;
 import com.ensoft.imgurviewer.service.resource.GiphyService;
 import com.ensoft.imgurviewer.service.resource.GyazoService;
 import com.ensoft.imgurviewer.service.resource.IbbCoService;
@@ -89,6 +90,7 @@ public class ResourceSolver
 		addSolver( new TumblrService() );
 		addSolver( new IbbCoService() );
 		addSolver( new RedGifsService() );
+		addSolver( new GifDeliveryNetworkSolver() );
 	}
 	
 	public void solve( Uri uri )
