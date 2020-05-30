@@ -21,9 +21,6 @@ allprojects {
     repositories {
         jcenter()
         maven {
-            url  "http://dl.bintray.com/prognoz/maven"
-        }
-        maven {
             url 'https://maven.google.com/'
             name 'Google'
         }
