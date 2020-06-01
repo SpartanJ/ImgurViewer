@@ -1,22 +1,4 @@
-ImgurViewer is a little image viewer to open image links from external applications in the fastest
-way possible.
-
-As the name suggests it was originally designed to open Imgur image links, but the application
-evolved to support some other images services too, the current image services supported are:
-
-Imgur: with full support ( galleries, albums, gif videos, simple image links ). Gif links will be
-opened as videos to save bandwidth and faster loading.
-
-Gyazo: full image support.
-Gfycat: full Gfycat videos. As Imgur, it will load videos instead of gifs when possible.
-i.reddituploads.com support.
-streamable.com support.
-twitch clips support.
-Instagram image, video, and simple profile image gallery support.
-vid.me support.
-flickr support.
-GIPHY support.
-And many more services.
-
-Also, ImgurViewer can open any link with a path with an image extension, so, it will try to handle
-any image or video link.
+ImgurViewer is a little image viewer to open image links from external applications in the fastest way possible.
+As the name suggests it was originally designed to open Imgur image links, but the application evolved to support some other images and video services.
+The application currently supports over 30 services, and it should open almost any media link coming from Reddit.
+Also, ImgurViewer can open any link with a path with an image extension, so, it will try to handle any image or video link.
