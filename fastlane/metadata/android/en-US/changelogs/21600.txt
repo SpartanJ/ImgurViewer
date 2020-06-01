@@ -1,0 +1,34 @@
+2.1.6:
+ImgurViewer release to F-Droid.
+
+2.1.5:
+Fixed some minor issues.
+
+2.1.4:
+Added new services.
+
+2.1.3:
+Now you can paste any valid URL into the main screen to open the image/video/album.
+Some minor services fixes.
+Updated internal libraries.
+
+2.1.2:
+Added ibb.co support.
+
+2.1.1:
+Several services fixes.
+
+2.1.0:
+Several services fixes and optimizations.
+
+2.0.4:
+Fixes for streamja and other services.
+
+2.0.3:
+Fixes for Gfycat and reddit videos.
+
+2.0.2:
+Improved share as media support.
+
+2.0.1:
+Added share as media support. 
