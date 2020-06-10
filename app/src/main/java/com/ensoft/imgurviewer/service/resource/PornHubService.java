@@ -47,6 +47,46 @@ public class PornHubService extends BasicVideoServiceSolver
 		return new String[] {};
 	}
 	
+	private List<String> getJsVars(String mediaString)
+	{
+		ArrayList<String> list = new ArrayList<>();
+		
+		if ( mediaString != null )
+		{
+			String cleanString = mediaString.replaceAll( "[^:]//.*|/\\\\*((?!=*/)(?s:.))+\\\\*/", "" );
+			String[] vars = cleanString.split( "\\+" );
+			for ( String var : vars )
+			{
+				list.add( var.trim() );
+			}
+		}
+		
+		return list;
+	}
+	
+	private String getJsVarValue(String response, String varName)
+	{
+		StringBuilder varValue = new StringBuilder();
+		String varDefinition = String.format( "var %s=", varName );
+		Pattern regex = Pattern.compile( String.format( "%s(.*?)\";", varDefinition ) );
+		Matcher m = regex.matcher(response);
+		
+		if ( m.find() )
+		{
+			String varDeclaration = m.group();
+			String varValues = varDeclaration.substring( varDefinition.length(), varDeclaration.length() - 1 );
+			String[] values = varValues.split( "\\+" );
+			
+			for ( String val : values )
+			{
+				val = val.trim().replaceAll( "\"", "" );
+				varValue.append( val );
+			}
+		}
+		
+		return varValue.toString();
+	}
+	
 	private Map<String, String> extractUrls( String response )
 	{
 		HashMap<String, String> map = new HashMap<>(  );
@@ -114,29 +154,44 @@ public class PornHubService extends BasicVideoServiceSolver
 	{
 		Map<String, String> vars = extractUrls( response );
 		
-		int bestQuality = 0;
-		String bestQualityUrl = "";
-		for ( Map.Entry<String, String> entry : vars.entrySet() )
+		if ( !vars.isEmpty() )
 		{
-			if ( entry.getKey().startsWith( "quality_" ) && !entry.getValue().isEmpty() )
+			int bestQuality = 0;
+			String bestQualityUrl = "";
+			for ( Map.Entry<String, String> entry : vars.entrySet() )
 			{
-				int q = Integer.parseInt( entry.getKey().substring( 8 ).replace( "p", "" ) );
-				
-				if ( q > bestQuality )
+				if ( entry.getKey().startsWith( "quality_" ) && !entry.getValue().isEmpty() )
 				{
-					bestQuality = q;
-					bestQualityUrl = entry.getValue();
+					int q = Integer.parseInt( entry.getKey().substring( 8 ).replace( "p", "" ) );
+					
+					if ( q > bestQuality )
+					{
+						bestQuality = q;
+						bestQualityUrl = entry.getValue();
+					}
 				}
 			}
+			
+			try
+			{
+				return Uri.parse( bestQualityUrl );
+			}
+			catch ( Exception ignored )
+			{
+				return null;
+			}
 		}
-		
-		try
+		else
 		{
-			return Uri.parse( bestQualityUrl );
-		}
-		catch ( Exception ignored )
-		{
-			return null;
+			List<String> mediaVars = getJsVars(getStringMatch( response, "var mediastring=", ";</script>" ));
+			StringBuilder url = new StringBuilder();
+			
+			for ( String var : mediaVars )
+			{
+				url.append( getJsVarValue( response, var ) );
+			}
+			
+			return !url.toString().isEmpty() ? Uri.parse( url.toString() ) : null;
 		}
 	}
 }

@@ -157,7 +157,7 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 		for ( String path : getDomainPath() )
 		{
 			if ( UriUtils.uriMatchesDomain( uri, getDomain(), path ) )
-				return  true;
+				return true;
 		}
 		
 		return false;

@@ -111,6 +111,7 @@ public class ResourceSolverTest
 		});
 		
 		String[] testUris = new String[] {
+			"https://www.gfycat.com/giantunfoldedesok-rata",
 			"https://www.pornhub.com/view_video.php?viewkey=ph5e13f804cbf69",
 			"https://www.gifdeliverynetwork.com/unconsciouslankyivorygull",
 			"https://gfycat.com/whoppingcostlyairedale",

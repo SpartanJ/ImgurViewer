@@ -1,6 +1,6 @@
 package com.ensoft.imgurviewer.service.resource;
 
-public class GifDeliveryNetworkSolver extends BasicVideoServiceSolver
+public class GifDeliveryNetworkService extends BasicVideoServiceSolver
 {
 	@Override
 	public String getDomain()

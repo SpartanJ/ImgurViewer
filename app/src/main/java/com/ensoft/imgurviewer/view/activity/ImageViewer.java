@@ -1,5 +1,6 @@
 package com.ensoft.imgurviewer.view.activity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -52,6 +53,10 @@ public class ImageViewer extends AppActivity
 			Log.v( TAG, "Data is: " + data.toString() );
 			
 			loadFragment( data );
+		}
+		else  if ( Intent.ACTION_SEND.equals( getIntent().getAction() ) && getIntent() != null && "text/plain".equals( getIntent().getType() ) )
+		{
+			loadFragment( Uri.parse( getIntent().getStringExtra( Intent.EXTRA_TEXT ) ) );
 		}
 		else
 		{
