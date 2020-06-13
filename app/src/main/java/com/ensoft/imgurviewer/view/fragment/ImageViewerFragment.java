@@ -28,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.devbrackets.android.exomedia.ExoMedia;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.MediaType;
@@ -58,6 +59,8 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.github.piasy.biv.view.BigImageView;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroup;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.imgurviewer.R;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
@@ -69,6 +72,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.util.Map;
 
 public class ImageViewerFragment extends Fragment
 {
@@ -514,6 +518,35 @@ public class ImageViewerFragment extends Fragment
 			videoView.setVisibility( View.VISIBLE );
 			
 			videoView.setBackgroundColor( Color.TRANSPARENT );
+			
+			if ( videoView.trackSelectionAvailable() ) {
+				Map<ExoMedia.RendererType, TrackGroupArray> tracks = videoView.getAvailableTracks();
+				if ( tracks != null && tracks.containsKey( ExoMedia.RendererType.VIDEO ) ) {
+					TrackGroupArray trackGroupArray = tracks.get(ExoMedia.RendererType.VIDEO);
+					if ( trackGroupArray != null )
+					{
+						int trackSelected = -1;
+						int indexSelected = -1;
+						for ( int i = 0; i < trackGroupArray.length; i++ )
+						{
+							TrackGroup trackGroup = trackGroupArray.get( i );
+							int biggestBitrate = 0;
+							for ( int g = 0; g < trackGroup.length; g++ )
+							{
+								if ( trackGroup.getFormat( g ).bitrate > biggestBitrate &&
+									trackGroup.getFormat( g ).bitrate < 9846000 )
+								{
+									trackSelected = i;
+									indexSelected = g;
+									biggestBitrate = trackGroup.getFormat( g ).bitrate;
+								}
+							}
+						}
+						if ( trackSelected >= 0 && indexSelected >= 0 )
+							videoView.setTrack( ExoMedia.RendererType.VIDEO, trackSelected, indexSelected );
+					}
+				}
+			}
 			
 			if ( albumPagerProvider != null )
 			{
