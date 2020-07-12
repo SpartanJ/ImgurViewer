@@ -9,12 +9,6 @@ import com.ensoft.restafari.network.service.RequestServiceOptions;
 import com.github.piasy.biv.BigImageViewer;
 import com.github.piasy.biv.loader.fresco.FrescoImageLoader;
 
-import org.acra.ACRA;
-import org.acra.annotation.ReportsCrashes;
-
-@ReportsCrashes(
-	formUri = "http://imgurviewer.ensoft.dev"
-)
 public class App extends Application
 {
 	protected static App instance;
@@ -33,8 +27,6 @@ public class App extends Application
 		instance = this;
 		
 		preferencesService = new PreferencesService( this );
-		
-		ACRA.init( this );
 		
 		RequestServiceOptions requestServiceOptions = new RequestServiceOptions.Builder().
 			setProxyHost( getPreferencesService().getProxyHost() ).

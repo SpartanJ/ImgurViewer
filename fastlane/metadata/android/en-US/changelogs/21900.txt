@@ -1,0 +1,3 @@
+2.1.9:
+Removed ACRA dependency.
+Added FIT_X and FIT_Y as optional scaling methods.

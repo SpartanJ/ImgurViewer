@@ -104,6 +104,8 @@
 	<string name="grid_view_default_scale_type">CENTER_CROP</string>
 	<string-array name="scale_types_names">
 		<item>FIT XY</item>
+		<item>FIT X</item>
+		<item>FIT Y</item>
 		<item>FIT START</item>
 		<item>FIT CENTER</item>
 		<item>FIT END</item>
@@ -115,6 +117,8 @@
 	</string-array>
 	<string-array name="scale_types_values">
 		<item>FIT_XY</item>
+		<item>FIT_X</item>
+		<item>FIT_Y</item>
 		<item>FIT_START</item>
 		<item>FIT_CENTER</item>
 		<item>FIT_END</item>
