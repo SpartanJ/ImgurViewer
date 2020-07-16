@@ -29,7 +29,7 @@ Also, **ImgurViewer** can open any link with a path with an image extension, so,
 
 **ImgurViewer** as a standalone application doesn't do anything, so don't expect anything when opening the application.
 It must be used in conjunction with some other external application as a web browser, reddit is fun, newsblur.
-It's was done for my personal use and uploaded to [Google Play](https://play.google.com/store/apps/details?id=com.ensoft.imgurviewer) to share it with the world. I hope that someone find it useful too.
+It's was done for my personal use and uploaded to [Google Play](https://play.google.com/store/apps/details?id=com.ensoft.imgurviewer) and [F-Droid](https://f-droid.org/packages/com.ensoft.imgurviewer/) to share it with the world. I hope that someone find it useful too.
 
 
 ## **Code License**
