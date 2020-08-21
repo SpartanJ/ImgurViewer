@@ -1,0 +1,2 @@
+2.2.0:
+Fixed imgur galleries and albums.

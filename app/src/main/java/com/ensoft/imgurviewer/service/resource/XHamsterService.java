@@ -56,7 +56,7 @@ public class XHamsterService extends BasicVideoServiceSolver
 	@Override
 	public String[] getNeedleStart()
 	{
-		return new String[] { "window.initials = " };
+		return new String[] { "window.initials=" };
 	}
 	
 	@Override

@@ -1,9 +1,11 @@
 package com.ensoft.imgurviewer.service.resource;
 
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.ImgurAlbum;
@@ -12,8 +14,11 @@ import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.service.listener.AlbumProvider;
 import com.ensoft.imgurviewer.service.listener.AlbumSolverListener;
 import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
+import com.ensoft.restafari.network.helper.RequestParameters;
+import com.ensoft.restafari.network.processor.ResponseListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.imgurviewer.R;
 
 import org.json.JSONException;
@@ -87,9 +92,10 @@ public class ImgurAlbumService implements AlbumProvider
 			@Override
 			public Map<String, String> getHeaders() throws AuthFailureError
 			{
-				Map<String, String> params = new HashMap<>();
-				params.put( "Authorization", "Client-ID " + App.getInstance().getString( R.string.imgur_client_id ) );
-				return params;
+				Map<String, String> headers = new HashMap<>();
+				headers.put( "Authorization", "Client-ID " + App.getInstance().getString( R.string.imgur_client_id ) );
+				headers.put( "User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:76.0) Gecko/20100101 Firefox/79.0" );
+				return headers;
 			}
 		};
 		
@@ -176,15 +182,19 @@ public class ImgurAlbumService implements AlbumProvider
 		else
 		{
 			String albumUrl = IMGUR_GALLERY_API_URL + getGalleryId( uri );
+			Map<String, String> headers = new HashMap<>();
+			headers.put( "Authorization", "Client-ID " + App.getInstance().getString( R.string.imgur_client_id ) );
+			headers.put( "User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:76.0) Gecko/20100101 Firefox/79.0" );
 			
-			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( albumUrl, null, response ->
+			RequestService.getInstance().makeStringRequest( Request.Method.GET, albumUrl, new ResponseListener<String>()
 			{
-				try
+				@Override
+				public void onRequestSuccess( Context context, String response )
 				{
-					JSONObject data = response.getJSONObject( "data" );
-					
 					try
 					{
+						JSONObject data = new JSONObject( response ).getJSONObject( "data" );
+					
 						boolean isAlbum = data.getBoolean( "is_album" );
 						
 						if ( isAlbum )
@@ -200,34 +210,20 @@ public class ImgurAlbumService implements AlbumProvider
 							albumSolverListener.onImageResolved( image );
 						}
 					}
-					catch ( JSONException e )
+					catch ( Exception e )
 					{
-						Log.e( TAG, e.getMessage() );
+						Log.v( TAG, e.getMessage() );
+						
+						albumSolverListener.onAlbumError( e.toString() );
 					}
 				}
-				catch ( JSONException e )
-				{
-					Log.v( TAG, e.getMessage() );
-					
-					albumSolverListener.onAlbumError( e.toString() );
-				}
-			}, error ->
-			{
-				Log.v( TAG, error.toString() );
 				
-				albumSolverListener.onAlbumError( error.toString() );
-			} )
-			{
-				@Override
-				public Map<String, String> getHeaders() throws AuthFailureError
-				{
-					Map<String, String> params = new HashMap<>();
-					params.put( "Authorization", "Client-ID " + App.getInstance().getString( R.string.imgur_client_id ) );
-					return params;
+				public void onRequestError( Context context, int errorCode, String errorMessage ) {
+					Log.v( TAG, errorMessage );
+					
+					albumSolverListener.onAlbumError( errorMessage );
 				}
-			};
-			
-			RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
+			},  new RequestParameters(), headers );
 		}
 	}
 }
