@@ -24,22 +24,7 @@ public class RedditVideoService extends MediaServiceSolver
 	
 	private String getId( Uri uri )
 	{
-		String url = uri.toString();
-		String[] split = url.split( "/" );
-		
-		if ( split.length >= 2 )
-		{
-			if ( !split[ split.length - 1 ].startsWith( "DASH_" ) )
-			{
-				return split[ split.length - 1 ];
-			}
-			else
-			{
-				return split[ split.length - 2 ];
-			}
-		}
-		
-		return null;
+		return uri.getPathSegments().get(0);
 	}
 	
 	private boolean videoExists( final String video )

@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 def versionMajor = 2
 def versionMinor = 2
-def versionPatch = 0
+def versionPatch = 1
 // We need to use a static versionCode and versionName to support automatic updates in F-Droid
 def versionCodeNum = versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100
 
@@ -14,8 +14,8 @@ android {
         applicationId "com.ensoft.imgurviewer"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 22000
-        versionName "2.2.0"
+        versionCode 22100
+        versionName "2.2.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -36,7 +36,7 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
-    implementation 'androidx.exifinterface:exifinterface:1.2.0'
+    implementation 'androidx.exifinterface:exifinterface:1.3.0'
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'com.facebook.fresco:fresco:2.2.0'
     implementation 'com.facebook.fresco:animated-gif:2.2.0'
@@ -46,7 +46,7 @@ dependencies {
     implementation 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     implementation 'com.devbrackets.android:exomedia:4.3.0'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation 'androidx.test:rules:1.3.0'
     testImplementation 'junit:junit:4.12'
 }

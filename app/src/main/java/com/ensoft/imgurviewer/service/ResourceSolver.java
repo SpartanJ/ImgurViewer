@@ -20,6 +20,7 @@ import com.ensoft.imgurviewer.service.resource.PornHubService;
 import com.ensoft.imgurviewer.service.resource.PornTubeService;
 import com.ensoft.imgurviewer.service.resource.RedGifsService;
 import com.ensoft.imgurviewer.service.resource.RedTubeService;
+import com.ensoft.imgurviewer.service.resource.RedditGalleryService;
 import com.ensoft.imgurviewer.service.resource.RedditUploadsService;
 import com.ensoft.imgurviewer.service.resource.RedditVideoService;
 import com.ensoft.imgurviewer.service.resource.ResourceServiceSolver;
@@ -62,6 +63,7 @@ public class ResourceSolver
 	
 	private void loadServices()
 	{
+		addSolver( new RedditGalleryService(), ImgurAlbumGalleryViewer.class );
 		addSolver( new ImgurService(), ImgurAlbumGalleryViewer.class );
 		addSolver( new GyazoService() );
 		addSolver( new ImgFlipService() );

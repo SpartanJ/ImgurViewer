@@ -17,13 +17,16 @@ As the name suggests it was originally designed to open Imgur image links, but t
 
 **twitch clips** support.
 
-**Instagram** image, video, and simple profile image gallery support.
+**Instagram** image and video support.
 
 **vid.me** support.
 
 **flickr** support.
 
 **GIPHY** support.
+
+And many more!
+
 
 Also, **ImgurViewer** can open any link with a path with an image extension, so, it will try to handle any image link.
 

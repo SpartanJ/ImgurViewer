@@ -23,6 +23,12 @@ public class IbbCoService extends MediaServiceSolver
 	@Override
 	public void getPath( Uri uri, PathResolverListener pathResolverListener )
 	{
+		if ( uri.toString().endsWith( "jpg" ) )
+		{
+			pathResolverListener.onPathResolved( uri,  UriUtils.guessMediaTypeFromUri( uri ), uri );
+			return;
+		}
+		
 		StringRequest stringRequest = new StringRequest( uri.toString(), response ->
 		{
 			Uri mediaUrl = getUrlFromResponse( response );

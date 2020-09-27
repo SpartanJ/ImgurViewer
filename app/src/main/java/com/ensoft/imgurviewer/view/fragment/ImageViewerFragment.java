@@ -414,6 +414,9 @@ public class ImageViewerFragment extends Fragment
 		imageView.setOptimizeDisplay( false );
 		imageView.setOnClickListener( v -> onImageClick() );
 		
+		if ( imageView.getSSIV() != null )
+			imageView.getSSIV().setMaxScale( 10 );
+		
 		imageView.setImageLoaderCallback( new ImageLoader.Callback()
 		{
 			@Override

@@ -111,6 +111,7 @@ public class ResourceSolverTest
 		});
 		
 		String[] testUris = new String[] {
+			"https://www.reddit.com/gallery/huxc4s",
 			"http://imgur.com/gallery/qZ7Oq2m",
 			"https://imgur.com/A61SaA1",
 			"https://i.imgur.com/crGpqCV.mp4",

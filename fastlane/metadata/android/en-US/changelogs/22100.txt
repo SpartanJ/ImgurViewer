@@ -1,0 +1,5 @@
+2.2.1:
+Added Reddit Gallery support.
+Fine grained open defaults.
+Removed instagram profile remotely open support.
+Pinch-zoom now allows up to 10x zoom.
