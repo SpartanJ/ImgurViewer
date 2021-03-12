@@ -18,6 +18,7 @@ import com.ensoft.imgurviewer.service.resource.InstagramService;
 import com.ensoft.imgurviewer.service.resource.MediaServiceSolver;
 import com.ensoft.imgurviewer.service.resource.PornHubService;
 import com.ensoft.imgurviewer.service.resource.PornTubeService;
+import com.ensoft.imgurviewer.service.resource.PrntScrService;
 import com.ensoft.imgurviewer.service.resource.RedGifsService;
 import com.ensoft.imgurviewer.service.resource.RedTubeService;
 import com.ensoft.imgurviewer.service.resource.RedditGalleryService;
@@ -67,6 +68,7 @@ public class ResourceSolver
 		addSolver( new ImgurService(), ImgurAlbumGalleryViewer.class );
 		addSolver( new GyazoService() );
 		addSolver( new ImgFlipService() );
+		addSolver( new PrntScrService() );
 		addSolver( new GfycatService() );
 		addSolver( new RedditUploadsService() );
 		addSolver( new StreamableService() );
