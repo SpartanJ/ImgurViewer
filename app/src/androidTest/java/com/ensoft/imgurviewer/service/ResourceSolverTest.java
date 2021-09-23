@@ -111,17 +111,17 @@ public class ResourceSolverTest
 		});
 		
 		String[] testUris = new String[] {
+			"https://clips.twitch.tv/FaintLightGullWholeWheat",
+			"https://www.gifdeliverynetwork.com/MadWickedBinturong",
+			"https://www.pornhub.com/view_video.php?viewkey=ph5effde87227d2",
 			"https://www.reddit.com/gallery/huxc4s",
 			"http://imgur.com/gallery/qZ7Oq2m",
 			"https://imgur.com/A61SaA1",
-			"https://i.imgur.com/crGpqCV.mp4",
 			"https://i.imgur.com/jxBXAMC.gifv",
 			"https://imgur.com/gallery/YcAQlkx",
 			"http://imgur.com/topic/Aww/ll5Vk",
 			"http://imgur.com/a/j6Orj",
 			"https://www.gfycat.com/temptingimpuregermanspaniel",
-			"https://www.pornhub.com/view_video.php?viewkey=ph5e13f804cbf69",
-			"https://www.gifdeliverynetwork.com/unconsciouslankyivorygull",
 			"https://gfycat.com/whoppingcostlyairedale",
 			"https://redgifs.com/watch/grimyacademicafricanbushviper-bz-beauty",
 			"https://redgifs.com/watch/calculatingsoreemperorpenguin-lauren-summer-swimsuit-bikini-beach",
@@ -139,7 +139,6 @@ public class ResourceSolverTest
 			"https://v.redd.it/zv89llsvexdz",
 			"https://streamable.com/dnd1",
 			"https://streamable.com/moo",
-			"https://clips.twitch.tv/FaintLightGullWholeWheat",
 			"https://instagram.com/p/aye83DjauH/?foo=bar#abc",
 			"https://www.instagram.com/p/BQ0eAlwhDrw/",
 			"http://www.flickr.com/photos/forestwander-nature-pictures/5645318632/in/photostream/",

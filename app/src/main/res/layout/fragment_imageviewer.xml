@@ -8,8 +8,7 @@
 	<RelativeLayout android:id="@+id/content_container"
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
-					android:background="@android:color/black"
-					android:fitsSystemWindows="true">
+					android:background="@android:color/black">
 
 		<RelativeLayout
 			android:layout_width="match_parent"

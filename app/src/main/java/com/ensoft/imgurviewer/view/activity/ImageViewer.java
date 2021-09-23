@@ -2,11 +2,16 @@ package com.ensoft.imgurviewer.view.activity;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 
+import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.view.fragment.ImageViewerFragment;
 import com.imgurviewer.R;
 
@@ -31,6 +36,23 @@ public class ImageViewer extends AppActivity
 		super.onPostCreate( savedInstanceState );
 		
 		loadResource();
+	}
+	
+	@Override
+	protected void onDestroy()
+	{
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.R )
+		{
+			Window window = getWindow();
+			WindowInsetsController controller = window.getInsetsController();
+			
+			if (controller != null)
+			{
+				controller.show( WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars() );
+			}
+		}
+		
+		super.onDestroy();
 	}
 	
 	protected void loadFragment( Uri uri )

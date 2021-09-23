@@ -20,6 +20,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.webkit.URLUtil;
@@ -740,6 +743,17 @@ public class ImageViewerFragment extends Fragment
 	private void setSystemUiVisibility()
 	{
 		contentView.setSystemUiVisibility( getSystemUiVisibilityHideFlags() );
+		
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.R )
+		{
+			Window window = getActivity().getWindow();
+			WindowInsetsController controller = window.getInsetsController();
+			
+			if (controller != null)
+			{
+				controller.hide(WindowInsets.Type.statusBars() | ( App.getInstance().getPreferencesService().isNavigationBarKeptVisible() ? 0 : WindowInsets.Type.navigationBars() ) );
+			}
+		}
 	}
 	
 	private void hideFast()
@@ -804,6 +818,17 @@ public class ImageViewerFragment extends Fragment
 	private void show()
 	{
 		contentView.setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN );
+		
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.R )
+		{
+			Window window = getActivity().getWindow();
+			WindowInsetsController controller = window.getInsetsController();
+			
+			if (controller != null)
+			{
+				controller.show(WindowInsets.Type.statusBars() | ( App.getInstance().getPreferencesService().isNavigationBarKeptVisible() ? 0 : WindowInsets.Type.navigationBars()));
+			}
+		}
 		
 		visible = true;
 		hideHandler.removeCallbacks( hidePart2Runnable );
