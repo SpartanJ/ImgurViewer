@@ -48,7 +48,9 @@ public class TwitchClipsService extends MediaServiceSolver
 					{
 						if ( quality.equals( clip.getQuality() ) )
 						{
-							return Uri.parse( clip.getSource() );
+							return Uri.parse( clip.getSource() +
+								"?sig=" + twitchClips.data.clip.playbackAccessToken.signature +
+								"&token=" + twitchClips.data.clip.playbackAccessToken.value.replace( "\\", "" ) );
 						}
 					}
 				}
@@ -62,14 +64,20 @@ public class TwitchClipsService extends MediaServiceSolver
 	@Override
 	public void getPath( Uri uri, final PathResolverListener pathResolverListener )
 	{
-		RequestParameters parameters = new RequestParameters();
 		HashMap<String, String> headers = new HashMap<>();
 		headers.put( "Client-ID", TWITCH_CLIENT_ID );
 		
-		parameters.putString( "query", "\n    query getClipStatus($slug:ID!) {\n        clip(slug: $slug) {\n            creationState\n            videoQualities {\n              frameRate\n              quality\n              sourceURL\n            }\n          }\n    }\n" );
+		RequestParameters parameters = new RequestParameters();
+		parameters.putString( "operationName", "VideoAccessToken_Clip" );
 		RequestParameters variables = new RequestParameters();
 		variables.putString( "slug", getClipId( uri ) );
 		parameters.putObject( "variables", variables );
+		RequestParameters extensions = new RequestParameters();
+		RequestParameters persistedQuery = new RequestParameters();
+		persistedQuery.putInt( "version", 1 );
+		persistedQuery.putString( "sha256Hash", "36b89d2507fce29e5ca551df756d27c1cfe079e2609642b4390aa4c35796eb11" );
+		extensions.putObject( "persistedQuery", persistedQuery );
+		parameters.putObject( "extensions", extensions );
 		
 		RequestService.getInstance().makeJsonRequest( Request.Method.POST, TWITCH_CLIPS_STATUS, new ResponseListener<TwitchClipResponse>()
 		{

@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class TwitchClips
 {
+	@SerializedName( "playbackAccessToken" )
+	public TwitchPlaybackAccessToken playbackAccessToken;
+	
 	@SerializedName( "videoQualities" )
 	protected TwitchClip[] clips;
 	

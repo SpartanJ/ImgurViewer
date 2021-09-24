@@ -11,13 +11,13 @@ public class RedGifsService extends BasicVideoServiceSolver
 	@Override
 	public String[] getNeedleStart()
 	{
-		return new String[] { "<source src=\"", "<source src=\"" };
+		return new String[] { "<meta property=\"og:video\" content=\"" };
 	}
 	
 	@Override
 	public String[] getNeedleEnd()
 	{
-		return new String[] { "\" type=\"video/mp4\"/>", "\" type=\"video/webm\"/>" };
+		return new String[] { "\">" };
 	}
 	
 	@Override

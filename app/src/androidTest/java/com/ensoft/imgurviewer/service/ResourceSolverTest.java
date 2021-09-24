@@ -111,8 +111,6 @@ public class ResourceSolverTest
 		});
 		
 		String[] testUris = new String[] {
-			"https://clips.twitch.tv/FaintLightGullWholeWheat",
-			"https://www.gifdeliverynetwork.com/MadWickedBinturong",
 			"https://www.pornhub.com/view_video.php?viewkey=ph5effde87227d2",
 			"https://www.reddit.com/gallery/huxc4s",
 			"http://imgur.com/gallery/qZ7Oq2m",
@@ -122,9 +120,6 @@ public class ResourceSolverTest
 			"http://imgur.com/topic/Aww/ll5Vk",
 			"http://imgur.com/a/j6Orj",
 			"https://www.gfycat.com/temptingimpuregermanspaniel",
-			"https://gfycat.com/whoppingcostlyairedale",
-			"https://redgifs.com/watch/grimyacademicafricanbushviper-bz-beauty",
-			"https://redgifs.com/watch/calculatingsoreemperorpenguin-lauren-summer-swimsuit-bikini-beach",
 			"https://www.redgifs.com/watch/grimyacademicafricanbushviper-bz-beauty",
 			"https://www.redgifs.com/watch/calculatingsoreemperorpenguin-lauren-summer-swimsuit-bikini-beach",
 			"https://ibb.co/f2D3BNg",
@@ -166,7 +161,13 @@ public class ResourceSolverTest
 			"https://pasaje13.tumblr.com/image/188445492882",
 			"https://spankbang.com/22xtb/video/",
 			"https://la.spankbang.com/22xtb/video/",
-			"http://www.xvideos.com/video4588838/biker_takes_his_girl"
+			"http://www.xvideos.com/video4588838/biker_takes_his_girl",
+			// approved
+			"https://redgifs.com/watch/calculatingsoreemperorpenguin-lauren-summer-swimsuit-bikini-beach",
+			"https://redgifs.com/watch/grimyacademicafricanbushviper-bz-beauty",
+			"https://gfycat.com/whoppingcostlyairedale",
+			"https://clips.twitch.tv/FaintLightGullWholeWheat",
+			"https://www.gifdeliverynetwork.com/MadWickedBinturong",
 		};
 		
 		for ( String testUri :testUris )
