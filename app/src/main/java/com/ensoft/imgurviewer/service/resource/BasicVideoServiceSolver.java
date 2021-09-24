@@ -23,6 +23,16 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 {
 	protected Uri referer;
 	
+	public interface VideoPathSolved
+	{
+		void onVideoPathSolved( Uri uri, PathResolverListener pathResolverListener );
+	}
+	
+	protected VideoPathSolved getVideoPathSolved()
+	{
+		return null;
+	}
+	
 	public abstract String getDomain();
 	
 	public abstract String[] getNeedleStart();
@@ -132,7 +142,14 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 				
 				if ( videoUrl != null )
 				{
-					sendPathResolved( pathResolverListener, videoUrl, UriUtils.guessMediaTypeFromUri( videoUrl ), referer );
+					if ( getVideoPathSolved() == null )
+					{
+						sendPathResolved( pathResolverListener, videoUrl, UriUtils.guessMediaTypeFromUri( videoUrl ), referer );
+					}
+					else
+					{
+						getVideoPathSolved().onVideoPathSolved( videoUrl, pathResolverListener );
+					}
 				}
 				else
 				{

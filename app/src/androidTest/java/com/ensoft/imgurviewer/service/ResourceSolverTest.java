@@ -111,9 +111,16 @@ public class ResourceSolverTest
 		});
 		
 		String[] testUris = new String[] {
+			// deprecate?
 			"https://www.pornhub.com/view_video.php?viewkey=ph5effde87227d2",
+			// approved
 			"https://www.reddit.com/gallery/huxc4s",
-			"http://imgur.com/gallery/qZ7Oq2m",
+			"https://redgifs.com/watch/calculatingsoreemperorpenguin-lauren-summer-swimsuit-bikini-beach",
+			"https://redgifs.com/watch/grimyacademicafricanbushviper-bz-beauty",
+			"https://gfycat.com/whoppingcostlyairedale",
+			"https://clips.twitch.tv/FaintLightGullWholeWheat",
+			"https://www.gifdeliverynetwork.com/MadWickedBinturong",
+			"http://imgur.com/gallery/fADjkcW",
 			"https://imgur.com/A61SaA1",
 			"https://i.imgur.com/jxBXAMC.gifv",
 			"https://imgur.com/gallery/YcAQlkx",
@@ -147,27 +154,20 @@ public class ResourceSolverTest
 			"https://www.clippituser.tv/c/dnbaba",
 			"https://www.clippituser.tv/c/apdmxa",
 			"http://abelvera.deviantart.com/art/Roadhog-Vs-Reinhardt-660542128?ga_submit_new=10%3A1485794341&ga_type=edit&ga_changes=1&ga_recent=1",
+			"https://pasaje13.tumblr.com/image/188445492882",
 			"https://dragonitearmy.deviantart.com/art/Pinyatta-751121451?ga_submit_new=10%3A1529760214",
 			"https://www.xvideos.com/video4588838/biker_takes_his_girl",
-			"https://www.youporn.com/watch/505835/sex-ed-is-it-safe-to-masturbate-daily/",
-			"https://www.youporn.com/watch/561726/big-tits-awesome-brunette-on-amazing-webcam-show/?from=related3&al=2&from_id=561726&pos=4",
+			"https://www.youporn.com/watch/16337494/apex-legends-lifeline-to-the-rescue/",
 			"https://www.redtube.com/16962391",
-			"https://www.tube8.com/teen/kasia-music-video/229795/",
+			"https://www.tube8.com/amateur/uploading-6222021-expo-5/81483201/",
 			"https://www.porntube.com/videos/porn-surfing-guide-porn-experts_1134180",
 			"https://www.erome.com/a/bEFp5geB",
 			"https://www.erome.com/a/Wh45ErMk",
 			"https://www.xnxx.com/video-55awb78/skyrim_test_video",
-			"https://xhamster.com/videos/erotic-asmr-2766455",
-			"https://pasaje13.tumblr.com/image/188445492882",
 			"https://spankbang.com/22xtb/video/",
 			"https://la.spankbang.com/22xtb/video/",
 			"http://www.xvideos.com/video4588838/biker_takes_his_girl",
-			// approved
-			"https://redgifs.com/watch/calculatingsoreemperorpenguin-lauren-summer-swimsuit-bikini-beach",
-			"https://redgifs.com/watch/grimyacademicafricanbushviper-bz-beauty",
-			"https://gfycat.com/whoppingcostlyairedale",
-			"https://clips.twitch.tv/FaintLightGullWholeWheat",
-			"https://www.gifdeliverynetwork.com/MadWickedBinturong",
+			"https://xhamster.com/videos/asmr-you-know-i-like-you-xhnBhXU",
 		};
 		
 		for ( String testUri :testUris )

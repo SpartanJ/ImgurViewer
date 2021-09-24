@@ -1,8 +1,15 @@
 package com.ensoft.imgurviewer.service.resource;
 
+import android.content.Context;
 import android.net.Uri;
 
+import com.android.volley.Request;
+import com.ensoft.imgurviewer.model.YouPornVideo;
 import com.ensoft.imgurviewer.service.StringUtils;
+import com.ensoft.imgurviewer.service.UriUtils;
+import com.ensoft.restafari.network.processor.ResponseListener;
+import com.ensoft.restafari.network.service.RequestService;
+import com.imgurviewer.R;
 
 public class Tube8Service extends RedTubeService
 {
@@ -15,7 +22,7 @@ public class Tube8Service extends RedTubeService
 	@Override
 	public String[] getNeedleStart()
 	{
-		return new String[] { "\"quality_2160p\":\"", "\"quality_1440p\":\"", "\"quality_1080p\":\"", "\"quality_720p\":\"", "\"quality_480p\":\"", "\"quality_240p\":\"", "\"quality_180p\":\"" };
+		return new String[] { "\"quality_1080p\":\"", "\"quality_720p\":\"", "\"quality_480p\":\"", "\"quality_240p\":\"", "\"quality_180p\":\"" };
 	}
 	
 	@Override
@@ -48,5 +55,11 @@ public class Tube8Service extends RedTubeService
 		}
 		
 		return url;
+	}
+	
+	@Override
+	protected VideoPathSolved getVideoPathSolved()
+	{
+		return ( uri, pathResolverListener ) -> sendPathResolved( pathResolverListener, uri, UriUtils.guessMediaTypeFromUri( uri ), uri );
 	}
 }

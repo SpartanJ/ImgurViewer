@@ -93,8 +93,8 @@ public class SpankBangService extends BasicVideoServiceSolver
 								"\"stream_url_240p\":[\"",
 							};
 							String[] needleEnds = new String[]{
-								"\",",
-								"\"]"
+								"\"]",
+								"\","
 							};
 							
 							for ( String needleEnd : needleEnds )

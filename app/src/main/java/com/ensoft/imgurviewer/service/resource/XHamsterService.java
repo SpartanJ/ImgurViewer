@@ -2,6 +2,7 @@ package com.ensoft.imgurviewer.service.resource;
 
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.ensoft.imgurviewer.model.XHamsterVideo;
 import com.ensoft.imgurviewer.model.XHamsterVideoMp4;
@@ -62,6 +63,6 @@ public class XHamsterService extends BasicVideoServiceSolver
 	@Override
 	public String[] getNeedleEnd()
 	{
-		return new String[] { "};" };
+		return new String[] { "};</script>" };
 	}
 }
