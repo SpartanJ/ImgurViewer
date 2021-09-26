@@ -54,7 +54,7 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 		return new JSONObject();
 	}
 	
-	protected Map<String, String> getHeaders( Uri referer )
+	protected HashMap<String, String> getHeaders( Uri referer )
 	{
 		HashMap<String,String> headers = new HashMap<>();
 		headers.put( "Origin", referer.getScheme() + "://" + referer.getHost() );

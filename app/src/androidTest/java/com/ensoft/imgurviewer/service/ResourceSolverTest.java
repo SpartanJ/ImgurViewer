@@ -111,9 +111,6 @@ public class ResourceSolverTest
 		});
 		
 		String[] testUris = new String[] {
-			// deprecate?
-			"https://www.pornhub.com/view_video.php?viewkey=ph5effde87227d2",
-			// approved
 			"https://www.reddit.com/gallery/huxc4s",
 			"https://redgifs.com/watch/calculatingsoreemperorpenguin-lauren-summer-swimsuit-bikini-beach",
 			"https://redgifs.com/watch/grimyacademicafricanbushviper-bz-beauty",
@@ -169,6 +166,7 @@ public class ResourceSolverTest
 			"https://la.spankbang.com/22xtb/video/",
 			"http://www.xvideos.com/video4588838/biker_takes_his_girl",
 			"https://xhamster.com/videos/asmr-you-know-i-like-you-xhnBhXU",
+			"https://www.pornhub.com/view_video.php?viewkey=ph5effde87227d2",
 		};
 		
 		for ( String testUri :testUris )

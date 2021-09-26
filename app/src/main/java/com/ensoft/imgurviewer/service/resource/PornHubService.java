@@ -1,7 +1,20 @@
 package com.ensoft.imgurviewer.service.resource;
 
+import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
+
+import com.android.volley.Request;
+import com.ensoft.imgurviewer.model.YouPornVideo;
+import com.ensoft.imgurviewer.service.UriUtils;
+import com.ensoft.imgurviewer.service.listener.PathResolverListener;
+import com.ensoft.restafari.helper.ThreadMode;
+import com.ensoft.restafari.network.helper.RequestParameters;
+import com.ensoft.restafari.network.processor.ResponseListener;
+import com.ensoft.restafari.network.rest.response.Header;
+import com.ensoft.restafari.network.service.RequestService;
+import com.imgurviewer.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,10 +41,10 @@ public class PornHubService extends BasicVideoServiceSolver
 	}
 	
 	@Override
-	protected Map<String, String> getHeaders( Uri referer )
+	protected HashMap<String, String> getHeaders( Uri referer )
 	{
-		Map<String, String> headers = super.getHeaders( referer );
-		headers.put( "Cookie", "platform=tv;" );
+		HashMap<String, String> headers = super.getHeaders( referer );
+		headers.put( "Cookie", "platform=pc;" );
 		return headers;
 	}
 	
@@ -156,42 +169,84 @@ public class PornHubService extends BasicVideoServiceSolver
 		
 		if ( !vars.isEmpty() )
 		{
-			int bestQuality = 0;
-			String bestQualityUrl = "";
 			for ( Map.Entry<String, String> entry : vars.entrySet() )
 			{
-				if ( entry.getKey().startsWith( "quality_" ) && !entry.getValue().isEmpty() )
+				if ( "media_1".equalsIgnoreCase( entry.getKey() ) )
 				{
-					int q = Integer.parseInt( entry.getKey().substring( 8 ).replace( "p", "" ) );
-					
-					if ( q > bestQuality )
+					return Uri.parse( entry.getValue() );
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	@Override
+	protected ResponseListener<String> getResponseListener( Uri uri, PathResolverListener pathResolverListener )
+	{
+		return new ResponseListener<String>()
+		{
+			@Override
+			public ThreadMode getThreadMode()
+			{
+				return ThreadMode.ASYNC;
+			}
+			
+			@Override
+			public void onRequestSuccess( Context context, String response )
+			{
+				Uri videoUrl = getVideoUrlFromResponse( response );
+				
+				HashMap<String, String> headers = getHeaders( uri );
+				
+				String cookie = "platform=pc;";
+				
+				for ( Header header : this.networkResponse.allHeaders )
+				{
+					if ( "set-cookie".equalsIgnoreCase( header.getName() ) )
 					{
-						bestQuality = q;
-						bestQualityUrl = entry.getValue();
+						String[] values = header.getValue().split( ";" );
+						
+						if ( values.length > 0 )
+						{
+							cookie += values[0].trim() + ";";
+						}
 					}
+				}
+				
+				headers.put( "Cookie", cookie );
+				
+				if ( videoUrl != null )
+				{
+					RequestService.getInstance().makeJsonArrayRequest( Request.Method.GET, videoUrl.toString(), new ResponseListener<YouPornVideo[]>()
+					{
+						@Override
+						public void onRequestSuccess( Context context, YouPornVideo[] response )
+						{
+							sendPathResolved( pathResolverListener, response[0].getVideoUri(), UriUtils.guessMediaTypeFromUri( response[0].getVideoUri() ), uri );
+						}
+						
+						@Override
+						public void onRequestError( Context context, int errorCode, String errorMessage )
+						{
+							sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
+						}
+					}, new RequestParameters(), headers );
+				}
+				else
+				{
+					sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
 				}
 			}
 			
-			try
+			@Override
+			public void onRequestError( Context context, int errorCode, String errorMessage )
 			{
-				return Uri.parse( bestQualityUrl );
+				if ( null != getDomain() && null != errorMessage )
+					Log.v( getDomain(), errorMessage );
+				
+				sendPathError( uri, pathResolverListener, null != errorMessage ? errorMessage : "" );
 			}
-			catch ( Exception ignored )
-			{
-				return null;
-			}
-		}
-		else
-		{
-			List<String> mediaVars = getJsVars(getStringMatch( response, "var mediastring=", ";</script>" ));
-			StringBuilder url = new StringBuilder();
-			
-			for ( String var : mediaVars )
-			{
-				url.append( getJsVarValue( response, var ) );
-			}
-			
-			return !url.toString().isEmpty() ? Uri.parse( url.toString() ) : null;
-		}
+		};
 	}
 }
