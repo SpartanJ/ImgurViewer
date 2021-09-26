@@ -1,0 +1,4 @@
+2.2.2:
+Fixes for Android 11 compatibility.
+Fixed all corrupted services (Twitch Clips and many others).
+Added prnt.sc support.
