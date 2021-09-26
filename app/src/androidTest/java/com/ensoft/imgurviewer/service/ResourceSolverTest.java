@@ -118,6 +118,7 @@ public class ResourceSolverTest
 			"https://redgifs.com/watch/calculatingsoreemperorpenguin-lauren-summer-swimsuit-bikini-beach",
 			"https://redgifs.com/watch/grimyacademicafricanbushviper-bz-beauty",
 			"https://gfycat.com/whoppingcostlyairedale",
+			"https://clips.twitch.tv/SmoggySmallHummingbirdOSkomodo-KeUalcW_KTZl_XRH?tt_medium=redt",
 			"https://clips.twitch.tv/FaintLightGullWholeWheat",
 			"https://www.gifdeliverynetwork.com/MadWickedBinturong",
 			"http://imgur.com/gallery/fADjkcW",

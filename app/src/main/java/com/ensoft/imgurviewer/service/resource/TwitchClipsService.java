@@ -14,6 +14,7 @@ import com.ensoft.restafari.network.processor.ResponseListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.imgurviewer.R;
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 
 public class TwitchClipsService extends MediaServiceSolver
@@ -48,9 +49,9 @@ public class TwitchClipsService extends MediaServiceSolver
 					{
 						if ( quality.equals( clip.getQuality() ) )
 						{
-							return Uri.parse( clip.getSource() +
-								"?sig=" + twitchClips.data.clip.playbackAccessToken.signature +
-								"&token=" + twitchClips.data.clip.playbackAccessToken.value.replace( "\\", "" ) );
+							return Uri.parse( clip.getSource() + "?" +
+								"sig=" + twitchClips.data.clip.playbackAccessToken.signature +
+								"&token=" + URLEncoder.encode( twitchClips.data.clip.playbackAccessToken.value.replace( "\\", "" ) ) );
 						}
 					}
 				}
