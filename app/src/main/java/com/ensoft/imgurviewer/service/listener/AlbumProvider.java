@@ -6,6 +6,7 @@ import com.ensoft.imgurviewer.service.resource.EromeService;
 import com.ensoft.imgurviewer.service.resource.FlickrService;
 import com.ensoft.imgurviewer.service.resource.ImgurAlbumService;
 import com.ensoft.imgurviewer.service.resource.InstagramService;
+import com.ensoft.imgurviewer.service.resource.NhentaiService;
 import com.ensoft.imgurviewer.service.resource.RedditAlbumService;
 
 public interface AlbumProvider
@@ -21,7 +22,8 @@ public interface AlbumProvider
 			new RedditAlbumService(),
 			new InstagramService(),
 			new FlickrService(),
-			new EromeService()
+			new EromeService(),
+			new NhentaiService()
 		};
 	}
 }
