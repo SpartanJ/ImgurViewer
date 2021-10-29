@@ -47,6 +47,11 @@ public class NhentaiService extends MediaServiceSolver implements AlbumProvider 
                 album = images.toArray(album);
                 albumSolverListener.onAlbumResolved(album);
             }
+
+            @Override
+            public void onRequestError(Context context, int errorCode, String errorMessage) {
+                albumSolverListener.onAlbumError(errorCode + ": Could not load album");
+            }
         });
     }
 
