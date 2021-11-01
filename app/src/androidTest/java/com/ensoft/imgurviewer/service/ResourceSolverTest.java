@@ -167,6 +167,7 @@ public class ResourceSolverTest
 			"http://www.xvideos.com/video4588838/biker_takes_his_girl",
 			"https://xhamster.com/videos/asmr-you-know-i-like-you-xhnBhXU",
 			"https://www.pornhub.com/view_video.php?viewkey=ph5effde87227d2",
+			"https://nhentai.net/g/169217/",
 		};
 		
 		for ( String testUri :testUris )

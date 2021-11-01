@@ -16,6 +16,7 @@ import com.ensoft.imgurviewer.service.resource.ImgFlipService;
 import com.ensoft.imgurviewer.service.resource.ImgurService;
 import com.ensoft.imgurviewer.service.resource.InstagramService;
 import com.ensoft.imgurviewer.service.resource.MediaServiceSolver;
+import com.ensoft.imgurviewer.service.resource.NhentaiService;
 import com.ensoft.imgurviewer.service.resource.PornHubService;
 import com.ensoft.imgurviewer.service.resource.PornTubeService;
 import com.ensoft.imgurviewer.service.resource.PrntScrService;
@@ -95,6 +96,7 @@ public class ResourceSolver
 		addSolver( new IbbCoService() );
 		addSolver( new RedGifsService() );
 		addSolver( new GifDeliveryNetworkService() );
+		addSolver( new NhentaiService(), ImgurAlbumGalleryViewer.class );
 	}
 	
 	public void solve( Uri uri )
