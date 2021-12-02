@@ -1,0 +1,4 @@
+ImgurViewer adalah sebuah penampil gambar kecil untuk membuka tautan gambar dari aplikasi eksternal secepat mungkin.
+Seperti dari namanya, aplikasi ini awalnya dirancang untuk membuka tautan gambar Imgur, tapi aplikasinya berkembang menjadi mendukung beberapa layanan gambar dan video lainnya.
+Aplikasi ini saat ini mendukung lebih dari 30 layanan dan bisa membuka hampir semua tautan media yang datang dari Reddit.
+Juga, ImgurViewer bisa membuka semua tautan dengan jalur dengan ekstensi gambar, jadi aplikasi ini akan mencoba menangani tautan gambar atau video apa pun.

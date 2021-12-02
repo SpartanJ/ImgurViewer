@@ -1,0 +1,1 @@
+Sebuah penampil gambar kecil untuk membuka tautan gambar dan video dari aplikasi eksternal.

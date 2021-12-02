@@ -1,0 +1,162 @@
+<resources>
+	<string name="app_name">ImgurViewer</string>
+	<string name="imgur_client_id">912617e18339d56</string>
+	<string name="flickr_key">2ba8fd93b3d6443c8c8b8f277770bf6e</string>
+	<string name="giphy_api_key">dc6zaTOxFJmzC</string>
+	<string name="version">Versi</string>
+	<string name="settings">Pengaturan</string>
+	<string name="general">Umum</string>
+	<string name="hacks">Retas</string>
+	<string name="gestures">Gestur</string>
+	<string name="gallery">Galeri</string>
+	<string name="videos">Video</string>
+	<string name="proxy">Proksi</string>
+	<string name="actions">Aksi</string>
+	<string name="proxyHost">Host Proksi</string>
+	<string name="proxyPort">Port Proksi</string>
+	<string name="share">Bagi</string>
+	<string name="shareUsing">Bagi menggunakan&#8230;</string>
+	<string name="videoRemoved">"Video dihapus."</string>
+	<string name="videoUrlNotFound">URL video tidak ditemukan.</string>
+	<string name="could_not_resolve_url">Tidak dapat menyelesaikan URL gambar.</string>
+	<string name="could_not_resolve_video_url">Tidak dapat menyelesaikan URL video.</string>
+	<string name="could_not_resolve_album_url">Tidak dapat menyelesaikan URL album.</string>
+	<string name="seconds_abbr">d</string>
+	<string name="tutorial">Bagaimana cara menggunakan ImgurViewer?</string>
+	<string name="tutorial_open">Atau Anda bisa menekan tautan gambar apa pun, album Imgur, atau klip video dari aplikasi eksternal.</string>
+	<string name="tutorial_open_with">Pilih ImgurViewer untuk membuka tautan.</string>
+	<string name="tutorial_that_is_it">Itu dia!\nImgurViewer dirancang untuk membuka tautan gambar dan video dari aplikasi eksternal.\nHanya itu tujuannya.</string>
+	<string name="tutorial_next">Selanjutnya</string>
+	<string name="tutorial_ended">Nikmati!</string>
+	<string name="unknown_error">Galat Tidak Diketahui</string>
+	<string name="muteVideos">Bisukan video</string>
+	<string name="muteVideosConf">Bisukan video secara baku</string>
+	<string name="clearCache">Bersihkan tembolok</string>
+	<string name="clearCacheConf">Bersihkan tembolok gambar aplikasi</string>
+	<string name="cacheCleared">Tembolok gambar dibersihkan</string>
+	<string name="errorLoadingAlbum">Gagal memuat album</string>
+	<string name="failedFetchProfile">Gagal mengambil profil</string>
+	<string name="gesturesEnabled">Gestur Diaktifkan</string>
+	<string name="gesturesEnabledConf">Aktifkan gestur geser</string>
+	<string name="gesturesImageView">Geser Tampilan Gambar</string>
+	<string name="gesturesImageViewConf">Buang gestur geser untuk tampilan gambar/video</string>
+	<string name="gesturesGalleryView">Geser Tampilan Galeri</string>
+	<string name="gesturesGalleryViewConf">Buang gestur geser untuk tampilan galeri</string>
+	<string name="defaultGalleryViewStyle">Gaya Baku Tampilan Galeri</string>
+	<string name="defaultGalleryViewStyleConf">Pilih antara tampilan Daftar atau Kisi</string>
+	<string name="gridViewColumns">Jumlah kolom dalam tampilan kisi</string>
+	<string name="gridViewColumnsConf">Pilih nilai antara 1 dan 10</string>
+	<string name="thumbnailsOnGallery">Keluku dalam Galeri</string>
+	<string name="thumbnailsOnGalleryConf">Gunakan keluku dari gambar asli, jika tidak muat gambar asli</string>
+	<string name="thumbnailsSizeOnGallery">Ukuran Keluku Imgur</string>
+	<string name="thumbnailsSizeOnGalleryConf">Pilih ukuran baku keluku untuk menampilkan gambar untuk album dan galeri Imgur</string>
+	<string name="keepNavigationVisible">Biarkan Bilah Navigasi Terlihat</string>
+	<string name="keepNavigationVisibleConf">Jangan sembunyikan bilah navigasi secara otomatis saat mode layar penuh diaktifkan.</string>
+	<string name="disableWindowTransparency">Perbaikan Rotasi</string>
+	<string name="disableWindowTransparencyConf">Nonaktifkan Transparansi Jendela: Dari Android 8 keatas, jendela transparan mewarisi konfigurasi orientasi dari tampilan sebelumnya. Jika Anda memiliki masalah merotasi layar di aplikasi ini, maka itu dikarenakan ini. Karena kebanyakan aplikasi tidak memaksa mode potret, ini biasanya bukan masalah, tetapi aktifkan ini jika Anda memiliki masalah ini.</string>
+	<string name="listViewImageScaleType">Tipe Skala Gambar Tampilan Daftar</string>
+	<string name="gridViewImageScaleType">Tipe Skala Gambar Tampilan Kisi</string>
+	<string name="vertical">VERTIKAL</string>
+	<string name="horizontal">HORIZONTAL</string>
+	<string name="left">KIRI</string>
+	<string name="right">KANAN</string>
+	<string name="top">ATAS</string>
+	<string name="bottom">BAWAH</string>
+	<string name="listView">Tampilan Daftar</string>
+	<string name="gridView">Tampilan Kisi</string>
+	<string name="share_as">Bagikan sebagai…</string>
+	<string name="could_not_detect_mime_type">Maaf, ada yang salah, tidak bisa dibagikan sebagai media. Mohon bagikan sebagai teks.</string>
+	<string-array name="share_as_type">
+		<item>Media (kirim gambar atau video)</item>
+		<item>Teks (kirim tautan)</item>
+	</string-array>
+	<string-array name="gallery_view_arr">
+		<item>@string/listView</item>
+		<item>@string/gridView</item>
+	</string-array>
+	<string-array name="gallery_view_val">
+		<item>0</item>
+		<item>1</item>
+	</string-array>
+	<string-array name="gestures_arr">
+		<item>@string/vertical</item>
+		<item>@string/horizontal</item>
+		<item>@string/left</item>
+		<item>@string/right</item>
+		<item>@string/top</item>
+		<item>@string/bottom</item>
+	</string-array>
+	<string name="vertical_val">4</string>
+	<string name="horizontal_val">5</string>
+	<string name="left_val">0</string>
+	<string name="right_val">1</string>
+	<string name="top_val">2</string>
+	<string name="bottom_val">3</string>
+	<string-array name="gestures_types">
+		<item>@string/vertical_val</item>
+		<item>@string/horizontal_val</item>
+		<item>@string/left_val</item>
+		<item>@string/right_val</item>
+		<item>@string/top_val</item>
+		<item>@string/bottom_val</item>
+	</string-array>
+	<string name="list_view_default_scale_type">FIT_CENTER</string>
+	<string name="grid_view_default_scale_type">CENTER_CROP</string>
+	<string-array name="scale_types_names">
+		<item>COCOK XY</item>
+		<item>COCOK X</item>
+		<item>COCOK Y</item>
+		<item>COCOK KIRI</item>
+		<item>COCOK TENGAH</item>
+		<item>COCOK KANAN</item>
+		<item>TENGAH</item>
+		<item>TENGAH DALAM</item>
+		<item>TENGAH TERPOTONG</item>
+		<item>FOKUS TERPOTONG</item>
+		<item>COCOK BAWAH KIRI</item>
+	</string-array>
+	<string-array name="scale_types_values">
+		<item>FIT_XY</item>
+		<item>FIT_X</item>
+		<item>FIT_Y</item>
+		<item>FIT_START</item>
+		<item>FIT_CENTER</item>
+		<item>FIT_END</item>
+		<item>CENTER</item>
+		<item>CENTER_INSIDE</item>
+		<item>CENTER_CROP</item>
+		<item>FOCUS_CROP</item>
+		<item>FIT_BOTTOM_START</item>
+	</string-array>
+	<string-array name="thumbnail_sizes_names">
+		<item>Gambar Penuh</item>
+		<item>Persegi Kecil (90×90)</item>
+		<item>Persegi Besar (160×160)</item>
+		<item>Keluku Kecil (160×160)</item>
+		<item>Keluku Medium (320×320)</item>
+		<item>Keluku Besar (640×640)</item>
+		<item>Keluku Sangat Besar (1024×1024)</item>
+	</string-array>
+	<string-array name="thumbnail_sizes_values">
+		<item></item>
+		<item>s</item>
+		<item>b</item>
+		<item>t</item>
+		<item>m</item>
+		<item>l</item>
+		<item>h</item>
+	</string-array>
+	<string name="thumbnail_sizes_default">l</string>
+	<string name="screenLockEnabled">Pengaturan Layar Kunci</string>
+	<string name="screenLockEnabledConf">Bolehkan untuk mengunci/membuka kunci tampilan gambar/video.</string>
+	<string name="fullScreenEnabled">Pengaturan Layar Penuh</string>
+	<string name="fullScreenEnabledConf">Bolehkan tombol layar penuh pada tampilan gambar/video.</string>
+	<string name="cantDisplayResourceNoPermission">Maaf, tidak dapat menampilkan sumber daya tanpa izin yang sesuai.</string>
+	<string name="cantDownloadNoPermission">Maaf, tidak dapat mengunduh sumber daya tanpa izin yang sesuai.</string>
+	<string name="cantShareNoPermission">Maaf, tidak dapat membagikan sumber daya tanpa izin yang sesuai.</string>
+	<string name="couldNotReproduceVideo">Maaf, reproduksi video gagal.</string>
+	<string name="textPaste">Tempel tautan di sini</string>
+	<string name="textPastView">Anda bisa menempelkan tautan gambar/video yang didukung apa pun untuk memvisualisasikannya</string>
+	<string name="resourceInvalid">Sumber daya yang dimuat bukan gambar yang valid.</string>
+	<string name="invalidUrl">URL tidak valid</string>
+</resources>
