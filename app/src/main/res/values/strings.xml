@@ -17,30 +17,30 @@
 	<string name="share">Share</string>
 	<string name="shareUsing">Share using&#8230;</string>
 	<string name="videoRemoved">"Video removed."</string>
-	<string name="videoUrlNotFound">Video url not found.</string>
-	<string name="could_not_resolve_url">Couldn\'t resolve image url.</string>
-	<string name="could_not_resolve_video_url">Couldn\'t resolve video url.</string>
-	<string name="could_not_resolve_album_url">Couldn\'t resolve album url.</string>
+	<string name="videoUrlNotFound">Video URL not found.</string>
+	<string name="could_not_resolve_url">Couldn\'t resolve image URL.</string>
+	<string name="could_not_resolve_video_url">Couldn\'t resolve video URL.</string>
+	<string name="could_not_resolve_album_url">Couldn\'t resolve album URL.</string>
 	<string name="seconds_abbr">s</string>
 	<string name="tutorial">How to use ImgurViewer?</string>
-	<string name="tutorial_open">Or you can tap on any image, imgur album or clip video link from an external application.</string>
+	<string name="tutorial_open">Or you can tap on any image, Imgur album or clip video link from an external application.</string>
 	<string name="tutorial_open_with">Select ImgurViewer to open the link.</string>
-	<string name="tutorial_that_is_it">That\'s it!\nImgurViewer is designed to open image and video links from external applications.\nThat\'s its only purpose.</string>
+	<string name="tutorial_that_is_it">That\'s it!\nImgurViewer is designed to open image and video links from external applications.\nThat\'s the only purpose.</string>
 	<string name="tutorial_next">Next</string>
 	<string name="tutorial_ended">Enjoy!</string>
 	<string name="unknown_error">Unknown Error</string>
-	<string name="muteVideos">Mute videos</string>
+	<string name="muteVideos">Mute Videos</string>
 	<string name="muteVideosConf">Mute videos by default</string>
-	<string name="clearCache">Clear cache</string>
+	<string name="clearCache">Clear Cache</string>
 	<string name="clearCacheConf">Clear application image cache</string>
 	<string name="cacheCleared">Image cache cleared</string>
 	<string name="errorLoadingAlbum">Error loading album</string>
 	<string name="failedFetchProfile">Failed to fetch profile</string>
 	<string name="gesturesEnabled">Gestures Enabled</string>
 	<string name="gesturesEnabledConf">Enable swipe gestures</string>
-	<string name="gesturesImageView">Image View swipe</string>
+	<string name="gesturesImageView">Image View Swipe</string>
 	<string name="gesturesImageViewConf">Discard swipe gesture for image/video view</string>
-	<string name="gesturesGalleryView">Gallery View swipe</string>
+	<string name="gesturesGalleryView">Gallery View Swipe</string>
 	<string name="gesturesGalleryViewConf">Discard swipe gesture for gallery view</string>
 	<string name="defaultGalleryViewStyle">Default Gallery View style</string>
 	<string name="defaultGalleryViewStyleConf">Select between List and Grid view</string>
@@ -53,7 +53,7 @@
 	<string name="keepNavigationVisible">Keep Navigation Bar Visible</string>
 	<string name="keepNavigationVisibleConf">Don\'t auto-hide the navigation bar when fullscreen mode enables.</string>
 	<string name="disableWindowTransparency">Rotation Fix</string>
-	<string name="disableWindowTransparencyConf">Disables Window Transparency: From Android 8 an up transparent windows inherit the orientation configuration from the previous view. If you are having problems rotating the screen on this application it\'s because of this. Since most applications don\'t force portrait mode this usually is a non-problem, but enable this if you\'re having this issue.</string>
+	<string name="disableWindowTransparencyConf">Disables Window Transparency: From Android 8 and up, transparent windows inherit the orientation configuration from the previous view. If you are having problems rotating the screen on this application it\'s because of this. Since most applications don\'t force portrait mode this usually is a non-problem, but enable this if you\'re having this issue.</string>
 	<string name="listViewImageScaleType">List View Image Scale Type</string>
 	<string name="gridViewImageScaleType">Grid View Image Scale Type</string>
 	<string name="vertical">VERTICAL</string>
@@ -65,10 +65,10 @@
 	<string name="listView">List View</string>
 	<string name="gridView">Grid View</string>
 	<string name="share_as">Share as…</string>
-	<string name="could_not_detect_mime_type">Sorry, something went wrong, can\'t share as media. Please share as Text.</string>
+	<string name="could_not_detect_mime_type">Sorry, something went wrong, can\'t share as media. Please share as text.</string>
 	<string-array name="share_as_type">
-		<item>Media ( send image or video )</item>
-		<item>Text ( send link )</item>
+		<item>Media (send image or video)</item>
+		<item>Text (send link)</item>
 	</string-array>
 	<string-array name="gallery_view_arr">
 		<item>@string/listView</item>
