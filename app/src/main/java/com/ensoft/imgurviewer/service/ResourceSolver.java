@@ -46,6 +46,11 @@ public class ResourceSolver
 	private ResourceLoadListener resourceLoadListener;
 	private ArrayList<ResourceServiceSolver> resourceServiceSolvers = new ArrayList<>();
 	
+	public ResourceSolver()
+	{
+		loadServices();
+	}
+	
 	public ResourceSolver( ResourceLoadListener resourceLoadListener )
 	{
 		this.resourceLoadListener = resourceLoadListener;
@@ -99,6 +104,19 @@ public class ResourceSolver
 		addSolver( new NhentaiService(), ImgurAlbumGalleryViewer.class );
 	}
 	
+	public ResourceServiceSolver isSolvable( Uri uri )
+	{
+		for ( ResourceServiceSolver resourceServiceSolver : resourceServiceSolvers )
+		{
+			if ( resourceServiceSolver.isSolvable( uri ) )
+			{
+				return resourceServiceSolver;
+			}
+		}
+		
+		return null;
+	}
+	
 	public void solve( Uri uri )
 	{
 		for ( ResourceServiceSolver resourceServiceSolver : resourceServiceSolvers )
@@ -109,13 +127,16 @@ public class ResourceSolver
 			}
 		}
 		
-		if ( UriUtils.isVideoUrl( uri ) || UriUtils.isAudioUrl( uri ) )
+		if (resourceLoadListener != null)
 		{
-			resourceLoadListener.loadVideo( uri, UriUtils.guessMediaTypeFromUri( uri ), uri );
-		}
-		else
-		{
-			resourceLoadListener.loadImage( uri, null );
+			if ( UriUtils.isVideoUrl( uri ) || UriUtils.isAudioUrl( uri ) )
+			{
+				resourceLoadListener.loadVideo( uri, UriUtils.guessMediaTypeFromUri( uri ), uri );
+			}
+			else
+			{
+				resourceLoadListener.loadImage( uri, null );
+			}
 		}
 	}
 }

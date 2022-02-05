@@ -5,12 +5,15 @@ import android.util.Log;
 
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.MediaType;
+import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.rest.response.HttpStatus;
 import com.imgurviewer.R;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RedditVideoService extends MediaServiceSolver
 {
@@ -18,9 +21,21 @@ public class RedditVideoService extends MediaServiceSolver
 	private static final String V_REDD_IT_DOMAIN = "v.redd.it";
 	private static final String I_REDD_IT_DOMAIN = "i.redd.it";
 	private static final String PREVIEW_REDD_IT_DOMAIN = "preview.redd.it";
+	private static final String V_REDD_IT_VIDEO_720p_URL = "https://v.redd.it/%s/DASH_720.mp4";
+	private static final String V_REDD_IT_VIDEO_480p_URL = "https://v.redd.it/%s/DASH_480.mp4";
+	private static final String V_REDD_IT_VIDEO_240p_URL = "https://v.redd.it/%s/DASH_240.mp4";
 	private static final String V_REDD_IT_VIDEO_URL_M38U = "https://v.redd.it/%s/HLSPlaylist.m3u8";
+	private static final String V_REDD_IT_VIDEO_URL_DASH = "https://v.redd.it/%s/DASHPlaylist.mpd";
 	private static final String V_REDD_IT_VIDEO_URL = "https://v.redd.it/%s/DASH_2_4_M";
 	private static final String V_REDD_IT_VIDEO_URL_2 = "https://v.redd.it/%s/DASH_600_K";
+	private static final String[] VIDEO_FORMATS = new String[] {
+		V_REDD_IT_VIDEO_URL_DASH,
+		V_REDD_IT_VIDEO_URL_M38U,
+		V_REDD_IT_VIDEO_720p_URL,
+		V_REDD_IT_VIDEO_URL,
+		V_REDD_IT_VIDEO_480p_URL,
+		V_REDD_IT_VIDEO_240p_URL,
+		V_REDD_IT_VIDEO_URL_2 };
 	
 	private String getId( Uri uri )
 	{
@@ -37,6 +52,7 @@ public class RedditVideoService extends MediaServiceSolver
 			URL url = new URL( video );
 			urlConnection = (HttpURLConnection) url.openConnection();
 			urlConnection.setRequestMethod( "HEAD" );
+			urlConnection.setRequestProperty( "User-Agent", UriUtils.getDefaultUserAgent() );
 			urlConnection.getInputStream().close();
 			
 			return urlConnection.getResponseCode() == HttpStatus.OK_200.getCode();
@@ -71,31 +87,17 @@ public class RedditVideoService extends MediaServiceSolver
 			{
 				new Thread( () ->
 				{
-					String video = String.format( V_REDD_IT_VIDEO_URL_M38U, id );
-					
-					if ( videoExists( video ) )
+					for ( String format: VIDEO_FORMATS )
 					{
-						sendPathResolved( pathResolverListener, Uri.parse( video ), MediaType.STREAM_HLS, uri );
-						return;
-					}
-					else
-					{
-						video = String.format( V_REDD_IT_VIDEO_URL, id );
+						String video = String.format( format, id );
 						
 						if ( videoExists( video ) )
 						{
-							sendPathResolved( pathResolverListener, Uri.parse( video ), MediaType.STREAM_DASH, uri );
+							sendPathResolved( pathResolverListener, Uri.parse( video ),
+								video.endsWith( ".m3u8" ) ? MediaType.STREAM_HLS :
+									( video.endsWith( ".mpd" ) ? MediaType.STREAM_DASH :
+										MediaType.VIDEO_MP4 ), uri );
 							return;
-						}
-						else
-						{
-							video = String.format( V_REDD_IT_VIDEO_URL_2, id );
-							
-							if ( videoExists( video ) )
-							{
-								sendPathResolved( pathResolverListener, Uri.parse( video ), MediaType.STREAM_DASH, uri );
-								return;
-							}
 						}
 					}
 					
@@ -104,7 +106,8 @@ public class RedditVideoService extends MediaServiceSolver
 			}
 			catch ( Exception e )
 			{
-				Log.v( TAG, e.getMessage() );
+				if ( e.getMessage() != null )
+					Log.v( TAG, e.getMessage() );
 				
 				pathResolverListener.onPathError( uri, e.toString() );
 			}

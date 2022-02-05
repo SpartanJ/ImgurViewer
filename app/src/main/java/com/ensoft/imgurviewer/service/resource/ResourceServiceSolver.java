@@ -44,4 +44,24 @@ public class ResourceServiceSolver
 		
 		return false;
 	}
+	
+	public boolean isGallery( Uri uri )
+	{
+		return serviceSolver.isGallery( uri );
+	}
+	
+	public boolean isSolvable( Uri uri )
+	{
+		if ( "http".equals( uri.getScheme() ) )
+		{
+			uri = Uri.parse( uri.toString().replaceFirst( "http", "https" ) );
+		}
+		
+		return null != uri && serviceSolver.isServicePath( uri );
+	}
+	
+	public Class<?> getGalleryViewClass()
+	{
+		return galleryViewClass;
+	}
 }

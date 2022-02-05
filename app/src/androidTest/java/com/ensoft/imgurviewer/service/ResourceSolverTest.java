@@ -111,6 +111,8 @@ public class ResourceSolverTest
 		});
 		
 		String[] testUris = new String[] {
+			"https://v.redd.it/zv89llsvexdz",
+			"https://v.redd.it/ulz7g757bb581",
 			"https://www.reddit.com/gallery/huxc4s",
 			"https://redgifs.com/watch/calculatingsoreemperorpenguin-lauren-summer-swimsuit-bikini-beach",
 			"https://redgifs.com/watch/grimyacademicafricanbushviper-bz-beauty",
@@ -136,7 +138,6 @@ public class ResourceSolverTest
 			"https://prntscr.com/10jpuxg/direct",
 			"http://gfycat.com/DeadlyDecisiveGermanpinscher",
 			"http://gfycat.com/ifr/JauntyTimelyAmazontreeboa",
-			"https://v.redd.it/zv89llsvexdz",
 			"https://streamable.com/dnd1",
 			"https://streamable.com/moo",
 			"https://instagram.com/p/aye83DjauH/?foo=bar#abc",

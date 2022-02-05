@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.ensoft.imgurviewer.model.MediaType;
 import com.ensoft.imgurviewer.service.ResourceSolver;
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
+import com.ensoft.imgurviewer.service.resource.ResourceServiceSolver;
 import com.imgurviewer.R;
 
 public class TutorialActivity extends Activity implements View.OnClickListener
@@ -35,6 +36,13 @@ public class TutorialActivity extends Activity implements View.OnClickListener
 	protected TextWatcher pasteWatcher = new TextWatcher()
 	{
 		boolean ignore = false;
+		
+		public void urlNotSolved()
+		{
+			Toast.makeText( TutorialActivity.this, getString( R.string.invalidUrl ), Toast.LENGTH_SHORT ).show();
+			ignore = true;
+			linkPasteInput.setText( "" );
+		}
 		
 		@Override
 		public void beforeTextChanged( CharSequence s, int start, int count, int after )
@@ -57,10 +65,21 @@ public class TutorialActivity extends Activity implements View.OnClickListener
 			
 			if ( URLUtil.isValidUrl( url ) )
 			{
-				new ResourceSolver( new ResourceLoadListener()
+				ResourceSolver resourceSolver = new ResourceSolver();
+				ResourceServiceSolver resourceServiceSolver = resourceSolver.isSolvable( Uri.parse( url ) );
+				Uri uri = Uri.parse( url );
+				
+				if ( null != resourceServiceSolver && resourceServiceSolver.isSolvable( uri ) )
 				{
-					@Override
-					public void loadVideo( Uri uri, MediaType mediaType, Uri referer )
+					if ( resourceServiceSolver.isGallery( uri ) )
+					{
+						Intent intent = new Intent( TutorialActivity.this, resourceServiceSolver.getGalleryViewClass() );
+						intent.putExtra( AppActivity.ALBUM_DATA, url );
+						startActivity( intent );
+						ignore = true;
+						linkPasteInput.setText( "" );
+					}
+					else
 					{
 						Intent intent = new Intent( TutorialActivity.this, ImageViewer.class );
 						intent.putExtra( ImageViewer.PARAM_RESOURCE_PATH, url );
@@ -68,42 +87,15 @@ public class TutorialActivity extends Activity implements View.OnClickListener
 						ignore = true;
 						linkPasteInput.setText( "" );
 					}
-					
-					@Override
-					public void loadImage( Uri uri, Uri thumbnail )
-					{
-						Intent intent = new Intent( TutorialActivity.this, ImageViewer.class );
-						intent.putExtra( ImageViewer.PARAM_RESOURCE_PATH, url );
-						startActivity( intent );
-						ignore = true;
-						linkPasteInput.setText( "" );
-					}
-					
-					@Override
-					public void loadAlbum( Uri uri, Class<?> view )
-					{
-						Intent intent = new Intent( TutorialActivity.this, view );
-						intent.putExtra( AppActivity.ALBUM_DATA, uri.toString() );
-						startActivity( intent );
-						ignore = true;
-						linkPasteInput.setText( "" );
-					}
-					
-					@Override
-					public void loadFailed( Uri uri, String error )
-					{
-						Log.v( TAG, error );
-						Toast.makeText( TutorialActivity.this, error, Toast.LENGTH_SHORT ).show();
-						ignore = true;
-						linkPasteInput.setText( "" );
-					}
-				} ).solve( Uri.parse( url ) );
+				}
+				else
+				{
+					urlNotSolved();
+				}
 			}
 			else
 			{
-				Toast.makeText( TutorialActivity.this, getString( R.string.invalidUrl ), Toast.LENGTH_SHORT ).show();
-				ignore = true;
-				linkPasteInput.setText( "" );
+				urlNotSolved();
 			}
 		}
 	};

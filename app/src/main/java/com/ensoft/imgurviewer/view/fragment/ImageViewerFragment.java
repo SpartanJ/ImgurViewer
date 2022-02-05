@@ -11,11 +11,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,14 +26,11 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.devbrackets.android.exomedia.ExoMedia;
-import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.MediaType;
 import com.ensoft.imgurviewer.service.DownloadService;
 import com.ensoft.imgurviewer.service.FrescoService;
 import com.ensoft.imgurviewer.service.IntentUtils;
-import com.ensoft.imgurviewer.service.MediaSourceHelper;
 import com.ensoft.imgurviewer.service.PermissionService;
 import com.ensoft.imgurviewer.service.PreferencesService;
 import com.ensoft.imgurviewer.service.ResourceSolver;
@@ -61,9 +53,11 @@ import com.facebook.imagepipeline.decoder.DecodeException;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.github.piasy.biv.loader.ImageLoader;
 import com.github.piasy.biv.view.BigImageView;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.TrackGroup;
-import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.PlaybackException;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.ui.PlayerView;
 import com.imgurviewer.R;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
@@ -75,7 +69,14 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
-import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
+import static com.google.android.exoplayer2.Player.REPEAT_MODE_ALL;
 
 public class ImageViewerFragment extends Fragment
 {
@@ -92,7 +93,8 @@ public class ImageViewerFragment extends Fragment
 	private View progressLine;
 	private BigImageView imageView;
 	private SimpleDraweeView imageViewFallback;
-	private VideoView videoView;
+	private PlayerView videoView;
+	private View videoTouchView;
 	private boolean visible;
 	private long lastClickTime;
 	private LinearLayout floatingMenu;
@@ -104,6 +106,7 @@ public class ImageViewerFragment extends Fragment
 	protected MediaPlayerFragment mediaPlayerFragment;
 	private AlbumPagerProvider albumPagerProvider;
 	private boolean requestingPermissionFromShare = false;
+	private ExoPlayer player;
 	
 	public static ImageViewerFragment newInstance( String resource )
 	{
@@ -148,7 +151,11 @@ public class ImageViewerFragment extends Fragment
 		imageView = view.findViewById( R.id.imageView );
 		imageViewFallback = view.findViewById( R.id.imageViewFallback );
 		videoView = view.findViewById( R.id.videoView );
-		videoView.setReleaseOnDetachFromWindow( false );
+		videoTouchView = view.findViewById( R.id.videoTouchView );
+		player = new ExoPlayer.Builder(context).build();
+		videoView.setPlayer( player );
+		videoView.setUseController( false );
+		player.setRepeatMode( REPEAT_MODE_ALL );
 		progressBar = view.findViewById( R.id.progressBar );
 		progressLine = view.findViewById( R.id.progressLine );
 		floatingMenu = view.findViewById( R.id.floating_menu );
@@ -164,6 +171,7 @@ public class ImageViewerFragment extends Fragment
 		
 		contentView.setClickable( true );
 		contentView.setOnClickListener( v -> toggle() );
+		videoTouchView.setOnClickListener( v -> toggle() );
 		
 		String path = null != args ? args.getString( PARAM_RESOURCE_PATH ) : null;
 		
@@ -221,8 +229,8 @@ public class ImageViewerFragment extends Fragment
 	{
 		super.onDetach();
 		
-		if ( null != videoView )
-			videoView.release();
+		if ( null != player )
+			player.release();
 	}
 	
 	public void setViewsMargins( int orientation )
@@ -413,6 +421,7 @@ public class ImageViewerFragment extends Fragment
 		Log.v( TAG, "Loading image: " + uri.toString() );
 		
 		videoView.setVisibility( View.GONE );
+		videoTouchView.setVisibility( View.GONE );
 		
 		imageView.setOptimizeDisplay( false );
 		imageView.setOnClickListener( v -> onImageClick() );
@@ -502,19 +511,6 @@ public class ImageViewerFragment extends Fragment
 		
 		videoView.setOnClickListener( v -> toggle() );
 		
-		videoView.setHandleAudioFocus( false );
-		
-		MediaSource mediaSource;
-		
-		if ( UriUtils.isAudioUrl( uri ) )
-		{
-			mediaSource = MediaSourceHelper.buildMediaSource( getActivity(), uri, mediaType );
-		}
-		else
-		{
-			mediaSource = MediaSourceHelper.buildLoopingMediaSource( getActivity(), uri, mediaType );
-		}
-		
 		createMediaPlayer();
 		
 		mediaPlayerFragment.setOnPreparedListener( () ->
@@ -522,37 +518,9 @@ public class ImageViewerFragment extends Fragment
 			progressBar.setVisibility( View.INVISIBLE );
 			
 			videoView.setVisibility( View.VISIBLE );
+			videoTouchView.setVisibility( View.VISIBLE );
 			
 			videoView.setBackgroundColor( Color.TRANSPARENT );
-			
-			if ( videoView.trackSelectionAvailable() ) {
-				Map<ExoMedia.RendererType, TrackGroupArray> tracks = videoView.getAvailableTracks();
-				if ( tracks != null && tracks.containsKey( ExoMedia.RendererType.VIDEO ) ) {
-					TrackGroupArray trackGroupArray = tracks.get(ExoMedia.RendererType.VIDEO);
-					if ( trackGroupArray != null )
-					{
-						int trackSelected = -1;
-						int indexSelected = -1;
-						for ( int i = 0; i < trackGroupArray.length; i++ )
-						{
-							TrackGroup trackGroup = trackGroupArray.get( i );
-							int biggestBitrate = 0;
-							for ( int g = 0; g < trackGroup.length; g++ )
-							{
-								if ( trackGroup.getFormat( g ).bitrate > biggestBitrate &&
-									trackGroup.getFormat( g ).bitrate < 9846000 )
-								{
-									trackSelected = i;
-									indexSelected = g;
-									biggestBitrate = trackGroup.getFormat( g ).bitrate;
-								}
-							}
-						}
-						if ( trackSelected >= 0 && indexSelected >= 0 )
-							videoView.setTrack( ExoMedia.RendererType.VIDEO, trackSelected, indexSelected );
-					}
-				}
-			}
 			
 			if ( albumPagerProvider != null )
 			{
@@ -565,17 +533,27 @@ public class ImageViewerFragment extends Fragment
 					mediaPlayerFragment.pause();
 				}
 			}
+			else
+			{
+				mediaPlayerFragment.play();
+			}
 		} );
 		
-		videoView.setOnErrorListener( e -> {
-			Toast.makeText( getActivity(), R.string.couldNotReproduceVideo, Toast.LENGTH_SHORT ).show();
-			
-			progressBar.setVisibility( View.INVISIBLE );
-			
-			return false;
+		player.addListener( new Player.Listener()
+		{
+			@Override
+			public void onPlayerError( PlaybackException error )
+			{
+				Toast.makeText( getActivity(), R.string.couldNotReproduceVideo, Toast.LENGTH_SHORT ).show();
+				
+				progressBar.setVisibility( View.INVISIBLE );
+				
+			}
 		} );
 		
-		videoView.setVideoURI( uri, mediaSource );
+		player.setMediaItem(MediaItem.fromUri(uri));
+		player.setTrackSelectionParameters(player.getTrackSelectionParameters().buildUpon().setMaxVideoSizeSd().build());
+		player.prepare();
 		
 		delayedHide();
 	}
@@ -676,7 +654,9 @@ public class ImageViewerFragment extends Fragment
 				.setItems( R.array.share_as_type, ( dialog, which ) -> {
 					if ( 0 == which )
 					{
-						if ( UriUtils.getMimeType( currentResource.toString() ).contains( "image" ) )
+						String foundMime = UriUtils.getMimeType( currentResource.toString() );
+						
+						if ( null != foundMime && foundMime.contains( "image" ) )
 						{
 							shareImageFromBitmap();
 						}
@@ -719,22 +699,14 @@ public class ImageViewerFragment extends Fragment
 	private int getSystemUiVisibilityHideFlags()
 	{
 		int flags = View.SYSTEM_UI_FLAG_LOW_PROFILE;
-		
-		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN )
-			flags |= View.SYSTEM_UI_FLAG_FULLSCREEN;
+		flags |= View.SYSTEM_UI_FLAG_FULLSCREEN;
 		
 		if ( !App.getInstance().getPreferencesService().isNavigationBarKeptVisible() )
 		{
 			flags |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-			
-			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN )
-				flags |= View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
-			
-			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT )
-				flags |= View.SYSTEM_UI_FLAG_IMMERSIVE;
-			
-			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN )
-				flags |= View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+			flags |= View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+			flags |= View.SYSTEM_UI_FLAG_IMMERSIVE;
+			flags |= View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
 		}
 		
 		return flags;
