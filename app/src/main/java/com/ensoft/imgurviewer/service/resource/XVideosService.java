@@ -11,9 +11,9 @@ public class XVideosService extends BasicVideoServiceSolver
 	}
 	
 	@Override
-	public String getDomainPath()
+	public String[] getDomainPath()
 	{
-		return "/video";
+		return new String[] { "/video" };
 	}
 	
 	@Override

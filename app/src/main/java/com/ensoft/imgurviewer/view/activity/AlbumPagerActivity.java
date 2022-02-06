@@ -4,13 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.ViewPager;
 import android.widget.Toast;
 
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.service.PreferencesService;
+import com.ensoft.imgurviewer.service.TransparencyUtils;
+import com.ensoft.imgurviewer.service.listener.AlbumPagerProvider;
 import com.ensoft.imgurviewer.view.adapter.ImagesAlbumPagerAdapter;
 import com.ensoft.imgurviewer.view.fragment.ImageViewerFragment;
 import com.ensoft.imgurviewer.view.helper.SlidrPositionHelper;
@@ -22,7 +24,7 @@ import com.r0adkll.slidr.model.SlidrPosition;
 
 import java.util.Arrays;
 
-public class AlbumPagerActivity extends AppActivity
+public class AlbumPagerActivity extends AppActivity implements AlbumPagerProvider
 {
 	public static final String PARAM_IMAGES = "images";
 	public static final String PARAM_IMAGES_CUR_POSITION = "imagesCurPosition";
@@ -37,6 +39,7 @@ public class AlbumPagerActivity extends AppActivity
 	
 	private ViewPager pager;
 	private ImagesAlbumPagerAdapter adapter;
+	private int currentPage;
 	
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -86,20 +89,47 @@ public class AlbumPagerActivity extends AppActivity
 	{
 		super.onPostCreate( savedInstanceState );
 		
+		if ( App.getInstance().getPreferencesService().getDisableWindowTransparency() )
+			TransparencyUtils.convertActivityFromTranslucent( this );
+		
 		Bundle bundle = getIntent().getExtras();
 		
 		if ( bundle != null )
 		{
 			try
 			{
-				Parcelable[] imagesParceable = bundle.getParcelableArray( PARAM_IMAGES );
+				Parcelable[] imagesParcelable = bundle.getParcelableArray( PARAM_IMAGES );
 				
-				ImgurImage[] images = Arrays.copyOf( imagesParceable, imagesParceable.length, ImgurImage[].class );
+				ImgurImage[] images = Arrays.copyOf( imagesParcelable, imagesParcelable.length, ImgurImage[].class );
 				
 				int initialPosition = bundle.getInt( PARAM_IMAGES_CUR_POSITION );
 				
-				pager.setAdapter( adapter = new ImagesAlbumPagerAdapter( getFragmentManager(), images ) );
+				pager.setAdapter( adapter = new ImagesAlbumPagerAdapter( getSupportFragmentManager(), images ) );
 				pager.setCurrentItem( initialPosition );
+				currentPage = initialPosition;
+				pager.addOnPageChangeListener( new ViewPager.OnPageChangeListener()
+				{
+					@Override
+					public void onPageScrolled( int i, float v, int i1 )
+					{}
+					
+					@Override
+					public void onPageSelected( int i )
+					{
+						if ( currentPage != i )
+						{
+							adapter.getImageViewerFragment( currentPage ).onViewHide();
+						}
+						
+						adapter.getImageViewerFragment( i ).onViewShow();
+						
+						currentPage = i;
+					}
+					
+					@Override
+					public void onPageScrollStateChanged( int i )
+					{}
+				} );
 			}
 			catch ( Exception e )
 			{
@@ -108,5 +138,11 @@ public class AlbumPagerActivity extends AppActivity
 				finish();
 			}
 		}
+	}
+	
+	@Override
+	public int getCurrentPage()
+	{
+		return currentPage;
 	}
 }

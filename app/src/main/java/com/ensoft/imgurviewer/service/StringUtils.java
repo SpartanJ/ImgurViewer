@@ -1,5 +1,8 @@
 package com.ensoft.imgurviewer.service;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class StringUtils
 {
 	public static int countMatches( String haystack, String needle )
@@ -7,18 +10,32 @@ public class StringUtils
 		return haystack.length() - haystack.replace( needle, "" ).length();
 	}
 	
-	public static String getStringMatch( String haystack, String needleStart, String needleEnds )
+	public static String regexString( String string )
 	{
-		int pos = haystack.lastIndexOf( needleStart );
+		return string.replaceAll( "[\\<\\(\\[\\{\\\\\\^\\-\\=\\$\\!\\|\\]\\}\\)\\?\\*\\+\\.\\>]", "\\\\$0" );
+	}
+	
+	public static Matcher getStringMatcher( String haystack, String needleStart, String needleEnds )
+	{
+		String regexString = String.format( "%s(.*?)%s", regexString(needleStart), regexString(needleEnds) );
+		Pattern regex = Pattern.compile( regexString );
+		return regex.matcher( haystack );
+	}
+	
+	public static String getLastStringMatch( String haystack, String needleStart, String needleEnds )
+	{
+		Matcher m = getStringMatcher( haystack, needleStart, needleEnds );
 		
-		if ( -1 != pos )
+		if ( m.find() )
 		{
-			int endPos = haystack.indexOf( needleEnds, pos + needleStart.length() );
+			String res;
 			
-			if ( -1 != endPos )
+			do
 			{
-				return haystack.substring( pos + needleStart.length(), endPos );
-			}
+				res = m.group();
+			} while ( m.find() );
+			
+			return res.substring( needleStart.length(), res.length() - needleEnds.length() );
 		}
 		
 		return null;
@@ -26,16 +43,12 @@ public class StringUtils
 	
 	public static String getFirstStringMatch( String haystack, String needleStart, String needleEnds )
 	{
-		int pos = haystack.indexOf( needleStart );
+		Matcher m = getStringMatcher( haystack, needleStart, needleEnds );
 		
-		if ( -1 != pos )
+		if ( m.find() )
 		{
-			int endPos = haystack.indexOf( needleEnds, pos + needleStart.length() );
-			
-			if ( -1 != endPos )
-			{
-				return haystack.substring( pos + needleStart.length(), endPos );
-			}
+			String res = m.group();
+			return res.substring( needleStart.length(), res.length() - needleEnds.length() );
 		}
 		
 		return null;

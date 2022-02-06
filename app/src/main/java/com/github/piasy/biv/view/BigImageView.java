@@ -30,8 +30,8 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.RequiresPermission;
-import android.support.annotation.UiThread;
+import androidx.annotation.RequiresPermission;
+import androidx.annotation.UiThread;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -41,6 +41,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -314,15 +315,19 @@ public class BigImageView extends FrameLayout implements ImageLoader.Callback {
     }
 
     public void showImage(final Uri thumbnail, final Uri uri) {
-        mThumbnail = thumbnail;
-        mUri = uri;
-        mImageLoader.loadImage(hashCode(), uri, mInternalCallback);
-
-        if (mFailureImageView != null) {
-            mFailureImageView.setVisibility(GONE);
-        }
+		showImage(hashCode(), thumbnail, uri);
     }
-
+	
+	public void showImage(final int requestId, final Uri thumbnail, final Uri uri) {
+		mThumbnail = thumbnail;
+		mUri = uri;
+		mImageLoader.loadImage(requestId, uri, mInternalCallback);
+		
+		if (mFailureImageView != null) {
+			mFailureImageView.setVisibility(GONE);
+		}
+	}
+	
     public void cancel() {
         mImageLoader.cancel(hashCode());
     }

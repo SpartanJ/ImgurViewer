@@ -2,8 +2,6 @@ package com.ensoft.imgurviewer.service.resource;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -54,7 +52,7 @@ public class PornTubeService extends BasicVideoServiceSolver
 		return "";
 	}
 	
-	protected ResponseListener<String> getResponseListener( PathResolverListener pathResolverListener )
+	protected ResponseListener<String> getResponseListener( Uri uri, PathResolverListener pathResolverListener )
 	{
 		return new ResponseListener<String>()
 		{
@@ -68,7 +66,7 @@ public class PornTubeService extends BasicVideoServiceSolver
 					if ( -1 != pos )
 					{
 						String id = StringUtils.getFirstStringMatch( response.substring( pos ), "\"mediaId\":", "," );
-						String url = "https://tkn.kodicdn.com/" + id + "/desktop/240+360+480+720+1080";
+						String url = "https://tkn.porntube.com/" + id + "/desktop/240+360+480+720+1080";
 						
 						RequestService.getInstance().makeJsonRequest( Request.Method.POST, url, new ResponseListener<PornTubeVideos>()
 						{
@@ -89,29 +87,29 @@ public class PornTubeService extends BasicVideoServiceSolver
 								{
 									final Uri videoUri = Uri.parse( videoUrl );
 									
-									new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( videoUri, UriUtils.guessMediaTypeFromUri( videoUri ), referer ) );
+									sendPathResolved( pathResolverListener, videoUri, UriUtils.guessMediaTypeFromUri( videoUri ), referer );
 								}
 								else
 								{
-									new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( context.getString( R.string.could_not_resolve_video_url ) ) );
+									sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
 								}
 							}
 							
 							@Override
 							public void onRequestError( Context context, int errorCode, String errorMessage )
 							{
-								new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( context.getString( R.string.could_not_resolve_video_url ) ) );
+								sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
 							}
-						}, getParameters(), getHeaders( referer ), null );
+						}, getParameters(), getHeaders( referer ) );
 					}
 					else
 					{
-						new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( context.getString( R.string.could_not_resolve_video_url ) ) );
+						sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
 					}
 				}
 				catch ( Exception e )
 				{
-					new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( context.getString( R.string.could_not_resolve_video_url ) ) );
+					sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
 				}
 			}
 			
@@ -120,7 +118,7 @@ public class PornTubeService extends BasicVideoServiceSolver
 			{
 				Log.v( getDomain(), errorMessage );
 				
-				new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( errorMessage ) );
+				sendPathError( uri, pathResolverListener, errorMessage );
 			}
 		};
 	}

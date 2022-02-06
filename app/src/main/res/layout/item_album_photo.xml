@@ -2,10 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 				xmlns:app="http://schemas.android.com/apk/res-auto"
 				xmlns:fresco="http://schemas.android.com/apk/res-auto"
+			  android:id="@+id/albumPhoto_container"
 			  android:layout_width="match_parent"
 			  android:layout_height="wrap_content"
 			  android:orientation="vertical"
-			android:paddingBottom="16dp">
+			  android:paddingBottom="16dp">
 
 	<TextView
 		android:id="@+id/albumPhoto_title"
@@ -14,6 +15,7 @@
 		android:ellipsize="none"
 		android:scrollHorizontally="false"
 		android:textColor="@android:color/white"
+		android:autoLink="web"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" />
 
@@ -24,6 +26,7 @@
 		android:ellipsize="none"
 		android:scrollHorizontally="false"
 		android:textColor="@android:color/white"
+		android:autoLink="web"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" />
 
@@ -49,5 +52,18 @@
 			android:layout_gravity="center"
 			android:layout_centerVertical="true"
 			android:layout_centerHorizontal="true"/>
+
+		<ImageView
+			android:id="@+id/albumPhoto_play"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/ic_play_circle_outline_white_48dp"
+			android:scaleType="centerInside"
+			android:clickable="false"
+			android:visibility="gone"
+			android:layout_gravity="center"
+			android:layout_centerVertical="true"
+			android:layout_centerHorizontal="true"
+			/>
 	</RelativeLayout>
 </LinearLayout>

@@ -2,8 +2,6 @@ package com.ensoft.imgurviewer.service;
 
 import android.content.Context;
 
-import com.imgurviewer.R;
-
 import java.util.Locale;
 
 public class TimeService
@@ -19,7 +17,8 @@ public class TimeService
 	{
 		if ( totalSeconds < 60 )
 		{
-			return String.valueOf( totalSeconds ) + context.getString( R.string.seconds_abbr );
+			return String.format( Locale.getDefault(), "%02d", 0 ) + ":" +
+				String.format( Locale.getDefault(), "%02d", totalSeconds );
 		}
 		
 		long minutesLeft = totalSeconds / 60;
@@ -27,14 +26,17 @@ public class TimeService
 		
 		if ( minutesLeft < 60 )
 		{
-			return String.format( Locale.getDefault(), "%02d", minutesLeft ) + ":" + String.format( Locale.getDefault(), "%02d", secondsLeft );
+			return String.format( Locale.getDefault(), "%02d", minutesLeft ) + ":" +
+				String.format( Locale.getDefault(), "%02d", secondsLeft );
 		}
 		else
 		{
 			long hoursLeft = minutesLeft / 60;
 			minutesLeft = minutesLeft - hoursLeft * 60;
 			
-			return String.format( Locale.getDefault(), "%02d", hoursLeft ) + String.format( Locale.getDefault(), "%02d", minutesLeft ) + ":" + String.format( Locale.getDefault(), "%02d", secondsLeft );
+			return String.format( Locale.getDefault(), "%02d", hoursLeft ) + ":" +
+				String.format( Locale.getDefault(), "%02d", minutesLeft ) + ":" +
+				String.format( Locale.getDefault(), "%02d", secondsLeft );
 		}
 	}
 	

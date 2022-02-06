@@ -1,0 +1,3 @@
+2.1.8:
+Improved reddit videos video quality.
+ImgurViewer now can be installed to the SD Card.

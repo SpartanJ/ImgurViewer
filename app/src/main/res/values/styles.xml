@@ -17,6 +17,9 @@
 		<item name="android:windowBackground">@android:color/transparent</item>
 	</style>
 
-	<style name="AppThemeSettings" parent="android:Theme.Holo.Dialog.NoActionBar">
+	<style name="AppThemeSettings" parent="@style/Theme.AppCompat">
+		<item name="android:textColor">@android:color/white</item>
 	</style>
+
+	<style name="AppDialogTheme" parent="Theme.AppCompat.Dialog.Alert" />
 </resources>

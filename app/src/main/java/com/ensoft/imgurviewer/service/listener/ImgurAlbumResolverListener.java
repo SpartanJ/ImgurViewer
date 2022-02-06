@@ -6,5 +6,5 @@ public interface ImgurAlbumResolverListener
 {
 	void onAlbumResolved( ImgurAlbum album );
 	
-	void onError( String error );
+	void onAlbumError( String error );
 }

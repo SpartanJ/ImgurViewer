@@ -3,8 +3,7 @@
 				android:id="@+id/albumViewer_container"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:background="@android:color/black"
-				android:fitsSystemWindows="true">
+				android:background="@android:color/black">
 
 	<ProgressBar
 		style="?android:attr/progressBarStyleLarge"
@@ -18,7 +17,7 @@
 		android:layout_centerVertical="true"
 		android:layout_centerHorizontal="true"/>
 
-	<android.support.v7.widget.RecyclerView
+	<androidx.recyclerview.widget.RecyclerView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:id="@+id/albumViewer_listView" />

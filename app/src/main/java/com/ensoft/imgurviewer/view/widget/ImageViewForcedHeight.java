@@ -53,4 +53,15 @@ public class ImageViewForcedHeight extends DraweeView<GenericDraweeHierarchy>
 		
 		setMeasuredDimension( measuredWidth, (int) ( (float) measuredWidth * heightRatio ) );
 	}
+	
+	public void setHeightRatio( float heightRatio )
+	{
+		if ( this.heightRatio != heightRatio )
+		{
+			this.heightRatio = heightRatio;
+			
+			requestLayout();
+			invalidate();
+		}
+	}
 }

@@ -2,8 +2,6 @@ package com.ensoft.imgurviewer.service.resource;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -12,6 +10,8 @@ import com.ensoft.imgurviewer.model.MediaType;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.processor.ResponseListener;
 import com.ensoft.restafari.network.service.RequestService;
+
+import java.util.List;
 
 public class DeviantArtService extends MediaServiceSolver
 {
@@ -26,7 +26,7 @@ public class DeviantArtService extends MediaServiceSolver
 			@Override
 			public void onRequestSuccess( Context context, DeviantArtImageModel response )
 			{
-				new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( response.getUri(), MediaType.IMAGE, response.getThumbnailUri() ) );
+				pathResolverListener.onPathResolved( response.getUri(), MediaType.IMAGE, response.getThumbnailUri() );
 			}
 			
 			@Override
@@ -34,7 +34,7 @@ public class DeviantArtService extends MediaServiceSolver
 			{
 				Log.v( DEVIANTART_DOMAIN, errorMessage );
 				
-				new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( errorMessage ) );
+				pathResolverListener.onPathError( uri, errorMessage );
 			}
 		} );
 	}
@@ -42,7 +42,21 @@ public class DeviantArtService extends MediaServiceSolver
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
-		return uri.toString().contains( DEVIANTART_DOMAIN + "/art/" );
+		if ( uri.toString().contains( DEVIANTART_DOMAIN ) )
+		{
+			if ( uri.toString().contains( DEVIANTART_DOMAIN + "/art/" ) )
+			{
+				return true;
+			}
+			else
+			{
+				List<String> segments = uri.getPathSegments();
+				
+				return segments.size() >= 2 && segments.get( segments.size() - 2 ).equals( "art" );
+			}
+		}
+		
+		return false;
 	}
 	
 	@Override

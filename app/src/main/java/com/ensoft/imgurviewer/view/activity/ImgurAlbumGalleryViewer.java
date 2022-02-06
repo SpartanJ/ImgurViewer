@@ -2,38 +2,35 @@ package com.ensoft.imgurviewer.view.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.URLUtil;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.ensoft.imgurviewer.App;
-import com.ensoft.imgurviewer.model.ImgurAlbum;
 import com.ensoft.imgurviewer.model.ImgurImage;
-import com.ensoft.imgurviewer.model.InstagramProfileModel;
+import com.ensoft.imgurviewer.model.LayoutType;
 import com.ensoft.imgurviewer.service.DeviceService;
 import com.ensoft.imgurviewer.service.DownloadService;
 import com.ensoft.imgurviewer.service.IntentUtils;
 import com.ensoft.imgurviewer.service.PermissionService;
 import com.ensoft.imgurviewer.service.PreferencesService;
-import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
-import com.ensoft.imgurviewer.service.listener.ImgurGalleryResolverListener;
-import com.ensoft.imgurviewer.service.listener.InstagramProfileResolverListener;
-import com.ensoft.imgurviewer.service.resource.ImgurAlbumService;
-import com.ensoft.imgurviewer.service.resource.ImgurGalleryService;
-import com.ensoft.imgurviewer.service.resource.ImgurService;
-import com.ensoft.imgurviewer.service.resource.InstagramProfileService;
-import com.ensoft.imgurviewer.service.resource.InstagramService;
+import com.ensoft.imgurviewer.service.TransparencyUtils;
+import com.ensoft.imgurviewer.service.listener.AlbumProvider;
+import com.ensoft.imgurviewer.service.listener.AlbumSolverListener;
 import com.ensoft.imgurviewer.view.adapter.ImgurAlbumAdapter;
 import com.ensoft.imgurviewer.view.helper.MetricsHelper;
 import com.ensoft.imgurviewer.view.helper.SlidrPositionHelper;
@@ -42,7 +39,6 @@ import com.imgurviewer.R;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrListener;
-import com.r0adkll.slidr.model.SlidrPosition;
 
 public class ImgurAlbumGalleryViewer extends AppActivity
 {
@@ -50,11 +46,13 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 	
 	protected RelativeLayout albumContainer;
 	protected LinearLayout floatingMenu;
+	protected ImageView layoutTypeView;
 	protected ImgurAlbumAdapter albumAdapter;
 	protected ProgressBar progressBar;
 	protected RecyclerView recyclerView;
 	protected Uri albumData;
 	protected ImgurImage[] images;
+	protected LayoutType currentLayoutType;
 	
 	@Override
 	public void onCreate( Bundle savedInstanceState )
@@ -65,11 +63,17 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		
 		progressBar = findViewById( R.id.albumViewer_progressBar );
 		albumContainer = findViewById( R.id.albumViewer_container );
+		floatingMenu = findViewById( R.id.floating_menu );
+		recyclerView = findViewById( R.id.albumViewer_listView );
+		layoutTypeView = findViewById( R.id.view_type );
 		findViewById( R.id.settings ).setOnClickListener( this::showSettings );
 		findViewById( R.id.download ).setOnClickListener( this::downloadImage );
 		findViewById( R.id.share ).setOnClickListener( this::shareImage );
 		
-		floatingMenu = findViewById( R.id.floating_menu );
+		currentLayoutType = App.getInstance().getPreferencesService().getDefaultGalleryLayoutType();
+		setLayoutType( currentLayoutType );
+		layoutTypeView.setVisibility( View.VISIBLE );
+		layoutTypeView.setOnClickListener( this::onLayoutTypeClick );
 		
 		if ( null != getResources() && null != getResources().getConfiguration() )
 		{
@@ -90,61 +94,6 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 			finish();
 			
 			Log.v( TAG, "Data not found." );
-			
-			return;
-		}
-		
-		Log.v( TAG, "Data is: " + albumData.toString() );
-		
-		if ( new ImgurAlbumService().isImgurAlbum( albumData ) )
-		{
-			new ImgurAlbumService().getAlbum( albumData, new ImgurAlbumResolverListener()
-			{
-				@Override
-				public void onAlbumResolved( ImgurAlbum album )
-				{
-					create( album.getImages() );
-				}
-				
-				@Override
-				public void onError( String error )
-				{
-					Toast.makeText( ImgurAlbumGalleryViewer.this, error, Toast.LENGTH_SHORT ).show();
-				}
-			} );
-		}
-		else if ( new ImgurGalleryService().isImgurGallery( albumData ) )
-		{
-			new ImgurGalleryService().getGallery( albumData, new ImgurGalleryResolverListener()
-			{
-				@Override
-				public void onAlbumResolved( ImgurAlbum album )
-				{
-					create( album.getImages() );
-				}
-				
-				@Override
-				public void onImageResolved( ImgurImage image )
-				{
-					ImgurImage[] images = new ImgurImage[ 1 ];
-					images[ 0 ] = image;
-					create( images );
-				}
-				
-				@Override
-				public void onError( String error )
-				{
-					Toast.makeText( ImgurAlbumGalleryViewer.this, error, Toast.LENGTH_SHORT ).show();
-				}
-			} );
-		}
-		else if ( new ImgurService().isMultiImageUri( albumData ) )
-		{
-			create( new ImgurService().getImagesFromMultiImageUri( albumData ) );
-		}
-		else if ( new InstagramService().isInstagramProfile( albumData ) )
-		{
-			loadInstagramProfile();
 		}
 	}
 	
@@ -154,28 +103,78 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		super.onPostCreate( savedInstanceState );
 		
 		statusBarTint();
+		
+		if ( App.getInstance().getPreferencesService().getDisableWindowTransparency() )
+			TransparencyUtils.convertActivityFromTranslucent( this );
+		
+		Log.v( TAG, "Data is: " + albumData.toString() );
+		
+		createFromAlbum( albumData );
 	}
 	
-	protected void loadInstagramProfile()
+	protected void createFromAlbum( Uri uri )
 	{
-		new InstagramProfileService().getProfile( albumData, new InstagramProfileResolverListener()
+		for ( AlbumProvider albumProvider : AlbumProvider.getProviders() )
+		{
+			if ( albumProvider.isAlbum( uri ) )
+			{
+				getGallery( albumProvider );
+				break;
+			}
+		}
+	}
+	
+	protected void getGallery( AlbumProvider galleryProvider )
+	{
+		galleryProvider.getAlbum( albumData, new AlbumSolverListener()
 		{
 			@Override
-			public void onProfileResolved( InstagramProfileModel profile )
+			public void onAlbumResolved( ImgurImage[] album )
 			{
-				if ( profile.hasItems() )
-				{
-					ImgurImage[] images = profile.getImages();
-					create( images );
-				}
+				create( album );
 			}
 			
 			@Override
-			public void onError( String error )
+			public void onImageResolved( ImgurImage image )
+			{
+				ImgurImage[] images = new ImgurImage[ 1 ];
+				images[ 0 ] = image;
+				create( images );
+			}
+			
+			@Override
+			public void onAlbumError( String error )
 			{
 				Toast.makeText( ImgurAlbumGalleryViewer.this, error, Toast.LENGTH_SHORT ).show();
 			}
 		} );
+	}
+	
+	protected void createAdapter()
+	{
+		boolean isGridLayout = currentLayoutType == LayoutType.GRID;
+		int layoutRows = App.getInstance().getPreferencesService().getGridLayoutColumns();
+		
+		progressBar.setVisibility( View.INVISIBLE );
+		
+		if ( isGridLayout )
+		{
+			recyclerView.setLayoutManager( new GridLayoutManager( this, layoutRows ) );
+		}
+		else
+		{
+			recyclerView.setLayoutManager( new LinearLayoutManager( this ) );
+		}
+		
+		Point viewSize = isGridLayout ?
+			new Point( recyclerView.getMeasuredWidth() / layoutRows, recyclerView.getMeasuredWidth() / layoutRows ) :
+			new Point( recyclerView.getMeasuredWidth(), (int)( recyclerView.getMeasuredWidth() * 0.89f ) );
+		
+		albumAdapter = new ImgurAlbumAdapter( R.layout.item_album_photo, isGridLayout, layoutRows, images, floatingMenu.getMeasuredHeight(), viewSize );
+		albumAdapter.setOrientationLandscape( new DeviceService().isLandscapeOrientation( this ) );
+		
+		recyclerView.setAdapter( albumAdapter );
+		recyclerView.setNestedScrollingEnabled( false );
 	}
 	
 	protected void create( ImgurImage[] images )
@@ -192,38 +191,43 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		if ( null == albumAdapter )
 		{
 			this.images = images;
-			progressBar.setVisibility( View.INVISIBLE );
-			albumAdapter = new ImgurAlbumAdapter( R.layout.item_album_photo, images, floatingMenu.getMeasuredHeight() );
-			albumAdapter.setOrientationLandscape( new DeviceService().isLandscapeOrientation( this ) );
 			
-			recyclerView = findViewById( R.id.albumViewer_listView );
-			recyclerView.setLayoutManager( new LinearLayoutManager( this ) );
-			recyclerView.setAdapter( albumAdapter );
+			createAdapter();
 		}
-		else
+		else if ( null != images )
 		{
-			ImgurImage[] newImages = new ImgurImage[ this.images.length + images.length ];
-			
-			int i = 0;
-			
-			for ( ImgurImage img : this.images )
+			if ( null != this.images && this.images.length > 0 && images.length > 0 && this.images[0].getLink().equals( images[0].getLink() ) )
 			{
-				newImages[i] = img;
-				i++;
+				// TODO: Find why this happens
+				return;
 			}
-			
-			for ( ImgurImage img : images )
+			else if ( this.images == null )
 			{
-				newImages[i] = img;
-				i++;
+				this.images = images;
 			}
-			
-			this.images = newImages;
+			else
+			{
+				ImgurImage[] newImages = new ImgurImage[ this.images.length + images.length ];
+				
+				int i = 0;
+				
+				for ( ImgurImage img : this.images )
+				{
+					newImages[ i ] = img;
+					i++;
+				}
+				
+				for ( ImgurImage img : images )
+				{
+					newImages[ i ] = img;
+					i++;
+				}
+				
+				this.images = newImages;
+			}
 			
 			albumAdapter.appendImages( images );
 		}
-		
-		recyclerView.setNestedScrollingEnabled( false );
 		
 		PreferencesService preferencesService = App.getInstance().getPreferencesService();
 		
@@ -275,7 +279,28 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 	
 	public void showSettings( View v )
 	{
-		startActivity( new Intent( this, SettingsView.class ) );
+		startActivity( new Intent( this, SettingsActivity.class ) );
+	}
+	
+	private void setLayoutType( LayoutType layoutType )
+	{
+		if ( layoutType == LayoutType.LIST )
+		{
+			layoutTypeView.setImageResource( R.drawable.ic_view_comfy_white_24dp );
+		}
+		else
+		{
+			layoutTypeView.setImageResource( R.drawable.ic_view_headline_white_24dp );
+		}
+		
+		currentLayoutType = layoutType;
+	}
+	
+	public void onLayoutTypeClick( View v )
+	{
+		setLayoutType( LayoutType.GRID == currentLayoutType ? LayoutType.LIST : LayoutType.GRID );
+		
+		createAdapter();
 	}
 	
 	@Override
@@ -295,7 +320,7 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 		{
 			for ( ImgurImage image : images )
 			{
-				new DownloadService( this ).download( image.getLinkUri(), URLUtil.guessFileName( image.getLink(), null, null ) );
+				new DownloadService( this ).download( image.getFullImageLinkUri(), URLUtil.guessFileName( image.getLink(), null, null ) );
 			}
 		}
 	}
@@ -312,7 +337,7 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 	{
 		if ( albumData != null )
 		{
-			IntentUtils.shareMessage( this, getString( R.string.share ), albumData.toString(), getString( R.string.shareUsing ) );
+			IntentUtils.shareAsTextMessage( this, getString( R.string.share ), albumData.toString(), getString( R.string.shareUsing ) );
 		}
 	}
 	

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.imgurviewer" >
+    package="com.imgurviewer"
+    android:installLocation="auto">
 
 	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -11,77 +13,284 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
 		android:hardwareAccelerated="true"
-		android:name="com.ensoft.imgurviewer.App">
+		android:name="com.ensoft.imgurviewer.App"
+		android:usesCleartextTraffic="true">
         <activity
             android:name="com.ensoft.imgurviewer.view.activity.ImageViewer"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/AppThemeFull" >
+            android:theme="@style/AppThemeFull"
+			android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 			<intent-filter>
+				<action android:name="android.intent.action.SEND" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="text/plain" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.SEND" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="porntube.com" />
+				<data android:host="www.porntube.com" />
+				<data android:host="m.porntube.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/videos/.*" />
+			</intent-filter>
+			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
 
-				<data android:host="imgur.com" />
-				<data android:host="i.imgur.com" />
-				<data android:host="m.imgur.com" />
+				<data android:host="tube8.com" />
+				<data android:host="www.tube8.com" />
+				<data android:host="m.tube8.com" />
 
-				<data android:host="reddituploads.com" />
-				<data android:host="i.reddituploads.com" />
+				<data android:scheme="https" />
+				<data android:scheme="http" />
 
-				<data android:host="streamable.com" />
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
 
-				<data android:host="gyazo.com" />
+				<data android:host="redtube.com" />
+				<data android:host="www.redtube.com" />
+				<data android:host="m.redtube.com" />
 
-				<data android:host="gfycat.com" />
+				<data android:scheme="https" />
+				<data android:scheme="http" />
 
-				<data android:host="clips.twitch.tv" />
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
 
-				<data android:host="instagram.com" />
-				<data android:host="www.instagram.com" />
+				<data android:host="youporn.com" />
+				<data android:host="www.youporn.com" />
+				<data android:host="m.youporn.com" />
 
-				<data android:host="vid.me" />
+				<data android:scheme="https" />
+				<data android:scheme="http" />
 
-				<data android:host="v.redd.it" />
-
-				<data android:host="streamja.com" />
-				<data android:host="vimeo.com" />
-
-				<data android:host="clippituser.tv" />
-				<data android:host="www.clippituser.tv" />
-
-				<data android:host="pornhub.com" />
-				<data android:host="www.pornhub.com" />
-				<data android:host="m.pornhub.com" />
-
-				<data android:host="xvideos.com" />
-				<data android:host="www.xvideos.com" />
-				<data android:host="m.xvideos.com" />
+				<data android:pathPattern="/watch/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
 
 				<data android:host="spankbang.com" />
 				<data android:host="www.spankbang.com" />
 				<data android:host="la.spankbang.com" />
 				<data android:host="*.spankbang.com" />
 
-				<data android:host="youporn.com" />
-				<data android:host="www.youporn.com" />
-				<data android:host="m.youporn.com" />
+				<data android:scheme="https" />
+				<data android:scheme="http" />
 
-				<data android:host="redtube.com" />
-				<data android:host="www.redtube.com" />
-				<data android:host="m.redtube.com" />
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
 
-				<data android:host="tube8.com" />
-				<data android:host="www.tube8.com" />
-				<data android:host="m.tube8.com" />
+				<data android:host="xvideos.com" />
+				<data android:host="www.xvideos.com" />
+				<data android:host="m.xvideos.com" />
 
-				<data android:host="porntube.com" />
-				<data android:host="www.porntube.com" />
-				<data android:host="m.porntube.com" />
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/video.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="pornhub.com" />
+				<data android:host="www.pornhub.com" />
+				<data android:host="m.pornhub.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/view_video.php.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="clippituser.tv" />
+				<data android:host="www.clippituser.tv" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="vimeo.com" />
+				<data android:host="player.vimeo.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/c/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="streamja.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="v.redd.it" />
+				<data android:host="i.redd.it" />
+				<data android:host="preview.redd.it" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="instagram.com" />
+				<data android:host="www.instagram.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/p/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="clips.twitch.tv" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="www.gfycat.com" />
+				<data android:host="gfycat.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="gifdeliverynetwork.com" />
+				<data android:host="www.gifdeliverynetwork.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="www.imgur.com" />
+				<data android:host="imgur.com" />
+				<data android:host="i.imgur.com" />
+				<data android:host="m.imgur.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="reddit.com" />
+				<data android:host="www.reddit.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/gallery/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="reddituploads.com" />
+				<data android:host="i.reddituploads.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="streamable.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="gyazo.com" />
 
 				<data android:scheme="https" />
 				<data android:scheme="http" />
@@ -100,6 +309,62 @@
 				<data android:scheme="http" />
 
 				<data android:pathPattern="/photos/.*" />
+				<data android:pathPattern="/set/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="flic.kr" />
+				<data android:host="www.flic.kr" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/s/.*" />
+				<data android:pathPattern="/p/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:host="xhamster.com" />
+				<data android:host="www.xhamster.com" />
+				<data android:host="m.xhamster.com" />
+
+				<data android:pathPattern="/videos/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:host="redgifs.com" />
+				<data android:host="www.redgifs.com" />
+
+				<data android:pathPattern="/watch/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:host="xnxx.com" />
+				<data android:host="www.xnxx.com" />
+				<data android:host="m.xnxx.com" />
+
+				<data android:pathPattern="/video.*" />
 			</intent-filter>
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
@@ -108,6 +373,7 @@
 
 				<data android:host="giphy.com" />
 				<data android:host="www.giphy.com" />
+				<data android:host="media.giphy.com" />
 
 				<data android:scheme="https" />
 				<data android:scheme="http" />
@@ -126,6 +392,59 @@
 				<data android:scheme="http" />
 
 				<data android:pathPattern="/a/.*" />
+				<data android:pathPattern="/i/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="imgflip.com" />
+				<data android:host="www.imgflip.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/i/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="ibb.co" />
+				<data android:host="www.ibb.co" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="nhentai.net" />
+				<data android:host="www.nhentai.net" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/g/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="prnt.sc" />
+				<data android:host="prntscr.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/.*" />
 			</intent-filter>
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
@@ -140,6 +459,20 @@
 				<data android:scheme="http" />
 
 				<data android:pathPattern="/art/.*" />
+				<data android:pathPattern="/.*/art/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="*.tumblr.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/image/.*" />
+				<data android:pathPattern="/video/.*" />
 			</intent-filter>
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
@@ -151,6 +484,176 @@
 				<data android:scheme="http" />
 				<data android:scheme="https" />
 				<data android:scheme="file" />
+				<data android:scheme="content"/>
+
+				<data android:pathPattern=".*\\.m3u8" />
+				<data android:pathPattern=".*..*..*..*..*..*.m3u8" />
+				<data android:pathPattern=".*..*..*..*..*.m3u8" />
+				<data android:pathPattern=".*..*..*..*.m3u8" />
+				<data android:pathPattern=".*..*..*.m3u8" />
+				<data android:pathPattern=".*..*.m3u8" />
+				<data android:pathPattern=".*.m3u8" />
+
+				<data android:pathPattern=".*\\.mpd" />
+				<data android:pathPattern=".*..*..*..*..*..*.mpd" />
+				<data android:pathPattern=".*..*..*..*..*.mpd" />
+				<data android:pathPattern=".*..*..*..*.mpd" />
+				<data android:pathPattern=".*..*..*.mpd" />
+				<data android:pathPattern=".*..*.mpd" />
+				<data android:pathPattern=".*.mpd" />
+
+				<data android:pathPattern=".*\\.ism" />
+				<data android:pathPattern=".*..*..*..*..*..*.ism" />
+				<data android:pathPattern=".*..*..*..*..*.ism" />
+				<data android:pathPattern=".*..*..*..*.ism" />
+				<data android:pathPattern=".*..*..*.ism" />
+				<data android:pathPattern=".*..*.ism" />
+				<data android:pathPattern=".*.ism" />
+
+				<data android:pathPattern=".*\\.M3U8" />
+				<data android:pathPattern=".*..*..*..*..*..*.M3U8" />
+				<data android:pathPattern=".*..*..*..*..*.M3U8" />
+				<data android:pathPattern=".*..*..*..*.M3U8" />
+				<data android:pathPattern=".*..*..*.M3U8" />
+				<data android:pathPattern=".*..*.M3U8" />
+				<data android:pathPattern=".*.M3U8" />
+
+				<data android:pathPattern=".*\\.MPD" />
+				<data android:pathPattern=".*..*..*..*..*..*.MPD" />
+				<data android:pathPattern=".*..*..*..*..*.MPD" />
+				<data android:pathPattern=".*..*..*..*.MPD" />
+				<data android:pathPattern=".*..*..*.MPD" />
+				<data android:pathPattern=".*..*.MPD" />
+				<data android:pathPattern=".*.MPD" />
+
+				<data android:pathPattern=".*\\.ISM" />
+				<data android:pathPattern=".*..*..*..*..*..*.ISM" />
+				<data android:pathPattern=".*..*..*..*..*.ISM" />
+				<data android:pathPattern=".*..*..*..*.ISM" />
+				<data android:pathPattern=".*..*..*.ISM" />
+				<data android:pathPattern=".*..*.ISM" />
+				<data android:pathPattern=".*.ISM" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="*" />
+
+				<data android:scheme="http" />
+				<data android:scheme="https" />
+				<data android:scheme="file" />
+				<data android:scheme="content"/>
+
+
+				<data android:pathPattern=".*\\.webp" />
+				<data android:pathPattern=".*..*..*..*..*..*.webp" />
+				<data android:pathPattern=".*..*..*..*..*.webp" />
+				<data android:pathPattern=".*..*..*..*.webp" />
+				<data android:pathPattern=".*..*..*.webp" />
+				<data android:pathPattern=".*..*.webp" />
+				<data android:pathPattern=".*.webp" />
+
+				<data android:pathPattern=".*\\.mp4" />
+				<data android:pathPattern=".*..*..*..*..*..*.mp4" />
+				<data android:pathPattern=".*..*..*..*..*.mp4" />
+				<data android:pathPattern=".*..*..*..*.mp4" />
+				<data android:pathPattern=".*..*..*.mp4" />
+				<data android:pathPattern=".*..*.mp4" />
+				<data android:pathPattern=".*.mp4" />
+
+				<data android:pathPattern=".*\\.avi" />
+				<data android:pathPattern=".*..*..*..*..*..*.avi" />
+				<data android:pathPattern=".*..*..*..*..*.avi" />
+				<data android:pathPattern=".*..*..*..*.avi" />
+				<data android:pathPattern=".*..*..*.avi" />
+				<data android:pathPattern=".*..*.avi" />
+				<data android:pathPattern=".*.avi" />
+
+				<data android:pathPattern=".*\\.flv" />
+				<data android:pathPattern=".*..*..*..*..*..*.flv" />
+				<data android:pathPattern=".*..*..*..*..*.flv" />
+				<data android:pathPattern=".*..*..*..*.flv" />
+				<data android:pathPattern=".*..*..*.flv" />
+				<data android:pathPattern=".*..*.flv" />
+				<data android:pathPattern=".*.flv" />
+
+				<data android:pathPattern=".*\\.mkv" />
+				<data android:pathPattern=".*..*..*..*..*..*.mkv" />
+				<data android:pathPattern=".*..*..*..*..*.mkv" />
+				<data android:pathPattern=".*..*..*..*.mkv" />
+				<data android:pathPattern=".*..*..*.mkv" />
+				<data android:pathPattern=".*..*.mkv" />
+				<data android:pathPattern=".*.mkv" />
+
+				<data android:pathPattern=".*\\.webm" />
+				<data android:pathPattern=".*..*..*..*..*..*.webm" />
+				<data android:pathPattern=".*..*..*..*..*.webm" />
+				<data android:pathPattern=".*..*..*..*.webm" />
+				<data android:pathPattern=".*..*..*.webm" />
+				<data android:pathPattern=".*..*.webm" />
+				<data android:pathPattern=".*.webm" />
+
+				<data android:pathPattern=".*\\.WEBP" />
+				<data android:pathPattern=".*..*..*..*..*..*.WEBP" />
+				<data android:pathPattern=".*..*..*..*..*.WEBP" />
+				<data android:pathPattern=".*..*..*..*.WEBP" />
+				<data android:pathPattern=".*..*..*.WEBP" />
+				<data android:pathPattern=".*..*.WEBP" />
+				<data android:pathPattern=".*.WEBP" />
+
+				<data android:pathPattern=".*\\.MP4" />
+				<data android:pathPattern=".*..*..*..*..*..*.MP4" />
+				<data android:pathPattern=".*..*..*..*..*.MP4" />
+				<data android:pathPattern=".*..*..*..*.MP4" />
+				<data android:pathPattern=".*..*..*.MP4" />
+				<data android:pathPattern=".*..*.MP4" />
+				<data android:pathPattern=".*.MP4" />
+
+				<data android:pathPattern=".*\\.AVI" />
+				<data android:pathPattern=".*..*..*..*..*..*.AVI" />
+				<data android:pathPattern=".*..*..*..*..*.AVI" />
+				<data android:pathPattern=".*..*..*..*.AVI" />
+				<data android:pathPattern=".*..*..*.AVI" />
+				<data android:pathPattern=".*..*.AVI" />
+				<data android:pathPattern=".*.AVI" />
+
+				<data android:pathPattern=".*\\.FLV" />
+				<data android:pathPattern=".*..*..*..*..*..*.FLV" />
+				<data android:pathPattern=".*..*..*..*..*.FLV" />
+				<data android:pathPattern=".*..*..*..*.FLV" />
+				<data android:pathPattern=".*..*..*.FLV" />
+				<data android:pathPattern=".*..*.FLV" />
+				<data android:pathPattern=".*.FLV" />
+
+				<data android:pathPattern=".*\\.MKV" />
+				<data android:pathPattern=".*..*..*..*..*..*.MKV" />
+				<data android:pathPattern=".*..*..*..*..*.MKV" />
+				<data android:pathPattern=".*..*..*..*.MKV" />
+				<data android:pathPattern=".*..*..*.MKV" />
+				<data android:pathPattern=".*..*.MKV" />
+				<data android:pathPattern=".*.MKV" />
+
+				<data android:pathPattern=".*\\.WEBM" />
+				<data android:pathPattern=".*..*..*..*..*..*.WEBM" />
+				<data android:pathPattern=".*..*..*..*..*.WEBM" />
+				<data android:pathPattern=".*..*..*..*.WEBM" />
+				<data android:pathPattern=".*..*..*.WEBM" />
+				<data android:pathPattern=".*..*.WEBM" />
+				<data android:pathPattern=".*.WEBM" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="*" />
+
+				<data android:scheme="http" />
+				<data android:scheme="https" />
+				<data android:scheme="file" />
+				<data android:scheme="content"/>
 
 				<data android:pathPattern=".*\\.jpg" />
 				<data android:pathPattern=".*..*..*..*..*..*.jpg" />
@@ -256,78 +759,6 @@
 				<data android:pathPattern=".*..*.gif:small" />
 				<data android:pathPattern=".*.gif:small" />
 
-				<data android:pathPattern=".*\\.webp" />
-				<data android:pathPattern=".*..*..*..*..*..*.webp" />
-				<data android:pathPattern=".*..*..*..*..*.webp" />
-				<data android:pathPattern=".*..*..*..*.webp" />
-				<data android:pathPattern=".*..*..*.webp" />
-				<data android:pathPattern=".*..*.webp" />
-				<data android:pathPattern=".*.webp" />
-
-				<data android:pathPattern=".*\\.mp4" />
-				<data android:pathPattern=".*..*..*..*..*..*.mp4" />
-				<data android:pathPattern=".*..*..*..*..*.mp4" />
-				<data android:pathPattern=".*..*..*..*.mp4" />
-				<data android:pathPattern=".*..*..*.mp4" />
-				<data android:pathPattern=".*..*.mp4" />
-				<data android:pathPattern=".*.mp4" />
-
-				<data android:pathPattern=".*\\.avi" />
-				<data android:pathPattern=".*..*..*..*..*..*.avi" />
-				<data android:pathPattern=".*..*..*..*..*.avi" />
-				<data android:pathPattern=".*..*..*..*.avi" />
-				<data android:pathPattern=".*..*..*.avi" />
-				<data android:pathPattern=".*..*.avi" />
-				<data android:pathPattern=".*.avi" />
-
-				<data android:pathPattern=".*\\.flv" />
-				<data android:pathPattern=".*..*..*..*..*..*.flv" />
-				<data android:pathPattern=".*..*..*..*..*.flv" />
-				<data android:pathPattern=".*..*..*..*.flv" />
-				<data android:pathPattern=".*..*..*.flv" />
-				<data android:pathPattern=".*..*.flv" />
-				<data android:pathPattern=".*.flv" />
-				
-				<data android:pathPattern=".*\\.mkv" />
-				<data android:pathPattern=".*..*..*..*..*..*.mkv" />
-				<data android:pathPattern=".*..*..*..*..*.mkv" />
-				<data android:pathPattern=".*..*..*..*.mkv" />
-				<data android:pathPattern=".*..*..*.mkv" />
-				<data android:pathPattern=".*..*.mkv" />
-				<data android:pathPattern=".*.mkv" />
-
-				<data android:pathPattern=".*\\.webm" />
-				<data android:pathPattern=".*..*..*..*..*..*.webm" />
-				<data android:pathPattern=".*..*..*..*..*.webm" />
-				<data android:pathPattern=".*..*..*..*.webm" />
-				<data android:pathPattern=".*..*..*.webm" />
-				<data android:pathPattern=".*..*.webm" />
-				<data android:pathPattern=".*.webm" />
-
-				<data android:pathPattern=".*\\.m3u8" />
-				<data android:pathPattern=".*..*..*..*..*..*.m3u8" />
-				<data android:pathPattern=".*..*..*..*..*.m3u8" />
-				<data android:pathPattern=".*..*..*..*.m3u8" />
-				<data android:pathPattern=".*..*..*.m3u8" />
-				<data android:pathPattern=".*..*.m3u8" />
-				<data android:pathPattern=".*.m3u8" />
-
-				<data android:pathPattern=".*\\.mpd" />
-				<data android:pathPattern=".*..*..*..*..*..*.mpd" />
-				<data android:pathPattern=".*..*..*..*..*.mpd" />
-				<data android:pathPattern=".*..*..*..*.mpd" />
-				<data android:pathPattern=".*..*..*.mpd" />
-				<data android:pathPattern=".*..*.mpd" />
-				<data android:pathPattern=".*.mpd" />
-
-				<data android:pathPattern=".*\\.ism" />
-				<data android:pathPattern=".*..*..*..*..*..*.ism" />
-				<data android:pathPattern=".*..*..*..*..*.ism" />
-				<data android:pathPattern=".*..*..*..*.ism" />
-				<data android:pathPattern=".*..*..*.ism" />
-				<data android:pathPattern=".*..*.ism" />
-				<data android:pathPattern=".*.ism" />
-
 				<data android:pathPattern=".*\\.JPG" />
 				<data android:pathPattern=".*..*..*..*..*..*.JPG" />
 				<data android:pathPattern=".*..*..*..*..*.JPG" />
@@ -359,80 +790,29 @@
 				<data android:pathPattern=".*..*..*.GIF" />
 				<data android:pathPattern=".*..*.GIF" />
 				<data android:pathPattern=".*.GIF" />
-
-				<data android:pathPattern=".*\\.WEBP" />
-				<data android:pathPattern=".*..*..*..*..*..*.WEBP" />
-				<data android:pathPattern=".*..*..*..*..*.WEBP" />
-				<data android:pathPattern=".*..*..*..*.WEBP" />
-				<data android:pathPattern=".*..*..*.WEBP" />
-				<data android:pathPattern=".*..*.WEBP" />
-				<data android:pathPattern=".*.WEBP" />
-
-				<data android:pathPattern=".*\\.MP4" />
-				<data android:pathPattern=".*..*..*..*..*..*.MP4" />
-				<data android:pathPattern=".*..*..*..*..*.MP4" />
-				<data android:pathPattern=".*..*..*..*.MP4" />
-				<data android:pathPattern=".*..*..*.MP4" />
-				<data android:pathPattern=".*..*.MP4" />
-				<data android:pathPattern=".*.MP4" />
-				
-				<data android:pathPattern=".*\\.AVI" />
-				<data android:pathPattern=".*..*..*..*..*..*.AVI" />
-				<data android:pathPattern=".*..*..*..*..*.AVI" />
-				<data android:pathPattern=".*..*..*..*.AVI" />
-				<data android:pathPattern=".*..*..*.AVI" />
-				<data android:pathPattern=".*..*.AVI" />
-				<data android:pathPattern=".*.AVI" />
-
-				<data android:pathPattern=".*\\.FLV" />
-				<data android:pathPattern=".*..*..*..*..*..*.FLV" />
-				<data android:pathPattern=".*..*..*..*..*.FLV" />
-				<data android:pathPattern=".*..*..*..*.FLV" />
-				<data android:pathPattern=".*..*..*.FLV" />
-				<data android:pathPattern=".*..*.FLV" />
-				<data android:pathPattern=".*.FLV" />
-
-				<data android:pathPattern=".*\\.MKV" />
-				<data android:pathPattern=".*..*..*..*..*..*.MKV" />
-				<data android:pathPattern=".*..*..*..*..*.MKV" />
-				<data android:pathPattern=".*..*..*..*.MKV" />
-				<data android:pathPattern=".*..*..*.MKV" />
-				<data android:pathPattern=".*..*.MKV" />
-				<data android:pathPattern=".*.MKV" />
-
-				<data android:pathPattern=".*\\.WEBM" />
-				<data android:pathPattern=".*..*..*..*..*..*.WEBM" />
-				<data android:pathPattern=".*..*..*..*..*.WEBM" />
-				<data android:pathPattern=".*..*..*..*.WEBM" />
-				<data android:pathPattern=".*..*..*.WEBM" />
-				<data android:pathPattern=".*..*.WEBM" />
-				<data android:pathPattern=".*.WEBM" />
-
-				<data android:pathPattern=".*\\.M3U8" />
-				<data android:pathPattern=".*..*..*..*..*..*.M3U8" />
-				<data android:pathPattern=".*..*..*..*..*.M3U8" />
-				<data android:pathPattern=".*..*..*..*.M3U8" />
-				<data android:pathPattern=".*..*..*.M3U8" />
-				<data android:pathPattern=".*..*.M3U8" />
-				<data android:pathPattern=".*.M3U8" />
-
-				<data android:pathPattern=".*\\.MPD" />
-				<data android:pathPattern=".*..*..*..*..*..*.MPD" />
-				<data android:pathPattern=".*..*..*..*..*.MPD" />
-				<data android:pathPattern=".*..*..*..*.MPD" />
-				<data android:pathPattern=".*..*..*.MPD" />
-				<data android:pathPattern=".*..*.MPD" />
-				<data android:pathPattern=".*.MPD" />
-
-				<data android:pathPattern=".*\\.ISM" />
-				<data android:pathPattern=".*..*..*..*..*..*.ISM" />
-				<data android:pathPattern=".*..*..*..*..*.ISM" />
-				<data android:pathPattern=".*..*..*..*.ISM" />
-				<data android:pathPattern=".*..*..*.ISM" />
-				<data android:pathPattern=".*..*.ISM" />
-				<data android:pathPattern=".*.ISM" />
-
 			</intent-filter>
+
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW"/>
+				<category android:name="android.intent.category.DEFAULT"/>
+				<category android:name="android.intent.category.BROWSABLE"/>
+
+				<data android:scheme="file"/>
+				<data android:scheme="content"/>
+				<data android:scheme="http"/>
+				<data android:scheme="https"/>
+				<data android:mimeType="video/*"/>
+				<data android:mimeType="audio/*"/>
+				<data android:mimeType="image/*"/>
+				<data android:mimeType="*/avi"/>
+				<data android:mimeType="*/mkv"/>
+				<data android:mimeType="application/mp4"/>
+				<data android:mimeType="application/mpeg*"/>
+				<data android:mimeType="application/x-extension-mp4"/>
+				<data android:mimeType="application/x-matroska"/>
+				<data android:mimeType="application/x-mpegurl"/>
+			</intent-filter>
+
         </activity>
 
 		<activity
@@ -448,7 +828,7 @@
 			android:theme="@style/AppThemeFull" />
 
 		<activity
-			android:name="com.ensoft.imgurviewer.view.activity.SettingsView"
+			android:name="com.ensoft.imgurviewer.view.activity.SettingsActivity"
 			android:configChanges="orientation|keyboardHidden|screenSize"
 			android:label="@string/app_name"
 			android:theme="@style/AppThemeSettings" />

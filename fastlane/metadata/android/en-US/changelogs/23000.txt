@@ -1,0 +1,3 @@
+2.3.0:
+Migrated the video player library from ExoMedia to ExoPlayer (since ExoMedia is out of date).
+Fixed several services including: Reddit Video, Reddit Galleries, Reddit Images, Vimeo, and much more.

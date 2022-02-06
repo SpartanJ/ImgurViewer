@@ -1,16 +1,18 @@
 package com.ensoft.imgurviewer.view.activity;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.view.WindowManager;
 
-import com.ensoft.imgurviewer.App;
 import com.imgurviewer.R;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+
+@SuppressLint( "Registered" )
 public class AppActivity extends FragmentActivity
 {
 	public static final String ALBUM_DATA = "albumData";
@@ -27,7 +29,10 @@ public class AppActivity extends FragmentActivity
 			getWindow().setFlags( WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS );
 		}
 		
-		App.getInstance().addActivity();
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.R )
+		{
+			getWindow().setDecorFitsSystemWindows( false );
+		}
 	}
 	
 	@Override
@@ -37,14 +42,6 @@ public class AppActivity extends FragmentActivity
 		
 		if ( tintManager == null )
 			tintManager = new SystemBarTintManager(this);
-	}
-	
-	@Override
-	protected void onDestroy()
-	{
-		super.onDestroy();
-		
-		App.getInstance().destroyActivity();
 	}
 	
 	public void statusBarTint()

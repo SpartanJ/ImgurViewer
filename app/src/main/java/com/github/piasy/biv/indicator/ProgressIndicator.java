@@ -25,6 +25,7 @@
 package com.github.piasy.biv.indicator;
 
 import android.view.View;
+
 import com.github.piasy.biv.view.BigImageView;
 
 /**

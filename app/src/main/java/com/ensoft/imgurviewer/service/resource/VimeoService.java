@@ -16,19 +16,12 @@ public class VimeoService extends MediaServiceSolver
 {
 	public static final String TAG = VimeoService.class.getCanonicalName();
 	public static final String VIMEO_DOMAIN = "vimeo.com";
+	public static final String VIMEO_PLAYER_DOMAIN = "player.vimeo.com";
 	public static final String VIMEO_API_URL = "https://player.vimeo.com/video/%s/config";
 	
 	protected String getId( Uri uri )
 	{
-		String url = uri.toString();
-		String[] split = url.split( "/" );
-		
-		if ( split.length > 0 )
-		{
-			return split[ split.length - 1 ];
-		}
-		
-		return null;
+		return uri.getLastPathSegment();
 	}
 	
 	protected Uri getVideo( VimeoVideo[] videos )
@@ -68,8 +61,6 @@ public class VimeoService extends MediaServiceSolver
 				{
 					try
 					{
-						Log.v( TAG, response.toString() );
-						
 						Uri video = getVideo( new Gson().fromJson( response.getJSONObject( "request" ).getJSONObject( "files" ).getJSONArray( "progressive" ).toString(), VimeoVideo[].class ) );
 						
 						if ( null != video )
@@ -78,20 +69,20 @@ public class VimeoService extends MediaServiceSolver
 						}
 						else
 						{
-							pathResolverListener.onPathError( App.getInstance().getString( R.string.could_not_resolve_video_url ) );
+							pathResolverListener.onPathError( uri, App.getInstance().getString( R.string.could_not_resolve_video_url ) );
 						}
 					}
 					catch ( Exception e )
 					{
 						Log.v( TAG, e.getMessage() );
 						
-						pathResolverListener.onPathError( e.toString() );
+						pathResolverListener.onPathError( uri, e.toString() );
 					}
 				}, error ->
 				{
 					Log.v( TAG, error.toString() );
 					
-					pathResolverListener.onPathError( error.toString() );
+					pathResolverListener.onPathError( uri, error.toString() );
 				} );
 				
 				RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
@@ -101,14 +92,14 @@ public class VimeoService extends MediaServiceSolver
 		{
 			Log.v( TAG, e.getMessage() );
 			
-			pathResolverListener.onPathError( e.toString() );
+			pathResolverListener.onPathError( uri, e.toString() );
 		}
 	}
 	
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
-		return UriUtils.uriMatchesDomain( uri, VIMEO_DOMAIN );
+		return UriUtils.uriMatchesDomain( uri, VIMEO_DOMAIN ) || UriUtils.uriMatchesDomain( uri, VIMEO_PLAYER_DOMAIN, "/video" );
 	}
 	
 	@Override
@@ -119,12 +110,6 @@ public class VimeoService extends MediaServiceSolver
 	
 	@Override
 	public boolean isVideo( Uri uri )
-	{
-		return true;
-	}
-	
-	@Override
-	public boolean isVideo( String uri )
 	{
 		return true;
 	}

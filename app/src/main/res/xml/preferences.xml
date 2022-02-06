@@ -1,60 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<CheckBoxPreference
-		android:key="muteVideos"
-		android:title="@string/muteVideos"
-		android:summary="@string/muteVideosConf" />
+	<PreferenceCategory android:title="@string/general">
 
-	<CheckBoxPreference
-		android:key="screenLockEnabled"
-		android:title="@string/screenLockEnabled"
-		android:summary="@string/screenLockEnabledConf" />
+		<CheckBoxPreference
+			android:key="keepNavigationVisible"
+			android:title="@string/keepNavigationVisible"
+			android:summary="@string/keepNavigationVisibleConf" />
 
-	<CheckBoxPreference
-		android:key="fullscreenEnabled"
-		android:title="@string/fullScreenEnabled"
-		android:summary="@string/fullScreenEnabledConf" />
+	</PreferenceCategory>
 
-	<EditTextPreference
-		android:name="proxyHost"
-		android:summary="@string/proxyHostConf"
-		android:title="@string/proxyHost"
-		android:key="proxyHost" />
+	<PreferenceCategory android:title="@string/gallery">
 
-	<EditTextPreference
-		android:name="proxyPort"
-		android:summary="@string/proxyPortConf"
-		android:defaultValue="8118"
-		android:title="@string/proxyPort"
-		android:key="proxyPort"
-		android:numeric="integer" />
+		<ListPreference
+			android:key="defaultGalleryViewStyle"
+			android:title="@string/defaultGalleryViewStyle"
+			android:summary="@string/defaultGalleryViewStyleConf"
+			android:entries="@array/gallery_view_arr"
+			android:entryValues="@array/gallery_view_val"
+			android:defaultValue="0" />
 
-	<CheckBoxPreference
-		android:key="gesturesEnabled"
-		android:title="@string/gesturesEnabled"
-		android:summary="@string/gesturesEnabledConf" />
+		<EditTextPreference
+			android:name="gridViewRows"
+			android:title="@string/gridViewColumns"
+			android:summary="@string/gridViewColumnsConf"
+			android:defaultValue="2"
+			android:key="gridViewRows"
+			android:numeric="integer" />
 
-	<ListPreference
-		android:dependency="gesturesEnabled"
-		android:key="gestureImageView"
-		android:title="@string/gesturesImageView"
-		android:summary="@string/gesturesImageViewConf"
-		android:entries="@array/gestures_arr"
-		android:entryValues="@array/gestures_types"
-		android:defaultValue="@string/vertical_val" />
+		<ListPreference
+			android:key="listViewImageScaleType"
+			android:title="@string/listViewImageScaleType"
+			android:entries="@array/scale_types_names"
+			android:entryValues="@array/scale_types_values"
+			android:defaultValue="@string/list_view_default_scale_type" />
 
-	<ListPreference
-		android:dependency="gesturesEnabled"
-		android:key="gestureGalleryView"
-		android:title="@string/gesturesGalleryView"
-		android:summary="@string/gesturesGalleryViewConf"
-		android:entries="@array/gestures_arr"
-		android:entryValues="@array/gestures_types"
-		android:defaultValue="@string/vertical_val" />
+		<ListPreference
+			android:key="gridViewImageScaleType"
+			android:title="@string/gridViewImageScaleType"
+			android:entries="@array/scale_types_names"
+			android:entryValues="@array/scale_types_values"
+			android:defaultValue="@string/grid_view_default_scale_type" />
 
-	<Preference android:title="@string/clearCache"
-				android:summary="@string/clearCacheConf"
-				android:key="clearCache" />
+		<ListPreference
+			android:key="thumbnailsSizeOnGallery"
+			android:title="@string/thumbnailsSizeOnGallery"
+			android:summary="@string/thumbnailsSizeOnGalleryConf"
+			android:entries="@array/thumbnail_sizes_names"
+			android:entryValues="@array/thumbnail_sizes_values"
+			android:defaultValue="@string/thumbnail_sizes_default" />
 
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="@string/videos">
+		<CheckBoxPreference
+			android:key="muteVideos"
+			android:title="@string/muteVideos"
+			android:summary="@string/muteVideosConf" />
+
+		<CheckBoxPreference
+			android:key="screenLockEnabled"
+			android:title="@string/screenLockEnabled"
+			android:summary="@string/screenLockEnabledConf" />
+
+		<CheckBoxPreference
+			android:key="fullscreenEnabled"
+			android:title="@string/fullScreenEnabled"
+			android:summary="@string/fullScreenEnabledConf" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="@string/gestures">
+
+		<CheckBoxPreference
+			android:key="gesturesEnabled"
+			android:title="@string/gesturesEnabled"
+			android:summary="@string/gesturesEnabledConf" />
+
+		<ListPreference
+			android:dependency="gesturesEnabled"
+			android:key="gestureImageView"
+			android:title="@string/gesturesImageView"
+			android:summary="@string/gesturesImageViewConf"
+			android:entries="@array/gestures_arr"
+			android:entryValues="@array/gestures_types"
+			android:defaultValue="@string/vertical_val" />
+
+		<ListPreference
+			android:dependency="gesturesEnabled"
+			android:key="gestureGalleryView"
+			android:title="@string/gesturesGalleryView"
+			android:summary="@string/gesturesGalleryViewConf"
+			android:entries="@array/gestures_arr"
+			android:entryValues="@array/gestures_types"
+			android:defaultValue="@string/vertical_val" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="@string/proxy">
+
+		<EditTextPreference
+			android:name="proxyHost"
+			android:title="@string/proxyHost"
+			android:key="proxyHost" />
+
+		<EditTextPreference
+			android:name="proxyPort"
+			android:defaultValue="8118"
+			android:title="@string/proxyPort"
+			android:key="proxyPort"
+			android:numeric="integer" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="@string/actions">
+
+		<Preference android:title="@string/clearCache"
+					android:summary="@string/clearCacheConf"
+					android:key="clearCache" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="@string/hacks">
+
+		<CheckBoxPreference
+			android:key="disableWindowTransparency"
+			android:title="@string/disableWindowTransparency"
+			android:summary="@string/disableWindowTransparencyConf" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="@string/version">
+
+		<Preference android:key="version" />
+
+	</PreferenceCategory>
 </PreferenceScreen>

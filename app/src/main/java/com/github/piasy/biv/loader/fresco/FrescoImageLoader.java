@@ -24,10 +24,12 @@
 
 package com.github.piasy.biv.loader.fresco;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
+
 import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.disk.FileCache;
@@ -85,6 +87,7 @@ public final class FrescoImageLoader implements ImageLoader {
     }
 
     @Override
+    @SuppressLint( "WrongThread" )
     public void loadImage(int requestId, Uri uri, final Callback callback) {
         ImageRequest request = ImageRequest.fromUri(uri);
 
@@ -142,8 +145,8 @@ public final class FrescoImageLoader implements ImageLoader {
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setUri(thumbnail)
                 .build();
-		thumbnailView.getHierarchy()
-			.setActualImageScaleType( scaleType );
+        thumbnailView.getHierarchy()
+            .setActualImageScaleType( scaleType );
         thumbnailView.setController(controller);
         return thumbnailView;
     }

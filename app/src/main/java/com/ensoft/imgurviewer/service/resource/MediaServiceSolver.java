@@ -1,11 +1,14 @@
 package com.ensoft.imgurviewer.service.resource;
 
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 
+import com.ensoft.imgurviewer.App;
+import com.ensoft.imgurviewer.model.MediaType;
 import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
-
-import java.util.List;
+import com.imgurviewer.R;
 
 public abstract class MediaServiceSolver
 {
@@ -18,10 +21,25 @@ public abstract class MediaServiceSolver
 		return UriUtils.isVideoUrl( uri );
 	}
 	
-	public boolean isVideo( String uri )
+	public abstract boolean isGallery( Uri uri );
+	
+	protected void sendPathResolved( final PathResolverListener pathResolverListener, final Uri uri, final MediaType mediaType, final Uri referer )
 	{
-		return UriUtils.isVideoUrl( uri );
+		new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( uri, mediaType, referer ) );
 	}
 	
-	public abstract boolean isGallery( Uri uri );
+	protected void sendPathError( Uri uri, final PathResolverListener pathResolverListener, String errorMessage )
+	{
+		new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( uri, errorMessage ) );
+	}
+	
+	protected void sendPathError( Uri uri, final PathResolverListener pathResolverListener, int errorMessage )
+	{
+		sendPathError( uri, pathResolverListener, App.getInstance().getString( errorMessage ) );
+	}
+	
+	protected void sendPathError( Uri uri, final PathResolverListener pathResolverListener )
+	{
+		sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
+	}
 }

@@ -2,8 +2,6 @@ package com.ensoft.imgurviewer.service.resource;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -11,6 +9,7 @@ import com.android.volley.Request;
 import com.ensoft.imgurviewer.service.StringUtils;
 import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
+import com.ensoft.restafari.helper.ThreadMode;
 import com.ensoft.restafari.network.processor.ResponseListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.imgurviewer.R;
@@ -23,6 +22,16 @@ import java.util.Map;
 public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 {
 	protected Uri referer;
+	
+	public interface VideoPathSolved
+	{
+		void onVideoPathSolved( Uri uri, PathResolverListener pathResolverListener );
+	}
+	
+	protected VideoPathSolved getVideoPathSolved()
+	{
+		return null;
+	}
 	
 	public abstract String getDomain();
 	
@@ -45,7 +54,7 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 		return new JSONObject();
 	}
 	
-	protected Map<String, String> getHeaders( Uri referer )
+	protected HashMap<String, String> getHeaders( Uri referer )
 	{
 		HashMap<String,String> headers = new HashMap<>();
 		headers.put( "Origin", referer.getScheme() + "://" + referer.getHost() );
@@ -53,18 +62,18 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 		headers.put( "Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7" );
 		headers.put( "Accept-Language", "en-us,en;q=0.5" );
 		headers.put( "Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" );
-		headers.put( "User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0 (Chrome)" );
+		headers.put( "User-Agent", UriUtils.getDefaultUserAgent() );
 		return headers;
 	}
 	
-	protected Uri getVideoUrlFromResponse( String response )
+	protected Uri getFirstVideoUrlFromResponse( String response )
 	{
 		String[] needleStart = getNeedleStart();
 		String[] needleEnd = getNeedleEnd();
 		
 		for ( int i = 0; i < needleStart.length; i++ )
 		{
-			String qualityUrl = StringUtils.getStringMatch( response, needleStart[i], ( i < needleEnd.length ) ? needleEnd[i] : needleEnd[0] );
+			String qualityUrl = StringUtils.getFirstStringMatch( response, needleStart[i], ( i < needleEnd.length ) ? needleEnd[i] : needleEnd[0] );
 			
 			if ( !TextUtils.isEmpty( qualityUrl ) )
 			{
@@ -75,10 +84,57 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 		return null;
 	}
 	
-	protected ResponseListener<String> getResponseListener( PathResolverListener pathResolverListener )
+	protected String getStringMatch( String haystack, String needleStart, String needleEnds )
+	{
+		return StringUtils.getLastStringMatch( haystack, needleStart, needleEnds );
+	}
+	
+	protected String getStringFromResponse( String response )
+	{
+		String[] needleStart = getNeedleStart();
+		String[] needleEnd = getNeedleEnd();
+		
+		for ( int i = 0; i < needleStart.length; i++ )
+		{
+			String qualityUrl = getStringMatch( response, needleStart[i], ( i < needleEnd.length ) ? needleEnd[i] : needleEnd[0] );
+			
+			if ( !TextUtils.isEmpty( qualityUrl ) )
+			{
+				return qualityUrl;
+			}
+		}
+		
+		return null;
+	}
+	
+	protected Uri getVideoUrlFromResponse( String response )
+	{
+		String[] needleStart = getNeedleStart();
+		String[] needleEnd = getNeedleEnd();
+		
+		for ( int i = 0; i < needleStart.length; i++ )
+		{
+			String qualityUrl = getStringMatch( response, needleStart[i], ( i < needleEnd.length ) ? needleEnd[i] : needleEnd[0] );
+			
+			if ( !TextUtils.isEmpty( qualityUrl ) )
+			{
+				return Uri.parse( parseUrlString( qualityUrl ) );
+			}
+		}
+		
+		return null;
+	}
+	
+	protected ResponseListener<String> getResponseListener( Uri uri, PathResolverListener pathResolverListener )
 	{
 		return new ResponseListener<String>()
 		{
+			@Override
+			public ThreadMode getThreadMode()
+			{
+				return ThreadMode.ASYNC;
+			}
+			
 			@Override
 			public void onRequestSuccess( Context context, String response )
 			{
@@ -86,20 +142,28 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 				
 				if ( videoUrl != null )
 				{
-					new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathResolved( videoUrl, UriUtils.guessMediaTypeFromUri( videoUrl ), referer ) );
+					if ( getVideoPathSolved() == null )
+					{
+						sendPathResolved( pathResolverListener, videoUrl, UriUtils.guessMediaTypeFromUri( videoUrl ), referer );
+					}
+					else
+					{
+						getVideoPathSolved().onVideoPathSolved( videoUrl, pathResolverListener );
+					}
 				}
 				else
 				{
-					new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( context.getString( R.string.could_not_resolve_video_url ) ) );
+					sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
 				}
 			}
 			
 			@Override
 			public void onRequestError( Context context, int errorCode, String errorMessage )
 			{
-				Log.v( getDomain(), errorMessage );
+				if ( null != getDomain() && null != errorMessage )
+					Log.v( getDomain(), errorMessage );
 				
-				new Handler( Looper.getMainLooper() ).post( () -> pathResolverListener.onPathError( errorMessage ) );
+				sendPathError( uri, pathResolverListener, null != errorMessage ? errorMessage : "" );
 			}
 		};
 	}
@@ -114,18 +178,24 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 	{
 		referer = uri;
 		
-		RequestService.getInstance().makeStringRequest( getRequestMethod(), parseReferer( uri ), getResponseListener( pathResolverListener ), getParameters(), getHeaders( uri ) );
+		RequestService.getInstance().makeStringRequest( getRequestMethod(), parseReferer( uri ), getResponseListener( uri, pathResolverListener ), getParameters(), getHeaders( uri ) );
 	}
 	
-	public String getDomainPath()
+	public String[] getDomainPath()
 	{
-		return "";
+		return new String[] { "" };
 	}
 	
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
-		return UriUtils.uriMatchesDomain( uri, getDomain(), getDomainPath() );
+		for ( String path : getDomainPath() )
+		{
+			if ( UriUtils.uriMatchesDomain( uri, getDomain(), path ) )
+				return true;
+		}
+		
+		return false;
 	}
 	
 	@Override
@@ -136,12 +206,6 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 	
 	@Override
 	public boolean isVideo( Uri uri )
-	{
-		return true;
-	}
-	
-	@Override
-	public boolean isVideo( String uri )
 	{
 		return true;
 	}

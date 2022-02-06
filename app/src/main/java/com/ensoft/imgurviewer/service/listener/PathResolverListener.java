@@ -21,5 +21,5 @@ public abstract class PathResolverListener
 	
 	public abstract void onPathResolved( Uri url, MediaType mediaType, Uri thumbnailOrReferer );
 	
-	public abstract void onPathError( String error );
+	public abstract void onPathError( Uri url, String error );
 }

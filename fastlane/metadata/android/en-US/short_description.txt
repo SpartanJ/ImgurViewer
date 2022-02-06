@@ -1,0 +1,1 @@
+A little image viewer to open image and video links from external applications.

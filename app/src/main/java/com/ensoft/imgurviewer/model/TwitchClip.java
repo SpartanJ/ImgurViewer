@@ -7,7 +7,7 @@ public class TwitchClip
 	@SerializedName( "quality" )
 	protected String quality;
 	
-	@SerializedName( "source" )
+	@SerializedName( "sourceURL" )
 	protected String source;
 	
 	public String getQuality()
@@ -18,16 +18,5 @@ public class TwitchClip
 	public String getSource()
 	{
 		return source;
-	}
-	
-	
-	public boolean is1080p()
-	{
-		return "1080".equals( quality );
-	}
-	
-	public boolean is720p()
-	{
-		return "720".equals( quality );
 	}
 }

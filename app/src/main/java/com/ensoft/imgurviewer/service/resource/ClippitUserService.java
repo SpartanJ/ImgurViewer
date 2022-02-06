@@ -9,9 +9,9 @@ public class ClippitUserService extends BasicVideoServiceSolver
 	}
 	
 	@Override
-	public String getDomainPath()
+	public String[] getDomainPath()
 	{
-		return "/c/";
+		return new String[] { "/c/" };
 	}
 	
 	@Override

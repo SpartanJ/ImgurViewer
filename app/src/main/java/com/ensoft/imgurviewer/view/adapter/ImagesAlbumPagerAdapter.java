@@ -1,8 +1,8 @@
 package com.ensoft.imgurviewer.view.adapter;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.support.v13.app.FragmentPagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.view.fragment.ImageViewerFragment;
@@ -26,7 +26,7 @@ public class ImagesAlbumPagerAdapter extends FragmentPagerAdapter
 	{
 		ImgurImage image = images[ position ];
 		
-		fragments[ position ] = ImageViewerFragment.newInstance( image.hasVideo() ? image.getVideoUri().toString() : image.getLink() );
+		fragments[ position ] = ImageViewerFragment.newInstance( image.hasVideo() ? image.getVideoUri().toString() : ( null != image.getFullSizeLink() ? image.getFullSizeLink() : image.getLink() ), position );
 		
 		return fragments[ position ];
 	}

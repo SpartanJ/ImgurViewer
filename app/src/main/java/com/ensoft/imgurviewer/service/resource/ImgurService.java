@@ -4,9 +4,10 @@ import android.net.Uri;
 
 import com.ensoft.imgurviewer.model.ImgurAlbum;
 import com.ensoft.imgurviewer.model.ImgurImage;
+import com.ensoft.imgurviewer.model.ThumbnailSize;
 import com.ensoft.imgurviewer.service.UriUtils;
+import com.ensoft.imgurviewer.service.listener.AlbumSolverListener;
 import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
-import com.ensoft.imgurviewer.service.listener.ImgurGalleryResolverListener;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 
 public class ImgurService extends MediaServiceSolver
@@ -29,21 +30,21 @@ public class ImgurService extends MediaServiceSolver
 			}
 			
 			@Override
-			public void onError( String error )
+			public void onAlbumError( String error )
 			{
-				pathResolverListener.onPathError( error );
+				pathResolverListener.onPathError( url, error );
 			}
 		} );
 	}
 	
 	protected void getFirstGalleryImage( final Uri url, final PathResolverListener pathResolverListener )
 	{
-		new ImgurGalleryService().getGallery( url, new ImgurGalleryResolverListener()
+		new ImgurAlbumService().getAlbum( url, new AlbumSolverListener()
 		{
 			@Override
-			public void onAlbumResolved( ImgurAlbum album )
+			public void onAlbumResolved( ImgurImage[] images )
 			{
-				Uri uri = Uri.parse( album.getImage( 0 ).getLink() );
+				Uri uri = Uri.parse( images[0].getLink() );
 				
 				pathResolverListener.onPathResolved( uri, UriUtils.guessMediaTypeFromUri( uri ), isVideo( uri ) ? url : getThumbnailPath( uri ) );
 			}
@@ -57,14 +58,14 @@ public class ImgurService extends MediaServiceSolver
 			}
 			
 			@Override
-			public void onError( String error )
+			public void onAlbumError( String error )
 			{
-				pathResolverListener.onPathError( error );
+				pathResolverListener.onPathError( url, error );
 			}
 		} );
 	}
 	
-	protected Uri processPath( Uri uri )
+	public Uri processPath( Uri uri, boolean fixVideoPath )
 	{
 		String url = uri.toString();
 		
@@ -86,13 +87,22 @@ public class ImgurService extends MediaServiceSolver
 			url = url.substring( 0, url.indexOf( "/r/" ) ) + url.substring( url.lastIndexOf( "/" ) );
 		}
 		
-		if ( url.endsWith( ".gif" ) || url.endsWith( ".gifv" ) )
+		if ( url.contains( "?" ) )
+		{
+			url = url.substring( 0, url.indexOf( '?' ) );
+		}
+		
+		if ( url.endsWith( ".gifv" ) )
 		{
 			url = url.replace( ".gifv", ".mp4" );
+		}
+		
+		if ( fixVideoPath && ( url.endsWith( ".gif" ) ) )
+		{
 			url = url.replace( ".gif", ".mp4" );
 		}
 		
-		if ( !url.endsWith( ".png" ) && !url.endsWith( ".jpg" ) && !url.endsWith( ".jpeg" ) && !url.endsWith( ".mp4" ) )
+		if ( !url.endsWith( ".png" ) && !url.endsWith( ".jpg" ) && !url.endsWith( ".jpeg" ) && !url.endsWith( ".mp4" ) && !url.endsWith( ".m3u8" ) && !url.endsWith( ".gif" ) )
 		{
 			url += ".jpg";
 		}
@@ -102,14 +112,26 @@ public class ImgurService extends MediaServiceSolver
 	
 	public Uri getThumbnailPath( Uri uri )
 	{
-		String fixedUri = processPath( uri ).toString();
+		return getThumbnailPath( uri, ThumbnailSize.SMALL_SQUARE );
+	}
+	
+	public Uri getThumbnailPath( Uri uri, ThumbnailSize thumbnailSize )
+	{
+		String fixedUri = processPath( uri, false ).toString();
 		
 		int pos = fixedUri.lastIndexOf( "." );
 		
 		String path = fixedUri.substring( 0, pos );
 		String ext = fixedUri.substring( pos );
+		String thumbSize = thumbnailSize.toString();
 		
-		return Uri.parse( path + "s" + ext );
+		if ( ".gif".equals( ext ) || ".mp4".equals( ext ) )
+		{
+			ext = ".jpg";
+			thumbSize = "";
+		}
+		
+		return Uri.parse( path + thumbSize + ext );
 	}
 	
 	public void getPath( Uri uri, PathResolverListener pathResolverListener )
@@ -118,13 +140,13 @@ public class ImgurService extends MediaServiceSolver
 		{
 			getFirstAlbumImage( uri, pathResolverListener );
 		}
-		else if ( new ImgurGalleryService().isImgurGallery( uri ) )
+		else if ( new ImgurAlbumService().isAlbum( uri ) )
 		{
 			getFirstGalleryImage( uri, pathResolverListener );
 		}
 		else
 		{
-			Uri fixedUri = processPath( uri );
+			Uri fixedUri = processPath( uri, true );
 			
 			pathResolverListener.onPathResolved( fixedUri, UriUtils.guessMediaTypeFromUri( uri ), isVideo( uri ) ? uri : getThumbnailPath( fixedUri ) );
 		}
@@ -139,7 +161,7 @@ public class ImgurService extends MediaServiceSolver
 	@Override
 	public boolean isGallery( Uri uri )
 	{
-		return new ImgurAlbumService().isImgurAlbum( uri ) || new ImgurGalleryService().isImgurGallery( uri ) || isMultiImageUri( uri );
+		return new ImgurAlbumService().isImgurAlbum( uri ) || new ImgurAlbumService().isAlbum( uri ) || isMultiImageUri( uri );
 	}
 	
 	public String getImageId( Uri uri )
@@ -161,7 +183,7 @@ public class ImgurService extends MediaServiceSolver
 	
 	public boolean isMultiImageUri( Uri uri )
 	{
-		if ( isServicePath( uri ) && !new ImgurAlbumService().isImgurAlbum( uri ) && !new ImgurGalleryService().isImgurGallery( uri ) )
+		if ( isServicePath( uri ) )
 		{
 			String id = getImageId( uri );
 			

@@ -11,4 +11,6 @@ public abstract class ResourceLoadListener
 	public abstract void loadImage( Uri uri, Uri thumbnail );
 	
 	public abstract void loadAlbum( Uri uri, Class<?> view );
+	
+	public abstract void loadFailed( Uri uri, String error );
 }
