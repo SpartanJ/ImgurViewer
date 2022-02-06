@@ -65,9 +65,9 @@ public class TutorialActivity extends Activity implements View.OnClickListener
 			
 			if ( URLUtil.isValidUrl( url ) )
 			{
-				ResourceSolver resourceSolver = new ResourceSolver();
-				ResourceServiceSolver resourceServiceSolver = resourceSolver.isSolvable( Uri.parse( url ) );
 				Uri uri = Uri.parse( url );
+				ResourceSolver resourceSolver = new ResourceSolver();
+				ResourceServiceSolver resourceServiceSolver = resourceSolver.isSolvable( uri );
 				
 				if ( null != resourceServiceSolver && resourceServiceSolver.isSolvable( uri ) )
 				{
