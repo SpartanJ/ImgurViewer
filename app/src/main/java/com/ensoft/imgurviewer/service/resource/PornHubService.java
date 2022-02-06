@@ -60,46 +60,6 @@ public class PornHubService extends BasicVideoServiceSolver
 		return new String[] {};
 	}
 	
-	private List<String> getJsVars(String mediaString)
-	{
-		ArrayList<String> list = new ArrayList<>();
-		
-		if ( mediaString != null )
-		{
-			String cleanString = mediaString.replaceAll( "[^:]//.*|/\\\\*((?!=*/)(?s:.))+\\\\*/", "" );
-			String[] vars = cleanString.split( "\\+" );
-			for ( String var : vars )
-			{
-				list.add( var.trim() );
-			}
-		}
-		
-		return list;
-	}
-	
-	private String getJsVarValue(String response, String varName)
-	{
-		StringBuilder varValue = new StringBuilder();
-		String varDefinition = String.format( "var %s=", varName );
-		Pattern regex = Pattern.compile( String.format( "%s(.*?)\";", varDefinition ) );
-		Matcher m = regex.matcher(response);
-		
-		if ( m.find() )
-		{
-			String varDeclaration = m.group();
-			String varValues = varDeclaration.substring( varDefinition.length(), varDeclaration.length() - 1 );
-			String[] values = varValues.split( "\\+" );
-			
-			for ( String val : values )
-			{
-				val = val.trim().replaceAll( "\"", "" );
-				varValue.append( val );
-			}
-		}
-		
-		return varValue.toString();
-	}
-	
 	private Map<String, String> extractUrls( String response )
 	{
 		HashMap<String, String> map = new HashMap<>(  );
@@ -197,41 +157,9 @@ public class PornHubService extends BasicVideoServiceSolver
 			{
 				Uri videoUrl = getVideoUrlFromResponse( response );
 				
-				HashMap<String, String> headers = getHeaders( uri );
-				
-				String cookie = "platform=pc;";
-				
-				for ( Header header : this.networkResponse.allHeaders )
-				{
-					if ( "set-cookie".equalsIgnoreCase( header.getName() ) )
-					{
-						String[] values = header.getValue().split( ";" );
-						
-						if ( values.length > 0 )
-						{
-							cookie += values[0].trim() + ";";
-						}
-					}
-				}
-				
-				headers.put( "Cookie", cookie );
-				
 				if ( videoUrl != null )
 				{
-					RequestService.getInstance().makeJsonArrayRequest( Request.Method.GET, videoUrl.toString(), new ResponseListener<YouPornVideo[]>()
-					{
-						@Override
-						public void onRequestSuccess( Context context, YouPornVideo[] response )
-						{
-							sendPathResolved( pathResolverListener, response[0].getVideoUri(), UriUtils.guessMediaTypeFromUri( response[0].getVideoUri() ), uri );
-						}
-						
-						@Override
-						public void onRequestError( Context context, int errorCode, String errorMessage )
-						{
-							sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
-						}
-					}, new RequestParameters(), headers );
+					sendPathResolved( pathResolverListener, videoUrl, UriUtils.guessMediaTypeFromUri( videoUrl ), uri );
 				}
 				else
 				{

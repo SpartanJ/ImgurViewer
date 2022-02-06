@@ -111,24 +111,23 @@ public class ResourceSolverTest
 		});
 		
 		String[] testUris = new String[] {
+			"https://www.reddit.com/gallery/pc1m7t",
 			"https://v.redd.it/zv89llsvexdz",
 			"https://v.redd.it/ulz7g757bb581",
 			"https://www.reddit.com/gallery/huxc4s",
-			"https://redgifs.com/watch/calculatingsoreemperorpenguin-lauren-summer-swimsuit-bikini-beach",
-			"https://redgifs.com/watch/grimyacademicafricanbushviper-bz-beauty",
+			"https://www.redgifs.com/watch/terrificaridbrownbutterfly",
+			"https://redgifs.com/watch/jaggedunselfishgannet",
 			"https://gfycat.com/whoppingcostlyairedale",
 			"https://clips.twitch.tv/SmoggySmallHummingbirdOSkomodo-KeUalcW_KTZl_XRH?tt_medium=redt",
 			"https://clips.twitch.tv/FaintLightGullWholeWheat",
-			"https://www.gifdeliverynetwork.com/MadWickedBinturong",
 			"http://imgur.com/gallery/fADjkcW",
 			"https://imgur.com/A61SaA1",
 			"https://i.imgur.com/jxBXAMC.gifv",
 			"https://imgur.com/gallery/YcAQlkx",
 			"http://imgur.com/topic/Aww/ll5Vk",
 			"http://imgur.com/a/j6Orj",
+			"https://www.gifdeliverynetwork.com/MadWickedBinturong",
 			"https://www.gfycat.com/temptingimpuregermanspaniel",
-			"https://www.redgifs.com/watch/grimyacademicafricanbushviper-bz-beauty",
-			"https://www.redgifs.com/watch/calculatingsoreemperorpenguin-lauren-summer-swimsuit-bikini-beach",
 			"https://ibb.co/f2D3BNg",
 			"https://gyazo.com/1eae60fbb44ba44cdcd89064ffbaacef",
 			"https://imgflip.com/i/3dhvnl",
@@ -167,8 +166,8 @@ public class ResourceSolverTest
 			"https://la.spankbang.com/22xtb/video/",
 			"http://www.xvideos.com/video4588838/biker_takes_his_girl",
 			"https://xhamster.com/videos/asmr-you-know-i-like-you-xhnBhXU",
-			"https://www.pornhub.com/view_video.php?viewkey=ph5effde87227d2",
 			"https://nhentai.net/g/169217/",
+			"https://www.pornhub.com/view_video.php?viewkey=ph5effde87227d2",
 		};
 		
 		for ( String testUri :testUris )

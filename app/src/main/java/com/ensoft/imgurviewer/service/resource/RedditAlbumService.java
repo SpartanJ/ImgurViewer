@@ -65,15 +65,24 @@ public class RedditAlbumService  extends MediaServiceSolver implements AlbumProv
 							
 							if ( "AnimatedImage".equals( mediaType ) )
 							{
-								img = Html.fromHtml( mediaObj.getJSONObject( "s" ).getString( "gif" ) ).toString();
+								if (  mediaObj.getJSONObject( "s" ).has( "gif" ) )
+								{
+									img = Html.fromHtml( mediaObj.getJSONObject( "s" ).getString( "gif" ) ).toString();
+								}
+								else
+								{
+									JSONArray jsonArray = mediaObj.getJSONArray( "p" );
+									img = Html.fromHtml( jsonArray.getJSONObject( jsonArray.length() - 1 ).getString( "u" ) ).toString();
+								}
+								
 								videoUri = Html.fromHtml( mediaObj.getJSONObject( "s" ).getString( "mp4" ) ).toString();
-								thumb = Html.fromHtml( mediaObj.getJSONArray( "p" ).getJSONObject( 0 ).getString( "u" ) ).toString();
 							}
 							else
 							{
 								img = Html.fromHtml( mediaObj.getJSONObject( "s" ).getString( "u" ) ).toString();
-								thumb = Html.fromHtml( mediaObj.getJSONArray( "p" ).getJSONObject( 0 ).getString( "u" ) ).toString();
 							}
+							
+							thumb = Html.fromHtml( mediaObj.getJSONArray( "p" ).getJSONObject( 0 ).getString( "u" ) ).toString();
 							
 							images[ i ] = new ImgurImage( mediaId, img, Uri.parse( thumb ), null != videoUri ? Uri.parse( videoUri ) : null, 0 == i && null != title && !title.isEmpty() ? title : "" );
 						}
