@@ -143,53 +143,50 @@ public class ImgurAlbumAdapter extends RecyclerView.Adapter<ImgurAlbumAdapter.Al
 			{
 				description.setVisibility( View.GONE );
 			}
+		
+			int top = MetricsHelper.getStatusBarHeight( App.getInstance() ) + floatingMenuHeight;
 			
-			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT )
+			if ( !isGridLayout )
 			{
-				int top = MetricsHelper.getStatusBarHeight( App.getInstance() ) + floatingMenuHeight;
-				
-				if ( !isGridLayout )
+				if ( position == 0 )
 				{
-					if ( position == 0 )
+					if ( null != image.getTitle() )
 					{
-						if ( null != image.getTitle() )
-						{
-							title.setPadding( 0, top, 0, 0 );
-						}
-						else if ( null != image.getDescription() )
-						{
-							description.setPadding( 0, top, 0, 0 );
-						}
-						else
-						{
-							imageView.setPadding( 0, top, 0, 0 );
-						}
+						title.setPadding( 0, top, 0, 0 );
 					}
-					else if ( position == count - 1 && !isLandscape )
+					else if ( null != image.getDescription() )
 					{
-						imageView.setPadding( 0, 0, 0, MetricsHelper.getNavigationBarHeight( App.getInstance() ) );
+						description.setPadding( 0, top, 0, 0 );
 					}
 					else
 					{
-						imageView.setPadding( 0, 0, 0, 0 );
+						imageView.setPadding( 0, top, 0, 0 );
 					}
+				}
+				else if ( position == count - 1 && !isLandscape )
+				{
+					imageView.setPadding( 0, 0, 0, MetricsHelper.getNavigationBarHeight( App.getInstance() ) );
 				}
 				else
 				{
-					container.setPadding( 0, 0, 0, 0 );
-					
-					imageView.setHeightRatio( 1 );
-					
-					RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams( RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT );
-					
-					layoutParams.setMargins( 0, ( position < layoutRows ) ? top : 0, 0, ( position >= count - layoutRows ) && !isLandscape ? MetricsHelper.getNavigationBarHeight( App.getInstance() ) : 0 );
-					
-					imageView.setLayoutParams( layoutParams );
-					progressBar.setLayoutParams( layoutParams );
-					playButton.setLayoutParams( layoutParams );
+					imageView.setPadding( 0, 0, 0, 0 );
 				}
 			}
-			
+			else
+			{
+				container.setPadding( 0, 0, 0, 0 );
+				
+				imageView.setHeightRatio( 1 );
+				
+				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams( RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT );
+				
+				layoutParams.setMargins( 0, ( position < layoutRows ) ? top : 0, 0, ( position >= count - layoutRows ) && !isLandscape ? MetricsHelper.getNavigationBarHeight( App.getInstance() ) : 0 );
+				
+				imageView.setLayoutParams( layoutParams );
+				progressBar.setLayoutParams( layoutParams );
+				playButton.setLayoutParams( layoutParams );
+			}
+		
 			playButton.setVisibility( img.hasVideo() ? View.VISIBLE : View.GONE );
 			
 			new FrescoService().loadImage( img.getImageUri(), img.getThumbnailLinkUri(), imageView, new ControllerImageInfoListener()

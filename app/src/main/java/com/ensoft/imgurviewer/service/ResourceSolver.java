@@ -22,7 +22,7 @@ import com.ensoft.imgurviewer.service.resource.PornTubeService;
 import com.ensoft.imgurviewer.service.resource.PrntScrService;
 import com.ensoft.imgurviewer.service.resource.RedGifsService;
 import com.ensoft.imgurviewer.service.resource.RedTubeService;
-import com.ensoft.imgurviewer.service.resource.RedditGalleryService;
+import com.ensoft.imgurviewer.service.resource.RedditAlbumService;
 import com.ensoft.imgurviewer.service.resource.RedditImageService;
 import com.ensoft.imgurviewer.service.resource.RedditUploadsService;
 import com.ensoft.imgurviewer.service.resource.RedditVideoService;
@@ -45,7 +45,7 @@ import java.util.ArrayList;
 public class ResourceSolver
 {
 	private ResourceLoadListener resourceLoadListener;
-	private ArrayList<ResourceServiceSolver> resourceServiceSolvers = new ArrayList<>();
+	private final ArrayList<ResourceServiceSolver> resourceServiceSolvers = new ArrayList<>();
 	
 	public ResourceSolver()
 	{
@@ -72,7 +72,7 @@ public class ResourceSolver
 	private void loadServices()
 	{
 		addSolver( new RedditImageService() );
-		addSolver( new RedditGalleryService(), ImgurAlbumGalleryViewer.class );
+		addSolver( new RedditAlbumService(), ImgurAlbumGalleryViewer.class );
 		addSolver( new ImgurService(), ImgurAlbumGalleryViewer.class );
 		addSolver( new GyazoService() );
 		addSolver( new ImgFlipService() );

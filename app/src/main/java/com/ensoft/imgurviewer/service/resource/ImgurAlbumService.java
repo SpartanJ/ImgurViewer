@@ -19,10 +19,8 @@ import com.ensoft.restafari.network.helper.RequestParameters;
 import com.ensoft.restafari.network.processor.ResponseListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.imgurviewer.R;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
