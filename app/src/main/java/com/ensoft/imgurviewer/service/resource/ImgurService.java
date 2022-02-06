@@ -87,6 +87,11 @@ public class ImgurService extends MediaServiceSolver
 			url = url.substring( 0, url.indexOf( "/r/" ) ) + url.substring( url.lastIndexOf( "/" ) );
 		}
 		
+		if ( url.contains( "?" ) )
+		{
+			url = url.substring( 0, url.indexOf( '?' ) );
+		}
+		
 		if ( url.endsWith( ".gifv" ) )
 		{
 			url = url.replace( ".gifv", ".mp4" );

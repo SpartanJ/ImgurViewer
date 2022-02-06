@@ -6,7 +6,7 @@ public class VimeoVideo
 {
 	protected String url;
 	protected String quality;
-	protected long id;
+	protected String id;
 	protected long width;
 	protected long height;
 	
@@ -25,7 +25,7 @@ public class VimeoVideo
 		return quality;
 	}
 	
-	public long getId()
+	public String getId()
 	{
 		return id;
 	}

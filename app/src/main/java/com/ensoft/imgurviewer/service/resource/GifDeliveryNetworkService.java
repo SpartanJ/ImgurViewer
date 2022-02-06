@@ -22,8 +22,8 @@ import java.util.Map;
 
 public class GifDeliveryNetworkService extends BasicVideoServiceSolver
 {
-	public static String API_WEBTOKEN = "https://api.redgifs.com/v1/oauth/webtoken";
 	public static String API_GFYCATS = "https://api.redgifs.com/v1/gfycats/";
+	public static String API_REDGIFS = "https://api.redgifs.com/v2/gifs/"; // TODO: Upgrade to the new API
 	
 	@Override
 	public String getDomain()
@@ -34,7 +34,7 @@ public class GifDeliveryNetworkService extends BasicVideoServiceSolver
 	@Override
 	public String[] getNeedleStart()
 	{
-		return new String[] { "<script src=\"/assets/app." };
+		return new String[] { "<script src=\"/assets/js/app." };
 	}
 	
 	@Override
@@ -68,93 +68,37 @@ public class GifDeliveryNetworkService extends BasicVideoServiceSolver
 			public void onRequestSuccess( Context context, String response )
 			{
 				String slug = getClipId( uri );
-				Uri scriptUrl = Uri.parse( "https://www.redgifs.com/assets/app." + getStringFromResponse( response ) + ".js" );
 				
-				if ( scriptUrl != null )
+				RequestService.getInstance().makeJsonRequest( Request.Method.GET, API_GFYCATS + slug, new ResponseListener<GfycatResource>()
 				{
-					RequestService.getInstance().makeStringRequest( Request.Method.GET, scriptUrl.toString(), new ResponseListener<String>()
+					@Override
+					public void onRequestSuccess( Context context, GfycatResource response )
 					{
-						@Override
-						public void onRequestSuccess( Context context, String response )
+						if (null != response.item)
 						{
-							String accessKey = getStringMatch( response,  "this.webloginAccessKey=\"", "\"" );
+							String url = response.item.getUrl();
 							
-							if ( null != accessKey )
+							if ( !TextUtils.isEmpty( url ) )
 							{
-								RequestParameters parameters = new RequestParameters();
-								parameters.putString( "access_key", accessKey );
-								
-								RequestService.getInstance().makeJsonRequest( Request.Method.POST, API_WEBTOKEN, new ResponseListener<GifDeliveryNetworkAccessToken>()
-								{
-									@Override
-									public void onRequestSuccess( Context context, GifDeliveryNetworkAccessToken response )
-									{
-										String accessToken = response.getAccessToken();
-										
-										if ( !TextUtils.isEmpty( accessToken ) )
-										{
-											Map<String, String> authHeader = getHeaders( scriptUrl );
-											authHeader.put( "authorization", "Bearer " + accessToken );
-											
-											RequestService.getInstance().makeJsonRequest( Request.Method.GET, API_GFYCATS + slug, new ResponseListener<GfycatResource>()
-											{
-												@Override
-												public void onRequestSuccess( Context context, GfycatResource response )
-												{
-													if (null != response.item)
-													{
-														String url = response.item.getUrl();
-														
-														if ( !TextUtils.isEmpty( url ) )
-														{
-															Uri videoUrl = Uri.parse( url );
-															sendPathResolved( pathResolverListener, videoUrl, UriUtils.guessMediaTypeFromUri( videoUrl ), referer );
-														}
-														else
-														{
-															sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
-														}
-													}
-													else
-													{
-														sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
-													}
-												}
-												
-												public void onRequestError( Context context, int errorCode, String errorMessage )
-												{
-													sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
-												}
-											}, getParameters(), authHeader );
-										}
-										else
-										{
-											sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
-										}
-									}
-									
-									public void onRequestError( Context context, int errorCode, String errorMessage )
-									{
-										sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
-									}
-								}, parameters, getHeaders( scriptUrl ) );
+								Uri videoUrl = Uri.parse( url );
+								sendPathResolved( pathResolverListener, videoUrl, UriUtils.guessMediaTypeFromUri( videoUrl ), referer );
 							}
 							else
 							{
 								sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
 							}
 						}
-						
-						public void onRequestError( Context context, int errorCode, String errorMessage )
+						else
 						{
 							sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
 						}
-					} );
-				}
-				else
-				{
-					sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
-				}
+					}
+					
+					public void onRequestError( Context context, int errorCode, String errorMessage )
+					{
+						sendPathError( uri, pathResolverListener, R.string.could_not_resolve_video_url );
+					}
+				}, getParameters() );
 			}
 			
 			@Override

@@ -72,7 +72,7 @@ public class SpankBangService extends BasicVideoServiceSolver
 				if ( null != dataStreamKey && null != csrfSession )
 				{
 					Map<String, String> headers = new HashMap<>();
-					headers.put( "User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:69.0) Gecko/20100101 Firefox/79.0" );
+					headers.put( "User-Agent", UriUtils.getDefaultUserAgent() );
 					headers.put( "Referer", uri.toString() );
 					headers.put( "Cookie", "sb_session=" + csrfSession + ";" );
 					

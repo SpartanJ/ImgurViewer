@@ -22,7 +22,8 @@ import com.ensoft.imgurviewer.service.resource.PornTubeService;
 import com.ensoft.imgurviewer.service.resource.PrntScrService;
 import com.ensoft.imgurviewer.service.resource.RedGifsService;
 import com.ensoft.imgurviewer.service.resource.RedTubeService;
-import com.ensoft.imgurviewer.service.resource.RedditGalleryService;
+import com.ensoft.imgurviewer.service.resource.RedditAlbumService;
+import com.ensoft.imgurviewer.service.resource.RedditImageService;
 import com.ensoft.imgurviewer.service.resource.RedditUploadsService;
 import com.ensoft.imgurviewer.service.resource.RedditVideoService;
 import com.ensoft.imgurviewer.service.resource.ResourceServiceSolver;
@@ -44,7 +45,12 @@ import java.util.ArrayList;
 public class ResourceSolver
 {
 	private ResourceLoadListener resourceLoadListener;
-	private ArrayList<ResourceServiceSolver> resourceServiceSolvers = new ArrayList<>();
+	private final ArrayList<ResourceServiceSolver> resourceServiceSolvers = new ArrayList<>();
+	
+	public ResourceSolver()
+	{
+		loadServices();
+	}
 	
 	public ResourceSolver( ResourceLoadListener resourceLoadListener )
 	{
@@ -65,7 +71,8 @@ public class ResourceSolver
 	
 	private void loadServices()
 	{
-		addSolver( new RedditGalleryService(), ImgurAlbumGalleryViewer.class );
+		addSolver( new RedditImageService() );
+		addSolver( new RedditAlbumService(), ImgurAlbumGalleryViewer.class );
 		addSolver( new ImgurService(), ImgurAlbumGalleryViewer.class );
 		addSolver( new GyazoService() );
 		addSolver( new ImgFlipService() );
@@ -99,6 +106,19 @@ public class ResourceSolver
 		addSolver( new NhentaiService(), ImgurAlbumGalleryViewer.class );
 	}
 	
+	public ResourceServiceSolver isSolvable( Uri uri )
+	{
+		for ( ResourceServiceSolver resourceServiceSolver : resourceServiceSolvers )
+		{
+			if ( resourceServiceSolver.isSolvable( uri ) )
+			{
+				return resourceServiceSolver;
+			}
+		}
+		
+		return null;
+	}
+	
 	public void solve( Uri uri )
 	{
 		for ( ResourceServiceSolver resourceServiceSolver : resourceServiceSolvers )
@@ -109,13 +129,16 @@ public class ResourceSolver
 			}
 		}
 		
-		if ( UriUtils.isVideoUrl( uri ) || UriUtils.isAudioUrl( uri ) )
+		if (resourceLoadListener != null)
 		{
-			resourceLoadListener.loadVideo( uri, UriUtils.guessMediaTypeFromUri( uri ), uri );
-		}
-		else
-		{
-			resourceLoadListener.loadImage( uri, null );
+			if ( UriUtils.isVideoUrl( uri ) || UriUtils.isAudioUrl( uri ) )
+			{
+				resourceLoadListener.loadVideo( uri, UriUtils.guessMediaTypeFromUri( uri ), uri );
+			}
+			else
+			{
+				resourceLoadListener.loadImage( uri, null );
+			}
 		}
 	}
 }

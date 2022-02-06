@@ -5,12 +5,12 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Html;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.service.listener.AlbumProvider;
 import com.ensoft.imgurviewer.service.listener.AlbumSolverListener;
+import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.processor.ResponseListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.imgurviewer.R;
@@ -20,7 +20,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class RedditAlbumService implements AlbumProvider
+public class RedditAlbumService  extends MediaServiceSolver implements AlbumProvider
 {
 	public static final String TAG = RedditAlbumService.class.getCanonicalName();
 	
@@ -55,9 +55,37 @@ public class RedditAlbumService implements AlbumProvider
 					for ( String mediaId : mediaIds )
 					{
 						JSONObject mediaObj = mediaMetadata.getJSONObject( mediaId );
-						String img = Html.fromHtml( mediaObj.getJSONObject( "s" ).getString( "u" ) ).toString();
-						String thumb = Html.fromHtml( mediaObj.getJSONArray( "p" ).getJSONObject( 0 ).getString( "u" ) ).toString();
-						images[i] = new ImgurImage( mediaId, img, Uri.parse( thumb ), null, 0 == i && null != title && !title.isEmpty() ? title : "" );
+						String mediaType = mediaObj.getString( "e" );
+						
+						if ( "Image".equals( mediaType ) || "AnimatedImage".equals( mediaType ) )
+						{
+							String img;
+							String thumb;
+							String videoUri = null;
+							
+							if ( "AnimatedImage".equals( mediaType ) )
+							{
+								if (  mediaObj.getJSONObject( "s" ).has( "gif" ) )
+								{
+									img = Html.fromHtml( mediaObj.getJSONObject( "s" ).getString( "gif" ) ).toString();
+								}
+								else
+								{
+									JSONArray jsonArray = mediaObj.getJSONArray( "p" );
+									img = Html.fromHtml( jsonArray.getJSONObject( jsonArray.length() - 1 ).getString( "u" ) ).toString();
+								}
+								
+								videoUri = Html.fromHtml( mediaObj.getJSONObject( "s" ).getString( "mp4" ) ).toString();
+							}
+							else
+							{
+								img = Html.fromHtml( mediaObj.getJSONObject( "s" ).getString( "u" ) ).toString();
+							}
+							
+							thumb = Html.fromHtml( mediaObj.getJSONArray( "p" ).getJSONObject( 0 ).getString( "u" ) ).toString();
+							
+							images[ i ] = new ImgurImage( mediaId, img, Uri.parse( thumb ), null != videoUri ? Uri.parse( videoUri ) : null, 0 == i && null != title && !title.isEmpty() ? title : "" );
+						}
 						i++;
 					}
 					
@@ -82,5 +110,22 @@ public class RedditAlbumService implements AlbumProvider
 	{
 		return ( "reddit.com".equals( uri.getHost() ) || "www.reddit.com".equals( uri.getHost() ) ) &&
 			uri.getPathSegments().size() >= 2 && uri.getPathSegments().get( 0 ).equals( "gallery" );
+	}
+	
+	@Override
+	public void getPath( Uri uri, PathResolverListener pathResolverListener )
+	{
+	}
+	
+	@Override
+	public boolean isServicePath( Uri uri )
+	{
+		return isAlbum( uri );
+	}
+	
+	@Override
+	public boolean isGallery( Uri uri )
+	{
+		return true;
 	}
 }

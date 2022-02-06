@@ -11,6 +11,7 @@ import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.ImgurAlbum;
 import com.ensoft.imgurviewer.model.ImgurAlbumResource;
 import com.ensoft.imgurviewer.model.ImgurImage;
+import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.AlbumProvider;
 import com.ensoft.imgurviewer.service.listener.AlbumSolverListener;
 import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
@@ -18,10 +19,8 @@ import com.ensoft.restafari.network.helper.RequestParameters;
 import com.ensoft.restafari.network.processor.ResponseListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.imgurviewer.R;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -94,7 +93,7 @@ public class ImgurAlbumService implements AlbumProvider
 			{
 				Map<String, String> headers = new HashMap<>();
 				headers.put( "Authorization", "Client-ID " + App.getInstance().getString( R.string.imgur_client_id ) );
-				headers.put( "User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:76.0) Gecko/20100101 Firefox/79.0" );
+				headers.put( "User-Agent", UriUtils.getDefaultUserAgent() );
 				return headers;
 			}
 		};
@@ -184,7 +183,7 @@ public class ImgurAlbumService implements AlbumProvider
 			String albumUrl = IMGUR_GALLERY_API_URL + getGalleryId( uri );
 			Map<String, String> headers = new HashMap<>();
 			headers.put( "Authorization", "Client-ID " + App.getInstance().getString( R.string.imgur_client_id ) );
-			headers.put( "User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:76.0) Gecko/20100101 Firefox/79.0" );
+			headers.put( "User-Agent", UriUtils.getDefaultUserAgent() );
 			
 			RequestService.getInstance().makeStringRequest( Request.Method.GET, albumUrl, new ResponseListener<String>()
 			{
