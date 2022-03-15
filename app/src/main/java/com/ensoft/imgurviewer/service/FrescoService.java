@@ -34,7 +34,7 @@ public class FrescoService
 			.setOldController( view.getController() )
 			.setAutoPlayAnimations( true );
 		
-		if ( null != thumbnail )
+		if ( null != thumbnail && !Uri.EMPTY.equals(thumbnail) )
 		{
 			draweeControllerBuilder.setLowResImageRequest( ImageRequest.fromUri( thumbnail ) );
 		}
