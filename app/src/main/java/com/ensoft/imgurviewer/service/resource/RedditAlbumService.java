@@ -60,7 +60,7 @@ public class RedditAlbumService  extends MediaServiceSolver implements AlbumProv
 						if ( "Image".equals( mediaType ) || "AnimatedImage".equals( mediaType ) )
 						{
 							String img;
-							String thumb;
+							String thumb = null;
 							String videoUri = null;
 							
 							if ( "AnimatedImage".equals( mediaType ) )
@@ -82,9 +82,12 @@ public class RedditAlbumService  extends MediaServiceSolver implements AlbumProv
 								img = Html.fromHtml( mediaObj.getJSONObject( "s" ).getString( "u" ) ).toString();
 							}
 							
-							thumb = Html.fromHtml( mediaObj.getJSONArray( "p" ).getJSONObject( 0 ).getString( "u" ) ).toString();
+							if ( 0 != mediaObj.getJSONArray( "p" ).length() )
+							{
+								thumb = Html.fromHtml( mediaObj.getJSONArray( "p" ).getJSONObject( 0 ).getString( "u" ) ).toString();
+							}
 							
-							images[ i ] = new ImgurImage( mediaId, img, Uri.parse( thumb ), null != videoUri ? Uri.parse( videoUri ) : null, 0 == i && null != title && !title.isEmpty() ? title : "" );
+							images[ i ] = new ImgurImage( mediaId, img, null != thumb ? Uri.parse( thumb ) : Uri.EMPTY, null != videoUri ? Uri.parse( videoUri ) : null, 0 == i && null != title && !title.isEmpty() ? title : "" );
 						}
 						i++;
 					}
