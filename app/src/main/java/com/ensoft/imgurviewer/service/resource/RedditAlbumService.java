@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.Html;
 
 import com.android.volley.Request;
 import com.ensoft.imgurviewer.model.ImgurImage;
@@ -27,7 +26,7 @@ public class RedditAlbumService  extends MediaServiceSolver implements AlbumProv
 	@Override
 	public void getAlbum( Uri uri, AlbumSolverListener albumSolverListener )
 	{
-		String url = "https://www.reddit.com/" + uri.getPathSegments().get( 1 ) + ".json";
+		String url = "https://www.reddit.com/" + uri.getPathSegments().get( 1 ) + ".json?raw_json=1";
 		
 		RequestService.getInstance().makeStringRequest( Request.Method.GET, url, new ResponseListener<String>()
 		{
@@ -67,24 +66,24 @@ public class RedditAlbumService  extends MediaServiceSolver implements AlbumProv
 							{
 								if (  mediaObj.getJSONObject( "s" ).has( "gif" ) )
 								{
-									img = Html.fromHtml( mediaObj.getJSONObject( "s" ).getString( "gif" ) ).toString();
+									img = mediaObj.getJSONObject( "s" ).getString( "gif" ).toString();
 								}
 								else
 								{
 									JSONArray jsonArray = mediaObj.getJSONArray( "p" );
-									img = Html.fromHtml( jsonArray.getJSONObject( jsonArray.length() - 1 ).getString( "u" ) ).toString();
+									img = jsonArray.getJSONObject( jsonArray.length() - 1 ).getString( "u" ).toString();
 								}
 								
-								videoUri = Html.fromHtml( mediaObj.getJSONObject( "s" ).getString( "mp4" ) ).toString();
+								videoUri = mediaObj.getJSONObject( "s" ).getString( "mp4" ).toString();
 							}
 							else
 							{
-								img = Html.fromHtml( mediaObj.getJSONObject( "s" ).getString( "u" ) ).toString();
+								img = mediaObj.getJSONObject( "s" ).getString( "u" ).toString();
 							}
 							
 							if ( 0 != mediaObj.getJSONArray( "p" ).length() )
 							{
-								thumb = Html.fromHtml( mediaObj.getJSONArray( "p" ).getJSONObject( 0 ).getString( "u" ) ).toString();
+								thumb = mediaObj.getJSONArray( "p" ).getJSONObject( 0 ).getString( "u" ).toString();
 							}
 							
 							images[ i ] = new ImgurImage( mediaId, img, null != thumb ? Uri.parse( thumb ) : Uri.EMPTY, null != videoUri ? Uri.parse( videoUri ) : null, 0 == i && null != title && !title.isEmpty() ? title : "" );
