@@ -10,3 +10,4 @@ build
 *.apk
 imgurviewer.jks
 app/release/output.json
+/app/release/output-metadata.json
