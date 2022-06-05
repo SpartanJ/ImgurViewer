@@ -43,7 +43,7 @@ public class EromeService extends BasicVideoServiceSolver implements AlbumProvid
 	@Override
 	public String[] getNeedleEnd()
 	{
-		return new String[] { "\" type='video/mp4'", "\" >" };
+		return new String[] { "\" type=\"video/mp4\"", "\" >" };
 	}
 	
 	@Override

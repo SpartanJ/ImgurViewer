@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.android.volley.Request;
 import com.ensoft.imgurviewer.model.MediaType;
+import com.ensoft.imgurviewer.model.TumblrImageResponse;
 import com.ensoft.imgurviewer.model.TumblrMedia;
 import com.ensoft.imgurviewer.model.TumblrPhoto;
 import com.ensoft.imgurviewer.service.StringUtils;
@@ -30,27 +31,25 @@ public class TumblrService extends MediaServiceSolver
 			public void onRequestSuccess( Context context, String response )
 			{
 				String jsonData = StringUtils.getLastStringMatch( response, "window['___INITIAL_STATE___'] = ", "};" );
-				TumblrMedia tumblrMedia = null;
+				TumblrImageResponse tumblrMedia = null;
 				
 				if ( !TextUtils.isEmpty( jsonData ) )
 				{
-					String browserRegexp = "\"supportedBrowserRegexp\":";
+					String browserRegexp = "{\"imageResponse\"";
 					int browserRegexpPos = jsonData.indexOf( browserRegexp );
 					if ( -1 != browserRegexpPos )
 					{
-						int endBrowserRegexp = jsonData.indexOf( "/,\"" );
+						int endBrowserRegexp = jsonData.indexOf( ",\"altText" );
 						
 						if ( -1 != endBrowserRegexp )
 						{
-							String firstPart = jsonData.substring( 0, browserRegexpPos );
-							String secondPart = jsonData.substring( endBrowserRegexp + 2 );
-							jsonData = firstPart + secondPart;
+							jsonData = jsonData.substring( browserRegexpPos, endBrowserRegexp ) + "}";
 						}
 					}
 					
 					try
 					{
-						tumblrMedia = new Gson().fromJson( jsonData + "}", TumblrMedia.class );
+						tumblrMedia = new Gson().fromJson( jsonData, TumblrImageResponse.class );
 					}
 					catch ( JsonSyntaxException e )
 					{
@@ -59,9 +58,9 @@ public class TumblrService extends MediaServiceSolver
 					}
 				}
 				
-				if ( null != tumblrMedia && null != tumblrMedia.imagePage && null != tumblrMedia.imagePage.photo && null != tumblrMedia.imagePage.photo.photos && tumblrMedia.imagePage.photo.photos.length > 0 )
+				if ( null != tumblrMedia && null != tumblrMedia.photos && tumblrMedia.photos.length > 0 )
 				{
-					TumblrPhoto photo = tumblrMedia.imagePage.photo.photos[0];
+					TumblrPhoto photo = tumblrMedia.photos[0];
 					
 					sendPathResolved( pathResolverListener, photo.getUri(), photo.getType().contains( "image" ) ? MediaType.IMAGE : MediaType.VIDEO_MP4, null );
 				}
