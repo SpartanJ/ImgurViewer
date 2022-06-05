@@ -6,6 +6,7 @@
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -14,7 +15,8 @@
         android:theme="@style/AppTheme"
 		android:hardwareAccelerated="true"
 		android:name="com.ensoft.imgurviewer.App"
-		android:usesCleartextTraffic="true">
+		android:usesCleartextTraffic="true"
+		android:requestLegacyExternalStorage="true">
         <activity
             android:name="com.ensoft.imgurviewer.view.activity.ImageViewer"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -231,6 +233,21 @@
 				<data android:scheme="http" />
 
 				<data android:pathPattern="/.*" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:host="www.imgur.com" />
+				<data android:host="imgur.com" />
+
+				<data android:scheme="https" />
+				<data android:scheme="http" />
+
+				<data android:pathPattern="/gallery/.*" />
+				<data android:pathPattern="/topic/.*" />
+				<data android:pathPattern="/a/.*" />
 			</intent-filter>
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
