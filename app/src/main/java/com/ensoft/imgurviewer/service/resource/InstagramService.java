@@ -88,7 +88,7 @@ public class InstagramService extends MediaServiceSolver implements AlbumProvide
 	public String getMediaUrl( Uri uri )
 	{
 		String url = uri.toString();
-		String mediaSep = "/p/";
+		String mediaSep = url.contains( "/p/" ) ? "/p/" : "/reel/";
 		
 		int pos = url.indexOf( mediaSep );
 		

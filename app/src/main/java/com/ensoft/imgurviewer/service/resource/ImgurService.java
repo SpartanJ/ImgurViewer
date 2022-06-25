@@ -13,6 +13,7 @@ import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 public class ImgurService extends MediaServiceSolver
 {
 	public static final String IMGUR_DOMAIN = "imgur.com";
+	public static final String IMGURIO_DOMAIN = "imgur.io";
 	public static final String IMGUR_IMAGE_DOMAIN = "i.imgur.com";
 	public static final String IMGUR_MOBILE_DOMAIN = "m.imgur.com";
 	public static final String IMGUR_API_URL = "https://api.imgur.com/3";
@@ -80,6 +81,10 @@ public class ImgurService extends MediaServiceSolver
 		else if ( url.contains( "//" + IMGUR_MOBILE_DOMAIN ) )
 		{
 			url = url.replace( "//" + IMGUR_MOBILE_DOMAIN, "//" + IMGUR_IMAGE_DOMAIN );
+		}
+		else if ( url.contains( "//" + IMGURIO_DOMAIN ) )
+		{
+			url = url.replace( "//" + IMGURIO_DOMAIN, "//" + IMGUR_IMAGE_DOMAIN );
 		}
 		
 		if ( url.contains( "/r/" ) )
@@ -155,7 +160,7 @@ public class ImgurService extends MediaServiceSolver
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
-		return uri.toString().contains( IMGUR_DOMAIN );
+		return uri.toString().contains( IMGUR_DOMAIN ) || uri.toString().contains( IMGURIO_DOMAIN );
 	}
 	
 	@Override

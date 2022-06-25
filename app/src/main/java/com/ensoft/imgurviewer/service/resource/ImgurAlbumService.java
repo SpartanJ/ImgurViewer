@@ -124,6 +124,10 @@ public class ImgurAlbumService implements AlbumProvider
 		{
 			endPart = uriString.substring( uriString.lastIndexOf( "/a/" ) + 3 );
 		}
+		else if ( uriString.contains( "/r/" ) )
+		{
+			return uriString.substring( uriString.lastIndexOf( "/r/" ) );
+		}
 		else if ( uriString.contains( "/album/" ) )
 		{
 			endPart = uriString.substring( uriString.lastIndexOf( "/album/" ) + 7 );
@@ -147,6 +151,7 @@ public class ImgurAlbumService implements AlbumProvider
 	{
 		return new ImgurService().isServicePath( uri ) && (
 			uri.toString().contains( "/a/" ) ||
+				uri.toString().contains( "/r/" ) ||
 				uri.toString().contains( "/gallery/" ) ||
 				uri.toString().contains( "/topic/" ) ||
 				uri.toString().contains( "/t/" ) ||

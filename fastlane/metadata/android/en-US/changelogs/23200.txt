@@ -1,0 +1,6 @@
+2.3.2:
+Fixed issue #28. Added imgur /r/ gallery links support.
+Fixed issue #37. Added imgur.io support.
+Fixed issue #39. Added support for GitHub images.
+Fixed issue #31. Added support for discordapp and steam CDNs.
+Removed instagram support.
