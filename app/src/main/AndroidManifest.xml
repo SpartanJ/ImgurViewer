@@ -281,6 +281,8 @@
 				<data android:scheme="http" />
 
 				<data android:pathPattern="/gallery/.*" />
+				<data android:pathPattern="/link/.*/video/.*/player" />
+				<data android:pathPattern="/r/.*/link/.*/video/.*/player" />
 			</intent-filter>
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
