@@ -14,8 +14,8 @@ android {
         applicationId "com.ensoft.imgurviewer"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 23200
-        versionName "2.3.2"
+        versionCode 23300
+        versionName "2.3.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

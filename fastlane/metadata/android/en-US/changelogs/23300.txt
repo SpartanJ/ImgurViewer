@@ -1,0 +1,4 @@
+2.3.3:
+Fixed a bug that provoked to unmute the video when seeking.
+Prevent the screen to dim while reproducing videos.
+Services fixes.

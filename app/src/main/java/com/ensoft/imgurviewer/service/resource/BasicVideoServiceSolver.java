@@ -17,7 +17,6 @@ import com.imgurviewer.R;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 {
