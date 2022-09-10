@@ -42,19 +42,25 @@ public class TwitchClipsService extends MediaServiceSolver
 			if ( null != twitchClips && null != twitchClips.data && null != twitchClips.data.clip && null != twitchClips.data.clip.getClips() )
 			{
 				TwitchClip[] clips = twitchClips.data.clip.getClips();
+				Uri first = null;
 				
 				for ( String quality : TWITCH_CLIPS_QUALITIES )
 				{
 					for ( TwitchClip clip : clips )
 					{
-						if ( quality.equals( clip.getQuality() ) )
+						if ( quality.equals( clip.getQuality() ) || first == null )
 						{
-							return Uri.parse( clip.getSource() + "?" +
+							first = Uri.parse( clip.getSource() + "?" +
 								"sig=" + twitchClips.data.clip.playbackAccessToken.signature +
 								"&token=" + URLEncoder.encode( twitchClips.data.clip.playbackAccessToken.value.replace( "\\", "" ) ) );
+							
+							if ( quality.equals( clip.getQuality() ) )
+								return first;
 						}
 					}
 				}
+				
+				return first;
 			}
 		}
 		catch ( Exception e ) {}
