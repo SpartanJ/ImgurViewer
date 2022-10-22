@@ -9,6 +9,4 @@ public class FlickrAlbumImageSize
 	public String displayUrl;
 	
 	public String url;
-	
-	public String key;
 }

@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 def versionMajor = 2
 def versionMinor = 3
-def versionPatch = 1
+def versionPatch = 4
 // We need to use a static versionCode and versionName to support automatic updates in F-Droid
 def versionCodeNum = versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100
 
@@ -14,8 +14,8 @@ android {
         applicationId "com.ensoft.imgurviewer"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 23300
-        versionName "2.3.3"
+        versionCode 23400
+        versionName "2.3.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -28,6 +28,7 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+    namespace 'com.imgurviewer'
 }
 
 dependencies {

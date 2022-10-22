@@ -2,25 +2,25 @@ package com.ensoft.imgurviewer.model;
 
 public class FlickrAlbumImageSizes
 {
-	FlickrAlbumImageSize c;
+	FlickrAlbumImageSizeData c;
 	
-	FlickrAlbumImageSize h;
+	FlickrAlbumImageSizeData h;
 	
-	FlickrAlbumImageSize k;
+	FlickrAlbumImageSizeData k;
 	
-	FlickrAlbumImageSize l;
+	FlickrAlbumImageSizeData l;
 	
-	FlickrAlbumImageSize m;
+	FlickrAlbumImageSizeData m;
 	
-	FlickrAlbumImageSize n;
+	FlickrAlbumImageSizeData n;
 	
-	FlickrAlbumImageSize q;
+	FlickrAlbumImageSizeData q;
 	
-	FlickrAlbumImageSize s;
+	FlickrAlbumImageSizeData s;
 	
-	FlickrAlbumImageSize t;
+	FlickrAlbumImageSizeData t;
 	
-	FlickrAlbumImageSize z;
+	FlickrAlbumImageSizeData z;
 	
-	FlickrAlbumImageSize sq;
+	FlickrAlbumImageSizeData sq;
 }
