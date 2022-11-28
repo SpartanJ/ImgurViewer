@@ -32,6 +32,7 @@ import com.ensoft.imgurviewer.service.resource.StreamableService;
 import com.ensoft.imgurviewer.service.resource.StreamjaService;
 import com.ensoft.imgurviewer.service.resource.Tube8Service;
 import com.ensoft.imgurviewer.service.resource.TumblrService;
+import com.ensoft.imgurviewer.service.resource.TwimgPBSService;
 import com.ensoft.imgurviewer.service.resource.TwitchClipsService;
 import com.ensoft.imgurviewer.service.resource.VimeoService;
 import com.ensoft.imgurviewer.service.resource.XHamsterService;
@@ -104,6 +105,7 @@ public class ResourceSolver
 		addSolver( new RedGifsService() );
 		addSolver( new GifDeliveryNetworkService() );
 		addSolver( new NhentaiService(), ImgurAlbumGalleryViewer.class );
+		addSolver( new TwimgPBSService() );
 	}
 	
 	public ResourceServiceSolver isSolvable( Uri uri )

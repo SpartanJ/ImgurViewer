@@ -167,6 +167,22 @@ public class ResourceSolverTest
 			"https://xhamster.com/videos/asmr-you-know-i-like-you-xhnBhXU",
 			"https://nhentai.net/g/169217/",
 			"https://www.pornhub.com/view_video.php?viewkey=ph5effde87227d2",
+			"https://pbs.twimg.com/ad_img/1000017167482372096/kLkQhpg3?format=jpg&name=orig",
+			"https://pbs.twimg.com/amplify_video_thumb/1000001578898604032/img/NRKFDjURSieuHaZu.png",
+			"https://pbs.twimg.com/amplify_video_thumb/1000001578898604032/img/NRKFDjURSieuHaZu.jpg:large",
+			"https://pbs.twimg.com/amplify_video_thumb/1000001578898604032/img/NRKFDjURSieuHaZu.jpg?name=small",
+			"https://pbs.twimg.com/amplify_video_thumb/1000001578898604032/img/NRKFDjURSieuHaZu?format=png&name=medium",
+			"https://pbs.twimg.com/media/EDzS7VrU0AAFL4_.jpg",
+			"https://pbs.twimg.com/media/EDzS7VrU0AAFL4_.jpg:small",
+			"https://pbs.twimg.com/media/EDzS7VrU0AAFL4_.jpg?name=orig",
+			"https://pbs.twimg.com/media/EDzS7VrU0AAFL4_?format=jpg",
+			"https://pbs.twimg.com/media/EDzS7VrU0AAFL4_?format=png&name=4096x4096",
+			"https://pbs.twimg.com/ext_tw_video_thumb/1594625806856114176/pu/img/v3wf_yoo5XJfR-jZ.jpg",
+			"https://pbs.twimg.com/ext_tw_video_thumb/1594625806856114176/pu/img/v3wf_yoo5XJfR-jZ.jpg:orig",
+			"https://pbs.twimg.com/ext_tw_video_thumb/1594625806856114176/pu/img/v3wf_yoo5XJfR-jZ.png?name=4096x4096",
+			"https://pbs.twimg.com/ext_tw_video_thumb/1594625806856114176/pu/img/v3wf_yoo5XJfR-jZ?format=jpg&name=medium",
+			"https://pbs.twimg.com/profile_images/1883433672/poza_01.doc",
+			"https://pbs.twimg.com/profile_banners/1329804233390997505/1655005904",
 		};
 		
 		for ( String testUri :testUris )
