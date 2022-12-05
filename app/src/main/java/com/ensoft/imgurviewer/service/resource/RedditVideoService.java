@@ -100,10 +100,8 @@ public class RedditVideoService extends MediaServiceSolver
 						
 						if ( videoExists( video ) )
 						{
-							sendPathResolved( pathResolverListener, Uri.parse( video ),
-								video.endsWith( ".m3u8" ) ? MediaType.STREAM_HLS :
-									( video.endsWith( ".mpd" ) ? MediaType.STREAM_DASH :
-										MediaType.VIDEO_MP4 ), uri );
+							Uri videoUri = Uri.parse( video );
+							sendPathResolved( pathResolverListener, videoUri, UriUtils.guessMediaTypeFromUri( videoUri ), uri );
 							return;
 						}
 					}

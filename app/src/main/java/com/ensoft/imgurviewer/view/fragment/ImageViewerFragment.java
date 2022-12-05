@@ -58,9 +58,8 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource;
-import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory;
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
@@ -565,15 +564,19 @@ public class ImageViewerFragment extends Fragment
 		
 		if ( proxy != null )
 		{
-			OkHttpClient client = new OkHttpClient.Builder().proxy( App.getInstance().getProxyUtils().getProxy() ).build();
-			dataSourceFactory = new OkHttpDataSource.Factory( (Call.Factory) client ).setUserAgent( UriUtils.getDefaultUserAgent() );
+			OkHttpClient client = new OkHttpClient.Builder().proxy( proxy ).build();
+			dataSourceFactory = new OkHttpDataSource.Factory( (Call.Factory) client )
+				.setUserAgent( UriUtils.getDefaultUserAgent() );
 		}
 		else
 		{
-			dataSourceFactory = new DefaultHttpDataSource.Factory().setUserAgent( UriUtils.getDefaultUserAgent() );
+			dataSourceFactory = new DefaultHttpDataSource.Factory()
+				.setUserAgent( UriUtils.getDefaultUserAgent() );
 		}
 		
-		MediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(uri));
+		MediaSource mediaSource = new DefaultMediaSourceFactory( dataSourceFactory )
+			.createMediaSource( MediaItem.fromUri( uri ) );
+		
 		player.setMediaSource( mediaSource );
 		player.setTrackSelectionParameters(player.getTrackSelectionParameters().buildUpon().setMaxVideoSizeSd().build());
 		player.prepare();
