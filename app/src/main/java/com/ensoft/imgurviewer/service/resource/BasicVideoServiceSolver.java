@@ -206,6 +206,6 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 	@Override
 	public boolean isVideo( Uri uri )
 	{
-		return true;
+		return UriUtils.isVideoUrl( uri );
 	}
 }

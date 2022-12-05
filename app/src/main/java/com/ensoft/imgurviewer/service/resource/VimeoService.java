@@ -3,6 +3,8 @@ package com.ensoft.imgurviewer.service.resource;
 import android.net.Uri;
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.VimeoVideo;
@@ -11,6 +13,9 @@ import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.restafari.network.service.RequestService;
 import com.google.gson.Gson;
 import com.imgurviewer.R;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class VimeoService extends MediaServiceSolver
 {
@@ -57,7 +62,7 @@ public class VimeoService extends MediaServiceSolver
 			{
 				String apiUrl = String.format( VIMEO_API_URL, id );
 				
-				JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( apiUrl, null, response ->
+				JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( Request.Method.GET, apiUrl, null, response ->
 				{
 					try
 					{
@@ -83,7 +88,16 @@ public class VimeoService extends MediaServiceSolver
 					Log.v( TAG, error.toString() );
 					
 					pathResolverListener.onPathError( uri, error.toString() );
-				} );
+				} )
+				{
+					@Override
+					public Map<String, String> getHeaders() throws AuthFailureError
+					{
+						Map<String, String> headers = new HashMap<>();
+						headers.put( "User-Agent", UriUtils.getDefaultUserAgent() );
+						return headers;
+					}
+				};
 				
 				RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
 			}

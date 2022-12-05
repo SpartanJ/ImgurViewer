@@ -4,8 +4,11 @@ import android.app.Application;
 import android.content.pm.PackageInfo;
 
 import com.ensoft.imgurviewer.service.PreferencesService;
+import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.restafari.network.service.RequestService;
 import com.ensoft.restafari.network.service.RequestServiceOptions;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.producers.HttpUrlConnectionNetworkFetcher;
 import com.github.piasy.biv.BigImageViewer;
 import com.github.piasy.biv.loader.fresco.FrescoImageLoader;
 
@@ -35,7 +38,11 @@ public class App extends Application
 		
 		RequestService.init( this, requestServiceOptions );
 		
-		BigImageViewer.initialize( FrescoImageLoader.with( this ) );
+		ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this )
+			.setNetworkFetcher( new HttpUrlConnectionNetworkFetcher( UriUtils.getDefaultUserAgent(),
+				HttpUrlConnectionNetworkFetcher.HTTP_DEFAULT_TIMEOUT ) ).build();
+		
+		BigImageViewer.initialize( FrescoImageLoader.with( this, config ) );
 	}
 	
 	public PreferencesService getPreferencesService()

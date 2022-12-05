@@ -121,6 +121,8 @@ public class ResourceSolverTest
 			"https://www.reddit.com/gallery/huxc4s",
 			"https://www.redgifs.com/watch/terrificaridbrownbutterfly",
 			"https://redgifs.com/watch/jaggedunselfishgannet",
+			"https://www.redgifs.com/watch/beautifuluncomfortableegret",
+			"https://redgifs.com/watch/unwrittengreenazurevase",
 			"https://gfycat.com/whoppingcostlyairedale",
 			"https://clips.twitch.tv/FaintLightGullWholeWheat",
 			"http://imgur.com/gallery/fADjkcW",
