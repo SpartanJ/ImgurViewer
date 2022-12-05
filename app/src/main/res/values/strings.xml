@@ -159,4 +159,5 @@
 	<string name="textPastView">You can paste any supported image/video link to visualize it</string>
 	<string name="resourceInvalid">Loaded resource is not a valid image.</string>
 	<string name="invalidUrl">Invalid URL</string>
+	<string name="proxy_restart_app">Restart the application after setting the proxy</string>
 </resources>

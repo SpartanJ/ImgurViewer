@@ -145,6 +145,7 @@ public class ResourceSolverTest
 			"http://www.flickr.com/photos/forestwander-nature-pictures/5645318632/in/photostream/",
 			"https://www.flickr.com/photos/10795027@N08/37124872560/in/photostream/lightbox/",
 			"https://www.flickr.com/photos/wernerkrause/albums/72157649599416957",
+			"https://giphy.com/gifs/football-conference-paradi-Y5IZDZKRVIpcA",
 			"https://giphy.com/gifs/warnerbrosde-R6gvnAxj2ISzJdbA63",
 			"https://giphy.com/gifs/love-i-you-that-70s-show-2dQ3FMaMFccpi",
 			"https://streamja.com/6BGLa",

@@ -2,20 +2,20 @@ apply plugin: 'com.android.application'
 
 def versionMajor = 2
 def versionMinor = 3
-def versionPatch = 4
+def versionPatch = 5
 // We need to use a static versionCode and versionName to support automatic updates in F-Droid
 def versionCodeNum = versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100
 
 android {
-    compileSdkVersion 32
-    buildToolsVersion '32.0.0'
+    compileSdkVersion 33
+    buildToolsVersion '33.0.0'
 
     defaultConfig {
         applicationId "com.ensoft.imgurviewer"
         minSdkVersion 21
-        targetSdkVersion 32
-        versionCode 23400
-        versionName "2.3.4"
+        targetSdkVersion 33
+        versionCode 23500
+        versionName "2.3.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -45,12 +45,13 @@ dependencies {
     implementation 'com.facebook.fresco:webpsupport:2.5.0'
     implementation 'com.ensoft-dev.restafari:restafari:0.4.1'
     implementation 'com.readystatesoftware.systembartint:systembartint:1.0.3'
-    implementation 'com.google.android.exoplayer:exoplayer:2.17.1'
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.17.1'
-    implementation 'com.google.android.exoplayer:exoplayer-dash:2.17.1'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.17.1'
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.2'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.18.2'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.18.2'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.18.2'
+    implementation 'com.google.android.exoplayer:extension-okhttp:2.18.2'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
-    androidTestImplementation 'androidx.test:runner:1.4.0'
-    androidTestImplementation 'androidx.test:rules:1.4.0'
+    androidTestImplementation 'androidx.test:runner:1.5.1'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
     testImplementation 'junit:junit:4.13.2'
 }
