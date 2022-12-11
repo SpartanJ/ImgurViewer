@@ -105,6 +105,25 @@ public class UriUtils
 		return false;
 	}
 	
+	public static boolean isImageUrl( Uri uri )
+	{
+		if ( null != uri )
+		{
+			List<String> pathSegments = uri.getPathSegments();
+			
+			if ( null != pathSegments && pathSegments.size() > 0 )
+			{
+				String lastPathSegment = pathSegments.get( pathSegments.size() - 1 );
+				String ext = lastPathSegment.toLowerCase();
+				
+				return ext.endsWith( ".jpg" ) || ext.endsWith( ".jpeg" ) || ext.endsWith( ".webp" )
+					|| ext.endsWith( ".gif" ) || ext.endsWith( ".png" );
+			}
+		}
+		
+		return false;
+	}
+	
 	public static String getMimeType( String url )
 	{
 		String type = null;

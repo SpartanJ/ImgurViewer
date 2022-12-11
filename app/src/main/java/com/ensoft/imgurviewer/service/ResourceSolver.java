@@ -7,6 +7,7 @@ import com.ensoft.imgurviewer.service.resource.ClippitUserService;
 import com.ensoft.imgurviewer.service.resource.DeviantArtService;
 import com.ensoft.imgurviewer.service.resource.EromeService;
 import com.ensoft.imgurviewer.service.resource.FlickrService;
+import com.ensoft.imgurviewer.service.resource.GenericServiceSolver;
 import com.ensoft.imgurviewer.service.resource.GfycatService;
 import com.ensoft.imgurviewer.service.resource.GifDeliveryNetworkService;
 import com.ensoft.imgurviewer.service.resource.GiphyService;
@@ -106,6 +107,7 @@ public class ResourceSolver
 		addSolver( new GifDeliveryNetworkService() );
 		addSolver( new NhentaiService(), ImgurAlbumGalleryViewer.class );
 		addSolver( new TwimgPBSService() );
+		addSolver( new GenericServiceSolver() );
 	}
 	
 	public ResourceServiceSolver isSolvable( Uri uri )
