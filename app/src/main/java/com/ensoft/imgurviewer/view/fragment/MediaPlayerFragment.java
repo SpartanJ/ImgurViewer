@@ -270,13 +270,13 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 		{
 			if ( enabled )
 			{
-				getActivity().setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE );
+				getActivity().setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE );
 				
 				fullscreenOnOffView.setImageResource( R.drawable.ic_fullscreen_exit_white_48dp );
 			}
 			else
 			{
-				getActivity().setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_SENSOR );
+				getActivity().setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_USER );
 				
 				fullscreenOnOffView.setImageResource( R.drawable.ic_fullscreen_white_48dp );
 			}
