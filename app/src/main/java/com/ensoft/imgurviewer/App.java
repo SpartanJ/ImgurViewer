@@ -3,20 +3,20 @@ package com.ensoft.imgurviewer;
 import android.app.Application;
 import android.content.pm.PackageInfo;
 
-import com.ensoft.imgurviewer.service.HttpUrlConnectionNetworkFetcherProxied;
 import com.ensoft.imgurviewer.service.PreferencesService;
 import com.ensoft.imgurviewer.service.ProxyUtils;
 import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.restafari.network.service.RequestService;
 import com.ensoft.restafari.network.service.RequestServiceOptions;
+import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
-import com.facebook.imagepipeline.producers.HttpUrlConnectionNetworkFetcher;
-import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.github.piasy.biv.BigImageViewer;
 import com.github.piasy.biv.loader.fresco.FrescoImageLoader;
+import okhttp3.OkHttpClient;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.time.Duration;
 
 public class App extends Application
 {
@@ -50,7 +50,9 @@ public class App extends Application
 		RequestService.init( this, requestServiceOptions );
 		
 		new Thread( () -> {
-			NetworkFetcher networkFetcher;
+			OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder().connectTimeout( Duration.ofMillis( 30000 ) ).addInterceptor( chain -> {
+				return chain.proceed( chain.request().newBuilder().addHeader( "User-Agent", UriUtils.getDefaultUserAgent() ).build() );
+			} );
 			
 			if ( getPreferencesService().getProxyHost() != null && !getPreferencesService().getProxyHost().isEmpty() )
 			{
@@ -58,15 +60,11 @@ public class App extends Application
 				
 				proxyUtils.setProxy( proxy );
 				
-				networkFetcher = new HttpUrlConnectionNetworkFetcherProxied( proxy, UriUtils.getDefaultUserAgent(), HttpUrlConnectionNetworkFetcher.HTTP_DEFAULT_TIMEOUT );
-			}
-			else
-			{
-				networkFetcher = new HttpUrlConnectionNetworkFetcher( UriUtils.getDefaultUserAgent(), HttpUrlConnectionNetworkFetcher.HTTP_DEFAULT_TIMEOUT );
+				okHttpClientBuilder.proxy( proxy );
 			}
 			
-			ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this )
-				.setNetworkFetcher( networkFetcher ).build();
+			ImagePipelineConfig config = OkHttpImagePipelineConfigFactory.newBuilder( this, okHttpClientBuilder.build() )
+				.build();
 			
 			BigImageViewer.initialize( FrescoImageLoader.with( this, config ) );
 		} ).start();
