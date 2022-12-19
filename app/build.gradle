@@ -42,6 +42,7 @@ dependencies {
     implementation 'com.facebook.fresco:fresco:2.5.0'
     implementation 'com.facebook.fresco:animated-gif:2.5.0'
     implementation 'com.facebook.fresco:animated-webp:2.5.0'
+    implementation 'com.facebook.fresco:imagepipeline-okhttp3:2.5.0'
     implementation 'com.facebook.fresco:webpsupport:2.5.0'
     implementation 'com.ensoft-dev.restafari:restafari:0.4.1'
     implementation 'com.readystatesoftware.systembartint:systembartint:1.0.3'
