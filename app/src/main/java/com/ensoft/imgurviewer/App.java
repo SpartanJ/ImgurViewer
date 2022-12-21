@@ -2,7 +2,9 @@ package com.ensoft.imgurviewer;
 
 import android.app.Application;
 import android.content.pm.PackageInfo;
+import android.graphics.Bitmap;
 
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.ensoft.imgurviewer.service.PreferencesService;
 import com.ensoft.imgurviewer.service.ProxyUtils;
 import com.ensoft.imgurviewer.service.UriUtils;
@@ -48,6 +50,8 @@ public class App extends Application
 			build();
 		
 		RequestService.init( this, requestServiceOptions );
+		
+		SubsamplingScaleImageView.setPreferredBitmapConfig( Bitmap.Config.ARGB_8888 );
 		
 		new Thread( () -> {
 			OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder().connectTimeout( 30, TimeUnit.SECONDS )
