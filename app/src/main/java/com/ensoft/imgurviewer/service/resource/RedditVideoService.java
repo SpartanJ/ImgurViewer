@@ -57,7 +57,7 @@ public class RedditVideoService extends MediaServiceSolver
 		{
 			System.setProperty( "http.keepAlive", "false" );
 			URL url = new URL( video );
-			urlConnection = (HttpURLConnection) url.openConnection();
+			urlConnection = App.getInstance().getProxyUtils().openConnectionTo( url );
 			urlConnection.setRequestMethod( "HEAD" );
 			urlConnection.setRequestProperty( "User-Agent", UriUtils.getDefaultUserAgent() );
 			urlConnection.getInputStream().close();

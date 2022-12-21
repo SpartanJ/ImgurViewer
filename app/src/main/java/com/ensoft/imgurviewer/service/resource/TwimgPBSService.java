@@ -42,8 +42,7 @@ public class TwimgPBSService extends MediaServiceSolver {
 
         try {
             System.setProperty("http.keepAlive", "false");
-            final URL url = new URL(uri.toString());
-            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection = App.getInstance().getProxyUtils().openConnectionTo( uri );
             urlConnection.setRequestMethod("HEAD");
             urlConnection.setRequestProperty("User-Agent", UriUtils.getDefaultUserAgent());
             urlConnection.getInputStream().close();

@@ -33,7 +33,7 @@
 				<data android:mimeType="text/plain" />
 			</intent-filter>
 			<intent-filter>
-				<action android:name="android.intent.action.SEND" />
+				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
 
@@ -580,7 +580,17 @@
 				<data android:pathPattern="/image/.*" />
 				<data android:pathPattern="/video/.*" />
 			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
 
+				<data android:host="streamff.com" />
+
+				<data android:scheme="https" />
+
+				<data android:pathPattern="/v/.*" />
+			</intent-filter>
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />

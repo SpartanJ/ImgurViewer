@@ -30,6 +30,7 @@ import com.ensoft.imgurviewer.service.resource.RedditVideoService;
 import com.ensoft.imgurviewer.service.resource.ResourceServiceSolver;
 import com.ensoft.imgurviewer.service.resource.SpankBangService;
 import com.ensoft.imgurviewer.service.resource.StreamableService;
+import com.ensoft.imgurviewer.service.resource.StreamffService;
 import com.ensoft.imgurviewer.service.resource.StreamjaService;
 import com.ensoft.imgurviewer.service.resource.Tube8Service;
 import com.ensoft.imgurviewer.service.resource.TumblrService;
@@ -107,6 +108,7 @@ public class ResourceSolver
 		addSolver( new GifDeliveryNetworkService() );
 		addSolver( new NhentaiService(), ImgurAlbumGalleryViewer.class );
 		addSolver( new TwimgPBSService() );
+		addSolver( new StreamffService() );
 		addSolver( new GenericServiceSolver() );
 	}
 	

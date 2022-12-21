@@ -54,7 +54,7 @@ public class FlickrService extends MediaServiceSolver implements AlbumProvider
 				@Override
 				protected HttpURLConnection createConnection( URL url) throws IOException
 				{
-					HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+					HttpURLConnection httpURLConnection = App.getInstance().getProxyUtils().openConnectionTo( url );
 					
 					trustAllCertsForConnection( httpURLConnection );
 					
