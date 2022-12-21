@@ -3,7 +3,7 @@ Added pbs.twimg.com service support.
 Added streamff.com service support.
 Added support for captions in Reddit albums.
 Improved image quality for static images.
-Improved rotation bevahior for fullscreen video reproduction.
+Improved rotation behavior for fullscreen video reproduction.
 Fixed proxy support.
 Several services fixes.
 Fix some image URLs opening incorrectly.
