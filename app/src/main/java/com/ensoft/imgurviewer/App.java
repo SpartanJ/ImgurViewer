@@ -16,7 +16,7 @@ import okhttp3.OkHttpClient;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 public class App extends Application
 {
@@ -50,9 +50,8 @@ public class App extends Application
 		RequestService.init( this, requestServiceOptions );
 		
 		new Thread( () -> {
-			OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder().connectTimeout( Duration.ofMillis( 30000 ) ).addInterceptor( chain -> {
-				return chain.proceed( chain.request().newBuilder().addHeader( "User-Agent", UriUtils.getDefaultUserAgent() ).build() );
-			} );
+			OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder().connectTimeout( 30, TimeUnit.SECONDS )
+				.addInterceptor( chain -> chain.proceed( chain.request().newBuilder().addHeader( "User-Agent", UriUtils.getDefaultUserAgent() ).build() ) );
 			
 			if ( getPreferencesService().getProxyHost() != null && !getPreferencesService().getProxyHost().isEmpty() )
 			{
