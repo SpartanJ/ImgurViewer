@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Animatable;
@@ -26,6 +27,11 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.davemorrissey.labs.subscaleview.decoder.CompatDecoderFactory;
+import com.davemorrissey.labs.subscaleview.decoder.ImageDecoder;
+import com.davemorrissey.labs.subscaleview.decoder.ImageRegionDecoder;
+import com.davemorrissey.labs.subscaleview.decoder.SkiaImageDecoder;
+import com.davemorrissey.labs.subscaleview.decoder.SkiaImageRegionDecoder;
 import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.MediaType;
 import com.ensoft.imgurviewer.service.DownloadService;
@@ -427,7 +433,11 @@ public class ImageViewerFragment extends Fragment
 		imageView.setOnClickListener( v -> onImageClick() );
 		
 		if ( imageView.getSSIV() != null )
+		{
 			imageView.getSSIV().setMaxScale( 10 );
+			imageView.getSSIV().setBitmapDecoderFactory(new CompatDecoderFactory<ImageDecoder>(SkiaImageDecoder.class, Bitmap.Config.ARGB_8888));
+			imageView.getSSIV().setRegionDecoderFactory(new CompatDecoderFactory<ImageRegionDecoder>(SkiaImageRegionDecoder.class, Bitmap.Config.ARGB_8888));
+		}
 		
 		imageView.setImageLoaderCallback( new ImageLoader.Callback()
 		{
