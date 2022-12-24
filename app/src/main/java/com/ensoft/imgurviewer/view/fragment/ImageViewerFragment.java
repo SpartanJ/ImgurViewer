@@ -530,6 +530,11 @@ public class ImageViewerFragment extends Fragment
 			
 			videoView.setBackgroundColor( Color.TRANSPARENT );
 			
+			if ( !mediaPlayerFragment.isFirstPlaybackReady )
+			{
+				return;
+			}
+			
 			if ( albumPagerProvider != null )
 			{
 				if ( albumPagerProvider.getCurrentPage() == adapterPosition )
