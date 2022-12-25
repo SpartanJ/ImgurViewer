@@ -300,10 +300,9 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 			if ( isFirstPlaybackReady )
 			{
 				isMuted = App.getInstance().getPreferencesService().videosMuted();
+				updatePlayPauseState();
 				isFirstPlaybackReady = false;
 			}
-			
-			updatePlayPauseState();
 			
 			setAudioOnOffState();
 			
