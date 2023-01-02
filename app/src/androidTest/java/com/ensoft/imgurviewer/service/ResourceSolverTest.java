@@ -119,6 +119,7 @@ public class ResourceSolverTest
 			"https://v.redd.it/zv89llsvexdz",
 			"https://v.redd.it/ulz7g757bb581",
 			"https://www.reddit.com/gallery/huxc4s",
+			"https://www.reddit.com/gallery/100pwis",
 			"https://www.redgifs.com/watch/terrificaridbrownbutterfly",
 			"https://redgifs.com/watch/jaggedunselfishgannet",
 			"https://www.redgifs.com/watch/beautifuluncomfortableegret",

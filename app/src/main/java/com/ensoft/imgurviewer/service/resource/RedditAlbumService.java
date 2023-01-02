@@ -26,7 +26,7 @@ public class RedditAlbumService  extends MediaServiceSolver implements AlbumProv
 	@Override
 	public void getAlbum( Uri uri, AlbumSolverListener albumSolverListener )
 	{
-		String url = "https://www.reddit.com/" + uri.getPathSegments().get( 1 ) + ".json?raw_json=1";
+		String url = "https://www.reddit.com/comments/" + uri.getPathSegments().get( 1 ) + ".json?raw_json=1";
 		
 		RequestService.getInstance().makeStringRequest( Request.Method.GET, url, new ResponseListener<String>()
 		{
