@@ -63,6 +63,7 @@ import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
+import com.google.android.exoplayer2.upstream.FileDataSource;
 import com.imgurviewer.R;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
@@ -567,16 +568,24 @@ public class ImageViewerFragment extends Fragment
 		Proxy proxy = App.getInstance().getProxyUtils().getProxy();
 		DataSource.Factory dataSourceFactory;
 		
-		if ( proxy != null )
+		if ( !"file".equals( uri.getScheme() ) )
 		{
-			OkHttpClient client = new OkHttpClient.Builder().proxy( proxy ).build();
-			dataSourceFactory = new OkHttpDataSource.Factory( (Call.Factory) client )
-				.setUserAgent( UriUtils.getDefaultUserAgent() );
+			if ( proxy != null )
+			{
+				OkHttpClient client = new OkHttpClient.Builder().proxy( proxy ).build();
+				dataSourceFactory = new OkHttpDataSource.Factory( (Call.Factory) client )
+					.setUserAgent( UriUtils.getDefaultUserAgent() );
+			}
+			else
+			{
+				dataSourceFactory = new DefaultHttpDataSource.Factory()
+					.setUserAgent( UriUtils.getDefaultUserAgent() );
+				
+			}
 		}
 		else
 		{
-			dataSourceFactory = new DefaultHttpDataSource.Factory()
-				.setUserAgent( UriUtils.getDefaultUserAgent() );
+			dataSourceFactory = new FileDataSource.Factory();
 		}
 		
 		MediaSource mediaSource = new DefaultMediaSourceFactory( dataSourceFactory )
