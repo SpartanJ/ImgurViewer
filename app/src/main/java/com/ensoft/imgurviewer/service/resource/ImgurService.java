@@ -1,22 +1,39 @@
 package com.ensoft.imgurviewer.service.resource;
 
 import android.net.Uri;
+import android.util.Log;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.ensoft.imgurviewer.App;
+import com.ensoft.imgurviewer.exception.NeedsToCheckApiException;
 import com.ensoft.imgurviewer.model.ImgurAlbum;
+import com.ensoft.imgurviewer.model.ImgurAlbumResource;
 import com.ensoft.imgurviewer.model.ImgurImage;
 import com.ensoft.imgurviewer.model.ThumbnailSize;
 import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.AlbumSolverListener;
 import com.ensoft.imgurviewer.service.listener.ImgurAlbumResolverListener;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
+import com.ensoft.restafari.network.service.RequestService;
+import com.google.gson.Gson;
+import com.imgurviewer.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ImgurService extends MediaServiceSolver
 {
+	public static final String TAG = ImgurService.class.getCanonicalName();
 	public static final String IMGUR_DOMAIN = "imgur.com";
 	public static final String IMGURIO_DOMAIN = "imgur.io";
 	public static final String IMGUR_IMAGE_DOMAIN = "i.imgur.com";
 	public static final String IMGUR_MOBILE_DOMAIN = "m.imgur.com";
 	public static final String IMGUR_API_URL = "https://api.imgur.com/3";
+	public static final String IMGUR_API_IMAGE_URL = IMGUR_API_URL + "/image/";
 	
 	protected void getFirstAlbumImage( final Uri url, final PathResolverListener pathResolverListener )
 	{
@@ -66,7 +83,7 @@ public class ImgurService extends MediaServiceSolver
 		} );
 	}
 	
-	public Uri processPath( Uri uri, boolean fixVideoPath )
+	public Uri processPath( Uri uri, boolean fixVideoPath, boolean throwException ) throws NeedsToCheckApiException
 	{
 		String url = uri.toString();
 		
@@ -107,9 +124,21 @@ public class ImgurService extends MediaServiceSolver
 			url = url.replace( ".gif", ".mp4" );
 		}
 		
+		if ( url.startsWith( "http://" ) )
+		{
+			url = url.replaceFirst( "http://", "https://" );
+		}
+		
 		if ( !url.endsWith( ".png" ) && !url.endsWith( ".jpg" ) && !url.endsWith( ".jpeg" ) && !url.endsWith( ".mp4" ) && !url.endsWith( ".m3u8" ) && !url.endsWith( ".gif" ) )
 		{
-			url += ".jpg";
+			if ( throwException )
+			{
+				throw new NeedsToCheckApiException();
+			}
+			else
+			{
+				url += ".jpg";
+			}
 		}
 		
 		return Uri.parse( url );
@@ -122,21 +151,28 @@ public class ImgurService extends MediaServiceSolver
 	
 	public Uri getThumbnailPath( Uri uri, ThumbnailSize thumbnailSize )
 	{
-		String fixedUri = processPath( uri, false ).toString();
-		
-		int pos = fixedUri.lastIndexOf( "." );
-		
-		String path = fixedUri.substring( 0, pos );
-		String ext = fixedUri.substring( pos );
-		String thumbSize = thumbnailSize.toString();
-		
-		if ( ".gif".equals( ext ) || ".mp4".equals( ext ) )
+		try
 		{
-			ext = ".jpg";
-			thumbSize = "";
+			String fixedUri = processPath( uri, false, false ).toString();
+			
+			int pos = fixedUri.lastIndexOf( "." );
+			
+			String path = fixedUri.substring( 0, pos );
+			String ext = fixedUri.substring( pos );
+			String thumbSize = thumbnailSize.toString();
+			
+			if ( ".gif".equals( ext ) || ".mp4".equals( ext ) )
+			{
+				ext = ".jpg";
+				thumbSize = "";
+			}
+			
+			return Uri.parse( path + thumbSize + ext );
 		}
-		
-		return Uri.parse( path + thumbSize + ext );
+		catch ( NeedsToCheckApiException e )
+		{
+			return Uri.EMPTY;
+		}
 	}
 	
 	public void getPath( Uri uri, PathResolverListener pathResolverListener )
@@ -151,9 +187,54 @@ public class ImgurService extends MediaServiceSolver
 		}
 		else
 		{
-			Uri fixedUri = processPath( uri, true );
+			try
+			{
+				Uri fixedUri = processPath( uri, true, true );
+				
+				pathResolverListener.onPathResolved( fixedUri, UriUtils.guessMediaTypeFromUri( uri ), isVideo( uri ) ? uri : getThumbnailPath( fixedUri ) );
+			}
+			catch ( NeedsToCheckApiException e )
+			{
+				String imageUrl = IMGUR_API_IMAGE_URL + uri.getLastPathSegment();
+				
+				JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( imageUrl, null, response ->
+				{
+					try
+					{
+						JSONObject obj = response.getJSONObject( "data" );
+						if ( obj.has( "mp4" ) )
+						{
+							Uri videoUri = Uri.parse( obj.getString( "mp4" ) );
+							sendPathResolved( pathResolverListener, videoUri, UriUtils.guessMediaTypeFromUri( videoUri ), uri );
+						}
+						else
+						{
+							Uri fixedUri = processPath( Uri.parse( obj.getString( "link" ) ), true, false );
+							sendPathResolved( pathResolverListener, fixedUri, UriUtils.guessMediaTypeFromUri( fixedUri ), uri );
+						}
+					} catch ( JSONException | NeedsToCheckApiException exception )
+					{
+						sendPathError( uri, pathResolverListener );
+					}
+				}, error ->
+				{
+					Log.v( TAG, error.toString() );
+					sendPathError( uri, pathResolverListener );
+				} )
+				{
+					@Override
+					public Map<String, String> getHeaders() throws AuthFailureError
+					{
+						Map<String, String> headers = new HashMap<>();
+						headers.put( "Authorization", "Client-ID " + App.getInstance().getString( R.string.imgur_client_id ) );
+						headers.put( "User-Agent", UriUtils.getDefaultUserAgent() );
+						return headers;
+					}
+				};
+				
+				RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
+			}
 			
-			pathResolverListener.onPathResolved( fixedUri, UriUtils.guessMediaTypeFromUri( uri ), isVideo( uri ) ? uri : getThumbnailPath( fixedUri ) );
 		}
 	}
 	

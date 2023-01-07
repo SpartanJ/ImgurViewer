@@ -128,6 +128,7 @@ public class ResourceSolverTest
 			"https://clips.twitch.tv/FaintLightGullWholeWheat",
 			"http://imgur.com/gallery/fADjkcW",
 			"https://imgur.com/A61SaA1",
+			"https://imgur.com/IOv8zBa",
 			"https://i.imgur.com/jxBXAMC.gifv",
 			"https://imgur.com/gallery/YcAQlkx",
 			"http://imgur.com/topic/Aww/ll5Vk",
