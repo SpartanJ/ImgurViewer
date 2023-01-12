@@ -110,13 +110,26 @@ public class TwimgPBSService extends MediaServiceSolver {
 
     @Override
     public boolean isServicePath(Uri uri) {
+        // Check if the host is pbs.twimg.com
         if (!DOMAIN.equals(uri.getHost())) {
             return false;
         }
+
+        // Check for profile_images or profile_banners
+        final List<String> pathSegments = uri.getPathSegments();
+        if (pathSegments == null || pathSegments.size() < 1) {
+            return false;
+        }
+        if ("profile_images".equals(pathSegments.get(0)) || "profile_banners".equals(pathSegments.get(0))) {
+            return true;
+        }
+
+        // Check for a ?format= query parameter
         if (!TextUtils.isEmpty(uri.getQueryParameter("format"))) {
             return true;
         }
 
+        // Check for a extension in the filename
         final String lastPathSegment = uri.getLastPathSegment();
         if (TextUtils.isEmpty(lastPathSegment)) {
             return false;
