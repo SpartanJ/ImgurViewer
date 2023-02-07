@@ -55,7 +55,22 @@ public class RedditAlbumService  extends MediaServiceSolver implements AlbumProv
 							String img;
 							String thumb = null;
 							String videoUri = null;
-							String description = galleryItem.optString( "caption", null );
+							String caption = galleryItem.optString( "caption", null );
+							String outbound_url = galleryItem.optString( "outbound_url", null );
+							String description = null;
+							
+							if ( null != caption && null != outbound_url )
+							{
+								description = caption + '\n' + outbound_url;
+							}
+							else if ( null != caption )
+							{
+								description = caption;
+							}
+							else if ( null != outbound_url )
+							{
+								description = outbound_url;
+							}
 							
 							if ( "AnimatedImage".equals( mediaType ) )
 							{

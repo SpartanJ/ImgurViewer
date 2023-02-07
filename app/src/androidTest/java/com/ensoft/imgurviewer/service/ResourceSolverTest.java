@@ -189,6 +189,10 @@ public class ResourceSolverTest
 			"https://pbs.twimg.com/profile_images/1883433672/poza_01.doc",
 			"https://pbs.twimg.com/profile_banners/1329804233390997505/1655005904",
 			"https://streamff.com/v/maOAhXsCkl",
+			"https://reddit.com/gallery/10vnkmy",
+			"https://www.reddit.com/gallery/10vwtow",
+			"https://www.reddit.com/gallery/10vxerk",
+			"https://reddit.com/gallery/10vxn7n",
 		};
 		
 		for ( String testUri :testUris )
