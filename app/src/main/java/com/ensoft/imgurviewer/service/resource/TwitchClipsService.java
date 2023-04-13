@@ -16,12 +16,15 @@ import com.imgurviewer.R;
 
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 
 public class TwitchClipsService extends MediaServiceSolver
 {
 	public static final String TAG = TwitchClipsService.class.getCanonicalName();
 	protected static final String TWITCH_CLIENT_ID = "jzkbprff40iqj646a697cyrvl0zt2m6";
 	protected static final String TWITCH_CLIPS_DOMAIN = "clips.twitch.tv";
+	protected static final String TWITCH_DOMAIN_SHORT = "twitch.tv";
+	protected static final String TWITCH_DOMAIN_FULL = "www.twitch.tv";
 	protected static final String TWITCH_CLIPS_STATUS = "https://gql.twitch.tv/gql";
 	protected static final String[] TWITCH_CLIPS_QUALITIES = new String[] { "source", "1080", "720", "480", "360" };
 	
@@ -114,8 +117,17 @@ public class TwitchClipsService extends MediaServiceSolver
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
-		String uriStr = uri.toString();
-		return ( uriStr.startsWith( "https://" + TWITCH_CLIPS_DOMAIN ) || uriStr.startsWith( "http://" + TWITCH_CLIPS_DOMAIN ) );
+		String scheme = uri.getScheme();
+		if ( !scheme.equals("http") && !scheme.equals("https") )
+			return false;
+		String host = uri.getHost();
+		if ( host.equals(TWITCH_CLIPS_DOMAIN) )
+			return true;
+		if ( host.equals(TWITCH_DOMAIN_SHORT) || host.equals(TWITCH_DOMAIN_FULL) ) {
+			List<String> segments = uri.getPathSegments();
+			return segments.size() == 3 && segments.get(1).equals("clip");
+		}
+		return false;
 	}
 	
 	@Override
