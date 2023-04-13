@@ -34,7 +34,7 @@ public class TwitchClipsService extends MediaServiceSolver
 		{
 				return uri.getQueryParameter( "clip" );
 		}
-		
+
 		return uri.getLastPathSegment();
 	}
 	
@@ -118,14 +118,16 @@ public class TwitchClipsService extends MediaServiceSolver
 	public boolean isServicePath( Uri uri )
 	{
 		String scheme = uri.getScheme();
-		if ( !scheme.equals("http") && !scheme.equals("https") )
+		if ( scheme == null || ( !scheme.equals("http") && !scheme.equals("https") ) )
 			return false;
 		String host = uri.getHost();
+		if ( host == null )
+			return false;
 		if ( host.equals(TWITCH_CLIPS_DOMAIN) )
 			return true;
 		if ( host.equals(TWITCH_DOMAIN_SHORT) || host.equals(TWITCH_DOMAIN_FULL) ) {
 			List<String> segments = uri.getPathSegments();
-			return segments.size() == 3 && segments.get(1).equals("clip");
+			return segments != null && segments.size() == 3 && segments.get(1).equals("clip");
 		}
 		return false;
 	}
