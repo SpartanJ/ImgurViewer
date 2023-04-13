@@ -3,6 +3,7 @@ package com.ensoft.imgurviewer.service;
 import android.net.Uri;
 
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
+import com.ensoft.imgurviewer.service.resource.ArazuService;
 import com.ensoft.imgurviewer.service.resource.ClippitUserService;
 import com.ensoft.imgurviewer.service.resource.DeviantArtService;
 import com.ensoft.imgurviewer.service.resource.EromeService;
@@ -109,6 +110,7 @@ public class ResourceSolver
 		addSolver( new NhentaiService(), ImgurAlbumGalleryViewer.class );
 		addSolver( new TwimgPBSService() );
 		addSolver( new StreamffService() );
+		addSolver( new ArazuService() );
 		addSolver( new GenericServiceSolver() );
 	}
 	
