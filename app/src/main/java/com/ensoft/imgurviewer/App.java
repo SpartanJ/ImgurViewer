@@ -3,6 +3,7 @@ package com.ensoft.imgurviewer;
 import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.ensoft.imgurviewer.service.PreferencesService;
@@ -25,6 +26,7 @@ public class App extends Application
 	protected static App instance;
 	protected PreferencesService preferencesService;
 	protected ProxyUtils proxyUtils;
+	protected Thread loadingThread;
 	
 	public static App getInstance()
 	{
@@ -53,7 +55,7 @@ public class App extends Application
 		
 		SubsamplingScaleImageView.setPreferredBitmapConfig( Bitmap.Config.ARGB_8888 );
 		
-		new Thread( () -> {
+		loadingThread = new Thread( () -> {
 			OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder().connectTimeout( 30, TimeUnit.SECONDS )
 				.addInterceptor( chain -> chain.proceed( chain.request().newBuilder().addHeader( "User-Agent", UriUtils.getDefaultUserAgent() ).build() ) );
 			
@@ -70,9 +72,18 @@ public class App extends Application
 				.build();
 			
 			BigImageViewer.initialize( FrescoImageLoader.with( this, config ) );
-		} ).start();
+		} );
+		loadingThread.start();
 	}
-	
+
+	public void waitForInitialization() {
+		try {
+			loadingThread.join();
+		} catch (InterruptedException e) {
+			Log.e("Init", "waiting for the init thread failed", e);
+		}
+	}
+
 	public PreferencesService getPreferencesService()
 	{
 		return preferencesService;

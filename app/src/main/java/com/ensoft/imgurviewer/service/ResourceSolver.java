@@ -17,6 +17,7 @@ import com.ensoft.imgurviewer.service.resource.IbbCoService;
 import com.ensoft.imgurviewer.service.resource.ImgFlipService;
 import com.ensoft.imgurviewer.service.resource.ImgurService;
 import com.ensoft.imgurviewer.service.resource.InstagramService;
+import com.ensoft.imgurviewer.service.resource.KickService;
 import com.ensoft.imgurviewer.service.resource.MediaServiceSolver;
 import com.ensoft.imgurviewer.service.resource.NhentaiService;
 import com.ensoft.imgurviewer.service.resource.PornHubService;
@@ -111,6 +112,7 @@ public class ResourceSolver
 		addSolver( new TwimgPBSService() );
 		addSolver( new StreamffService() );
 		addSolver( new ArazuService() );
+		addSolver( new KickService() );
 		addSolver( new GenericServiceSolver() );
 	}
 	

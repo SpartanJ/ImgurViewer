@@ -45,7 +45,8 @@ public class AlbumPagerActivity extends AppActivity implements AlbumPagerProvide
 	protected void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
-		
+
+		App.getInstance().waitForInitialization();
 		setContentView( R.layout.activity_albumpager );
 		
 		pager = findViewById( R.id.view_pager );

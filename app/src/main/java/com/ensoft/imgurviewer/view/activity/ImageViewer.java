@@ -26,7 +26,8 @@ public class ImageViewer extends AppActivity
 	protected void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
-		
+
+		App.getInstance().waitForInitialization();
 		setContentView( R.layout.activity_imageviewer );
 	}
 	
