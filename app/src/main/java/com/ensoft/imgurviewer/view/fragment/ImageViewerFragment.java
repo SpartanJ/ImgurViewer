@@ -605,6 +605,10 @@ public class ImageViewerFragment extends Fragment
 
 		player.setMediaSource( mediaSource );
 		player.setTrackSelectionParameters(player.getTrackSelectionParameters().buildUpon().setMaxVideoSizeSd().build());
+
+		if(options.getStartTime() > 0)
+			player.seekTo(options.getStartTime());
+
 		player.prepare();
 		
 		delayedHide();

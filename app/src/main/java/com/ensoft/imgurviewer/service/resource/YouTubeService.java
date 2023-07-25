@@ -54,6 +54,8 @@ public class YouTubeService extends MediaServiceSolver  {
             return;
         }
         VideoOptions options = new VideoOptions();
+        if(info.startTime > 0)
+            options.setStartTime(info.startTime * 1000);
         if(!info.clip) {
             resolveVideo(uri, info.id, options, pathResolverListener);
         } else {
@@ -117,23 +119,32 @@ public class YouTubeService extends MediaServiceSolver  {
         if(host == null)
             return null;
 
+        int start = 0;
+        {
+            String timestamp = uri.getQueryParameter("t");
+            try {
+                if (timestamp != null)
+                    start = Integer.parseInt(timestamp);
+            } catch (NumberFormatException ignored) {}
+        }
+
         if(host.endsWith("youtu.be")) {
             List<String> path = uri.getPathSegments();
             if(path == null || path.isEmpty())
                 return null;
-            return new VideoType(path.get(0), false);
+            return new VideoType(path.get(0), start, false);
         } else if(host.endsWith("youtube.com")) {
             String id = uri.getQueryParameter("v");
             if(id != null)
-                return new VideoType(id, false);
+                return new VideoType(id, start, false);
             List<String> path = uri.getPathSegments();
             if(path == null || path.size() < 2)
                 return null;
             if(path.get(0).equals("clip"))
-                return new VideoType(path.get(1), true);
+                return new VideoType(path.get(1), start, true);
             if(!path.get(0).matches("(embed|v|shorts)"))
                 return null;
-            return new VideoType(path.get(1), false);
+            return new VideoType(path.get(1), start, false);
         }
 
         return null;
@@ -142,10 +153,12 @@ public class YouTubeService extends MediaServiceSolver  {
     class VideoType {
         public String id;
         public boolean clip;
+        public int startTime;
 
-        public VideoType(String id, boolean clip) {
+        public VideoType(String id, int startTime, boolean clip) {
             this.id = id;
             this.clip = clip;
+            this.startTime = startTime;
         }
     }
 
