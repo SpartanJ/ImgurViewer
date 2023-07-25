@@ -43,6 +43,7 @@ import com.ensoft.imgurviewer.service.resource.XHamsterService;
 import com.ensoft.imgurviewer.service.resource.XVideosService;
 import com.ensoft.imgurviewer.service.resource.XnxxService;
 import com.ensoft.imgurviewer.service.resource.YouPornService;
+import com.ensoft.imgurviewer.service.resource.YouTubeService;
 import com.ensoft.imgurviewer.view.activity.ImgurAlbumGalleryViewer;
 
 import java.util.ArrayList;
@@ -113,6 +114,7 @@ public class ResourceSolver
 		addSolver( new StreamffService() );
 		addSolver( new ArazuService() );
 		addSolver( new KickService() );
+		addSolver( new YouTubeService() );
 		addSolver( new GenericServiceSolver() );
 	}
 	
