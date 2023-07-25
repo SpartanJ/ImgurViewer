@@ -3,6 +3,7 @@ package com.ensoft.imgurviewer.service;
 import android.net.Uri;
 
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
+import com.ensoft.imgurviewer.service.listener.VideoOptions;
 import com.ensoft.imgurviewer.service.resource.ArazuService;
 import com.ensoft.imgurviewer.service.resource.ClippitUserService;
 import com.ensoft.imgurviewer.service.resource.DeviantArtService;
@@ -145,7 +146,7 @@ public class ResourceSolver
 		{
 			if ( UriUtils.isVideoUrl( uri ) || UriUtils.isAudioUrl( uri ) )
 			{
-				resourceLoadListener.loadVideo( uri, UriUtils.guessMediaTypeFromUri( uri ), uri );
+				resourceLoadListener.loadVideo( uri, UriUtils.guessMediaTypeFromUri( uri ), uri, new VideoOptions());
 			}
 			else
 			{

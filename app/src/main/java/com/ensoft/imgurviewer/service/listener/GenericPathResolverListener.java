@@ -17,11 +17,17 @@ public class GenericPathResolverListener extends PathResolverListener
 	}
 
 	@Override
-	public void onPathResolved( Uri url, MediaType mediaType, Uri thumbnailOrReferer )
+	public void onPathResolved( Uri url, MediaType mediaType, Uri thumbnailOrReferer, Object additionalData )
 	{
 		if ( mediaType == MediaType.VIDEO_MP4 )
 		{
-			resourceLoadListener.loadVideo( url, mediaType, thumbnailOrReferer );
+			VideoOptions options = null;
+			if(additionalData instanceof VideoOptions) {
+				options = (VideoOptions) additionalData;
+			} else {
+				options = new VideoOptions();
+			}
+			resourceLoadListener.loadVideo( url, mediaType, thumbnailOrReferer, options);
 		}
 		else
 		{

@@ -40,6 +40,7 @@ import com.ensoft.imgurviewer.service.event.OnViewLockStateChange;
 import com.ensoft.imgurviewer.service.listener.AlbumPagerProvider;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
+import com.ensoft.imgurviewer.service.listener.VideoOptions;
 import com.ensoft.imgurviewer.view.activity.AppActivity;
 import com.ensoft.imgurviewer.view.activity.SettingsActivity;
 import com.ensoft.imgurviewer.view.helper.MetricsHelper;
@@ -274,9 +275,9 @@ public class ImageViewerFragment extends Fragment
 		new ResourceSolver( new ResourceLoadListener()
 		{
 			@Override
-			public void loadVideo( Uri uri, MediaType mediaType, Uri referer )
+			public void loadVideo(Uri uri, MediaType mediaType, Uri referer, VideoOptions options)
 			{
-				ImageViewerFragment.this.loadVideo( uri, mediaType );
+				ImageViewerFragment.this.loadVideo( uri, mediaType, options );
 				
 				if ( App.getInstance().getPreferencesService().getDisableWindowTransparency() )
 					TransparencyUtils.convertActivityFromTranslucent( getActivity() );
@@ -510,7 +511,7 @@ public class ImageViewerFragment extends Fragment
 		delayedHide();
 	}
 	
-	public void loadVideo( Uri uri, MediaType mediaType )
+	public void loadVideo( Uri uri, MediaType mediaType, VideoOptions options )
 	{
 		currentResource = uri;
 		
@@ -587,10 +588,21 @@ public class ImageViewerFragment extends Fragment
 		{
 			dataSourceFactory = new FileDataSource.Factory();
 		}
-		
+
+		MediaItem.Builder itemBuilder = new MediaItem.Builder()
+				.setUri(uri);
+
+		if(options.isClipped()) {
+			itemBuilder.setClippingConfiguration(new MediaItem.ClippingConfiguration.Builder()
+					.setStartPositionMs(options.getClipStartPosition())
+					.setEndPositionMs(options.getClipEndPosition())
+					.build()
+			);
+		}
+
 		MediaSource mediaSource = new DefaultMediaSourceFactory( dataSourceFactory )
-			.createMediaSource( MediaItem.fromUri( uri ) );
-		
+			.createMediaSource( itemBuilder.build() );
+
 		player.setMediaSource( mediaSource );
 		player.setTrackSelectionParameters(player.getTrackSelectionParameters().buildUpon().setMaxVideoSizeSd().build());
 		player.prepare();

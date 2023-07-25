@@ -8,6 +8,7 @@ import com.ensoft.imgurviewer.model.MediaType;
 import com.ensoft.imgurviewer.service.listener.AlbumProvider;
 import com.ensoft.imgurviewer.service.listener.AlbumSolverListener;
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
+import com.ensoft.imgurviewer.service.listener.VideoOptions;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,7 +29,7 @@ public class ResourceSolverTest
 		ResourceSolver resourceSolver = new ResourceSolver( new ResourceLoadListener()
 		{
 			@Override
-			public void loadVideo( Uri uri, MediaType mediaType, Uri referer )
+			public void loadVideo(Uri uri, MediaType mediaType, Uri referer, VideoOptions options)
 			{
 				waitResponse = false;
 				Assert.assertNotNull(uri);

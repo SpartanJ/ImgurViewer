@@ -12,6 +12,7 @@ import com.ensoft.imgurviewer.model.PipedStreamResponse;
 import com.ensoft.imgurviewer.model.PipedVideoStream;
 import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
+import com.ensoft.imgurviewer.service.listener.VideoOptions;
 import com.ensoft.restafari.network.processor.ResponseListener;
 import com.ensoft.restafari.network.service.RequestService;
 
@@ -52,15 +53,21 @@ public class YouTubeService extends MediaServiceSolver  {
             pathResolverListener.onPathError(uri, "Could not extract the video id");
             return;
         }
+        VideoOptions options = new VideoOptions();
         if(!info.clip) {
-            resolveVideo(uri, info.id, pathResolverListener);
+            resolveVideo(uri, info.id, options, pathResolverListener);
         } else {
             RequestService.getInstance().makeStringRequest(Request.Method.GET, YOUTUBE_CLIP_BASE_URL + info.id, new ResponseListener<String>() {
                 @Override
                 public void onRequestSuccess(Context context, String response) {
                     ClipInfo info = parseClipInfo(response);
+                    if(info == null) {
+                        pathResolverListener.onPathError(uri, "Could not resolve clip");
+                        return;
+                    }
                     Log.i("YOUTUBE CLIP", "id: " + info.parent + " start: " + info.startMs + " end: " + info.endMs);
-                    //resolveVideo(uri, info.parent, pathResolverListener);
+                    options.setClipRange(info.startMs, info.endMs);
+                    resolveVideo(uri, info.parent, options, pathResolverListener);
                 }
                 @Override
                 public void onRequestError(Context context, int errorCode, String errorMessage) {
@@ -70,7 +77,7 @@ public class YouTubeService extends MediaServiceSolver  {
         }
     }
 
-    private void resolveVideo(Uri uri, String id, PathResolverListener pathResolverListener) {
+    private void resolveVideo(Uri uri, String id, VideoOptions options, PathResolverListener pathResolverListener) {
         String endpoint = PIPED_INSTANCE + "/streams/" + id;
         RequestService.getInstance().makeJsonRequest(Request.Method.GET, endpoint, new ResponseListener<PipedStreamResponse>() {
             @Override
@@ -83,7 +90,8 @@ public class YouTubeService extends MediaServiceSolver  {
                 pathResolverListener.onPathResolved(
                         Uri.parse(stream.getVideoUrl()),
                         MediaType.VIDEO_MP4,
-                        uri );
+                        uri,
+                        options);
             }
             @Override
             public void onRequestError(Context context, int errorCode, String errorMessage) {
