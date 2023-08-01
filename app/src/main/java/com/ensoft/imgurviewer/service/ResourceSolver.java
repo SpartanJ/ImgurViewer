@@ -46,6 +46,7 @@ import com.ensoft.imgurviewer.service.resource.XnxxService;
 import com.ensoft.imgurviewer.service.resource.YouPornService;
 import com.ensoft.imgurviewer.service.resource.YouTubeService;
 import com.ensoft.imgurviewer.view.activity.ImgurAlbumGalleryViewer;
+import com.imgurviewer.BuildConfig;
 
 import java.util.ArrayList;
 
@@ -115,7 +116,8 @@ public class ResourceSolver
 		addSolver( new StreamffService() );
 		addSolver( new ArazuService() );
 		addSolver( new KickService() );
-		addSolver( new YouTubeService() );
+		if(!BuildConfig.FLAVOR.endsWith("playstore"))
+			addSolver( new YouTubeService() );
 		addSolver( new GenericServiceSolver() );
 	}
 	
