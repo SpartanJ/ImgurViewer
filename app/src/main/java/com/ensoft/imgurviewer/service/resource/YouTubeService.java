@@ -2,51 +2,38 @@ package com.ensoft.imgurviewer.service.resource;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Handler;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import com.android.volley.Request;
-import com.ensoft.imgurviewer.App;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.ensoft.imgurviewer.model.MediaType;
-import com.ensoft.imgurviewer.service.UriUtils;
+import com.ensoft.imgurviewer.model.YouTubeVideo;
+import com.ensoft.imgurviewer.model.YouTubeVideoFormat;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
 import com.ensoft.imgurviewer.service.listener.VideoOptions;
 import com.ensoft.restafari.network.processor.ResponseListener;
 import com.ensoft.restafari.network.service.RequestService;
+import com.google.gson.Gson;
 
-import org.schabi.newpipe.extractor.NewPipe;
-import org.schabi.newpipe.extractor.ServiceList;
-import org.schabi.newpipe.extractor.downloader.Downloader;
-import org.schabi.newpipe.extractor.downloader.Response;
-import org.schabi.newpipe.extractor.exceptions.ReCaptchaException;
-import org.schabi.newpipe.extractor.services.youtube.YoutubeService;
-import org.schabi.newpipe.extractor.stream.StreamExtractor;
-import org.schabi.newpipe.extractor.stream.VideoStream;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.io.IOException;
-import java.util.Arrays;
+import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 
 
 public class YouTubeService extends MediaServiceSolver  {
 
+    public static final String TAG = YouTubeService.class.getCanonicalName();
     private static final String YOUTUBE_CLIP_BASE_URL = "https://youtube.com/clip/";
 
-    private static boolean newPipeInitialized = false;
+    private static final String YOUTUBE_INTERNAL_API_URL = "https://www.youtube.com/youtubei/v1/player?key=AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w";
+    private static final String YOUTUBE_INTERNAL_API_REQUEST_CONTEXT = "{\"client\":{\"clientName\":\"ANDROID\",\"clientVersion\":\"17.31.35\",\"androidSdkVersion\":30}}";
+    private static final String YOUTUBE_INTERNAL_API_USER_AGENT = "com.google.android.youtube/17.31.35 (Linux; U; Android 11) gzip";
 
     @Override
     public void getPath(Uri uri, PathResolverListener pathResolverListener) {
@@ -69,7 +56,7 @@ public class YouTubeService extends MediaServiceSolver  {
                         pathResolverListener.onPathError(uri, "Could not resolve clip");
                         return;
                     }
-                    Log.d("YouTube Service", "Resolved Clip: videoId: " + info.parent + " start: " + info.startMs + " end: " + info.endMs);
+                    Log.d(TAG, "Resolved Clip: videoId: " + info.parent + " start: " + info.startMs + " end: " + info.endMs);
                     options.setClipRange(info.startMs, info.endMs);
                     resolveVideo(uri, info.parent, options, pathResolverListener);
                 }
@@ -82,35 +69,63 @@ public class YouTubeService extends MediaServiceSolver  {
     }
 
     private void resolveVideo(Uri uri, String id, VideoOptions options, PathResolverListener pathResolverListener) {
-        if(!newPipeInitialized) {
-            OkHttpDownloader.init(null);
-            NewPipe.init(OkHttpDownloader.getInstance());
-            newPipeInitialized = true;
+        JSONObject request = new JSONObject();
+        try {
+            request.put("videoId", id);
+            request.put("context", new JSONObject(YOUTUBE_INTERNAL_API_REQUEST_CONTEXT));
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        Handler handler = new Handler(App.getInstance().getMainLooper());
-        new Thread(() -> {
-            try {
-                long t =  System.currentTimeMillis();
-                YoutubeService yt = ServiceList.YouTube;
-                StreamExtractor extractor = yt.getStreamExtractor(yt.getStreamLHFactory().fromId(id));
-                extractor.fetchPage();
-                Optional<VideoStream> stream = extractor
-                        .getVideoStreams()
-                        .stream()
-                        .max(Comparator.comparing(VideoStream::getHeight));
-                Log.d("YouTubeExtractor", "Extraction took " + (System.currentTimeMillis() - t) + "ms");
-                handler.post(() ->  {
-                    if(stream.isPresent()) {
-                        pathResolverListener.onPathResolved(Uri.parse(stream.get().getContent()), MediaType.VIDEO_MP4, uri, options);
-                    } else {
-                        pathResolverListener.onPathError(uri, "Could not find a suitable video stream");
+        Log.v(TAG, request.toString());
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST,
+                YOUTUBE_INTERNAL_API_URL,
+                null,
+                response -> {
+                    try
+                    {
+                        YouTubeVideo video = new Gson().fromJson( response.toString(), YouTubeVideo.class );
+                        Optional<YouTubeVideoFormat> stream = video
+                            .getFormats()
+                            .stream()
+                            .max(Comparator.comparing(f -> f.height));
+                        if(stream.isPresent()) {
+                            pathResolverListener.onPathResolved(Uri.parse(stream.get().url), MediaType.VIDEO_MP4, uri, options);
+                        } else {
+                            pathResolverListener.onPathError(uri, "Could not find a suitable video stream");
+                        }
                     }
-                });
-            } catch (Exception e) {
-                Log.e("NewPipeExtractor", "Failed to extract video information", e);
-                handler.post(() -> pathResolverListener.onPathError(uri, e.getMessage()));
+                    catch ( Exception e )
+                    {
+                        Log.v(TAG, e.getMessage());
+                        pathResolverListener.onPathError(uri, e.getMessage());
+                    }
+                },
+                e -> {
+                    Log.v(TAG, e.getMessage());
+                    pathResolverListener.onPathError(uri, e.getMessage());
+                }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
             }
-        }).start();
+
+            @Override
+            public byte[] getBody() {
+                return request.toString().getBytes(StandardCharsets.UTF_8);
+            }
+
+            @Override
+            public Map<String, String> getHeaders()
+            {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("User-Agent", YOUTUBE_INTERNAL_API_USER_AGENT);
+                return headers;
+            }
+        };
+
+        RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
     }
 
 
@@ -161,7 +176,7 @@ public class YouTubeService extends MediaServiceSolver  {
         return null;
     }
 
-    class VideoType {
+    static class VideoType {
         public String id;
         public boolean clip;
         public int startTime;
@@ -173,7 +188,7 @@ public class YouTubeService extends MediaServiceSolver  {
         }
     }
 
-    class ClipInfo {
+    static class ClipInfo {
         public String parent;
         public int startMs, endMs;
 
@@ -210,135 +225,4 @@ public class YouTubeService extends MediaServiceSolver  {
         return haystack.substring(start, end);
     }
 
-}
-
-class OkHttpDownloader extends Downloader {
-
-    //public static final String USER_AGENT =
-    //        "Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0";
-    public static final String YOUTUBE_RESTRICTED_MODE_COOKIE_KEY =
-            "youtube_restricted_mode_key";
-    public static final String YOUTUBE_RESTRICTED_MODE_COOKIE = "PREF=f2=8000000";
-    public static final String YOUTUBE_DOMAIN = "youtube.com";
-
-    private static OkHttpDownloader instance;
-    private final Map<String, String> mCookies;
-    private final OkHttpClient client;
-
-    public OkHttpDownloader(final OkHttpClient.Builder builder) {
-        this.client = builder
-                .readTimeout(30, TimeUnit.SECONDS)
-//                .cache(new Cache(new File(context.getExternalCacheDir(), "okhttp"),
-//                        16 * 1024 * 1024))
-                .build();
-        this.mCookies = new HashMap<>();
-    }
-
-    public static OkHttpDownloader init(final OkHttpClient.Builder builder) {
-        instance = new OkHttpDownloader(
-                builder != null ? builder : new OkHttpClient.Builder());
-        return instance;
-    }
-
-    public static OkHttpDownloader getInstance() {
-        return instance;
-    }
-
-    public String getCookies(final String url) {
-        String youtubeCookie = url.contains(YOUTUBE_DOMAIN)
-                ? getCookie(YOUTUBE_RESTRICTED_MODE_COOKIE_KEY) : null;
-        //// Recaptcha cookie is always added TODO: not sure if this is necessary
-        return Stream.of(youtubeCookie /*, getCookie(ReCaptchaActivity.RECAPTCHA_COOKIES_KEY) */)
-                .filter(Objects::nonNull)
-                .flatMap(cookies -> Arrays.stream(cookies.split("; *")))
-                .distinct()
-                .collect(Collectors.joining("; "));
-    }
-
-    public String getCookie(final String key) {
-        return mCookies.get(key);
-    }
-
-    public void setCookie(final String key, final String cookie) {
-        mCookies.put(key, cookie);
-    }
-
-    public void removeCookie(final String key) {
-        mCookies.remove(key);
-    }
-
-    public void updateYoutubeRestrictedModeCookies(final boolean youtubeRestrictedModeEnabled) {
-        if (youtubeRestrictedModeEnabled) {
-            setCookie(YOUTUBE_RESTRICTED_MODE_COOKIE_KEY,
-                    YOUTUBE_RESTRICTED_MODE_COOKIE);
-        } else {
-            removeCookie(YOUTUBE_RESTRICTED_MODE_COOKIE_KEY);
-        }
-        //InfoCache.getInstance().clearCache();
-    }
-
-    public long getContentLength(final String url) throws IOException {
-        try {
-            final Response response = head(url);
-            return Long.parseLong(response.getHeader("Content-Length"));
-        } catch (final NumberFormatException e) {
-            throw new IOException("Invalid content length", e);
-        } catch (final ReCaptchaException e) {
-            throw new IOException(e);
-        }
-    }
-
-    @Override
-    public Response execute(@NonNull org.schabi.newpipe.extractor.downloader.Request request) throws IOException, ReCaptchaException {
-        final String httpMethod = request.httpMethod();
-        final String url = request.url();
-        final Map<String, List<String>> headers = request.headers();
-        final byte[] dataToSend = request.dataToSend();
-
-        RequestBody requestBody = null;
-        if (dataToSend != null) {
-            requestBody = RequestBody.create(dataToSend);
-        }
-
-        final okhttp3.Request.Builder requestBuilder = new okhttp3.Request.Builder()
-                .method(httpMethod, requestBody).url(url)
-                .addHeader("User-Agent", UriUtils.getDefaultUserAgent());
-
-        final String cookies = getCookies(url);
-        if (!cookies.isEmpty()) {
-            requestBuilder.addHeader("Cookie", cookies);
-        }
-
-        for (final Map.Entry<String, List<String>> pair : headers.entrySet()) {
-            final String headerName = pair.getKey();
-            final List<String> headerValueList = pair.getValue();
-
-            if (headerValueList.size() > 1) {
-                requestBuilder.removeHeader(headerName);
-                for (final String headerValue : headerValueList) {
-                    requestBuilder.addHeader(headerName, headerValue);
-                }
-            } else if (headerValueList.size() == 1) {
-                requestBuilder.header(headerName, headerValueList.get(0));
-            }
-
-        }
-        final okhttp3.Response response = client.newCall(requestBuilder.build()).execute();
-
-        if (response.code() == 429) {
-            response.close();
-
-            throw new ReCaptchaException("reCaptcha Challenge requested", url);
-        }
-
-        final ResponseBody body = response.body();
-        String responseBodyToReturn = null;
-
-        if (body != null) {
-            responseBodyToReturn = body.string();
-        }
-        final String latestUrl = response.request().url().toString();
-        return new Response(response.code(), response.message(), response.headers().toMultimap(),
-                responseBodyToReturn, latestUrl);
-    }
 }
