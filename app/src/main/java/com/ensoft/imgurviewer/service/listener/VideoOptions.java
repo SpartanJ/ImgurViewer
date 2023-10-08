@@ -1,29 +1,31 @@
 package com.ensoft.imgurviewer.service.listener;
 
+import android.net.Uri;
 import android.util.Pair;
-
-import com.google.common.base.Optional;
 
 
 public class VideoOptions {
 
-    private Optional<Pair<Integer, Integer>> clipRange = Optional.absent();
+    private Pair<Integer, Integer> clipRange = null;
     private int startTime = 0;
 
+    private Uri audioTrack = null;
+
     public void setClipRange(int start, int end) {
-        clipRange = Optional.of(Pair.create(start, end));
+        clipRange = Pair.create(start, end);
     }
 
     public boolean isClipped() {
-        return clipRange.isPresent();
+        return clipRange != null;
     }
 
+
     public int getClipStartPosition() {
-        return clipRange.get().first;
+        return clipRange.first;
     }
 
     public int getClipEndPosition() {
-        return clipRange.get().second;
+        return clipRange.second;
     }
 
     public int getStartTime() {
@@ -33,4 +35,17 @@ public class VideoOptions {
     public void setStartTime(int startTime) {
         this.startTime = startTime;
     }
+
+    public void setExternalAudioTrack(Uri uri) {
+        audioTrack = uri;
+    }
+
+    public boolean hasExternalAudioTrack() {
+        return this.audioTrack != null;
+    }
+
+    public Uri getExternalAudioTrack() {
+        return audioTrack;
+    }
+
 }

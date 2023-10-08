@@ -61,6 +61,7 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.MergingMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
@@ -589,19 +590,34 @@ public class ImageViewerFragment extends Fragment
 			dataSourceFactory = new FileDataSource.Factory();
 		}
 
+		MediaItem.ClippingConfiguration clippingConfig = null;
+		if(options.isClipped()) {
+			clippingConfig = new MediaItem.ClippingConfiguration.Builder()
+					.setStartPositionMs(options.getClipStartPosition())
+					.setEndPositionMs(options.getClipEndPosition())
+					.build();
+		}
+
 		MediaItem.Builder itemBuilder = new MediaItem.Builder()
 				.setUri(uri);
 
-		if(options.isClipped()) {
-			itemBuilder.setClippingConfiguration(new MediaItem.ClippingConfiguration.Builder()
-					.setStartPositionMs(options.getClipStartPosition())
-					.setEndPositionMs(options.getClipEndPosition())
-					.build()
-			);
+		if(clippingConfig != null) {
+			itemBuilder.setClippingConfiguration(clippingConfig);
 		}
 
 		MediaSource mediaSource = new DefaultMediaSourceFactory( dataSourceFactory )
 			.createMediaSource( itemBuilder.build() );
+
+		if(options.hasExternalAudioTrack()) {
+			MediaItem.Builder audioBuilder = new MediaItem.Builder()
+					.setUri(options.getExternalAudioTrack());
+			if(clippingConfig != null) {
+				audioBuilder.setClippingConfiguration(clippingConfig);
+			}
+			MediaSource audioTrack = new DefaultMediaSourceFactory( dataSourceFactory )
+					.createMediaSource( audioBuilder.build() );
+			mediaSource = new MergingMediaSource(false, mediaSource, audioTrack);
+		}
 
 		player.setMediaSource( mediaSource );
 		player.setTrackSelectionParameters(player.getTrackSelectionParameters().buildUpon().setMaxVideoSizeSd().build());

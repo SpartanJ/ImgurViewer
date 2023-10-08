@@ -10,4 +10,11 @@ public class YouTubeVideoFormat {
     @SerializedName("height")
     public int height;
 
+    @SerializedName("bitrate")
+    public int bitrate;
+
+    public boolean hasVideo() {
+        return height > 0;
+    }
+
 }

@@ -20,6 +20,10 @@ public class YouTubeVideo {
         return this.streamingData.formats;
     }
 
+    public List<YouTubeVideoFormat> getAdaptiveFormats() {
+        return this.streamingData.adaptiveFormats;
+    }
+
     static class Status {
         @SerializedName("status")
         public String status;
@@ -28,6 +32,9 @@ public class YouTubeVideo {
     static class StreamingData {
         @SerializedName("formats")
         protected List<YouTubeVideoFormat> formats;
+
+        @SerializedName("adaptiveFormats")
+        protected List<YouTubeVideoFormat> adaptiveFormats;
     }
 
 }

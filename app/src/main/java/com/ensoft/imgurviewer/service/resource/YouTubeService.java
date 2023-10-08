@@ -30,10 +30,12 @@ public class YouTubeService extends MediaServiceSolver  {
 
     public static final String TAG = YouTubeService.class.getCanonicalName();
     private static final String YOUTUBE_CLIP_BASE_URL = "https://youtube.com/clip/";
-
     private static final String YOUTUBE_INTERNAL_API_URL = "https://www.youtube.com/youtubei/v1/player?key=AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w";
     private static final String YOUTUBE_INTERNAL_API_REQUEST_CONTEXT = "{\"client\":{\"clientName\":\"ANDROID\",\"clientVersion\":\"17.31.35\",\"androidSdkVersion\":30}}";
     private static final String YOUTUBE_INTERNAL_API_USER_AGENT = "com.google.android.youtube/17.31.35 (Linux; U; Android 11) gzip";
+    //Loading times are much slower when using adaptive formats
+    //Probably a problem with MergingMediaSource
+    private static final boolean USE_ADAPTIVE_FORMATS = false;
 
     @Override
     public void getPath(Uri uri, PathResolverListener pathResolverListener) {
@@ -85,13 +87,31 @@ public class YouTubeService extends MediaServiceSolver  {
                 response -> {
                     try
                     {
-                        YouTubeVideo video = new Gson().fromJson( response.toString(), YouTubeVideo.class );
-                        Optional<YouTubeVideoFormat> stream = video
-                            .getFormats()
-                            .stream()
-                            .max(Comparator.comparing(f -> f.height));
-                        if(stream.isPresent()) {
-                            pathResolverListener.onPathResolved(Uri.parse(stream.get().url), MediaType.VIDEO_MP4, uri, options);
+                        YouTubeVideo ytv = new Gson().fromJson( response.toString(), YouTubeVideo.class );
+
+                        Optional<YouTubeVideoFormat> video = ytv
+                                .getAdaptiveFormats()
+                                .stream()
+                                .filter(f -> f.hasVideo() && f.height <= 1080)
+                                .max(Comparator.comparing(f -> f.height));
+
+                        Optional<YouTubeVideoFormat> audio = ytv
+                                .getAdaptiveFormats()
+                                .stream()
+                                .filter(f -> !f.hasVideo())
+                                .max(Comparator.comparing(f -> f.bitrate));
+
+                        Optional<YouTubeVideoFormat> mixed = ytv
+                                .getFormats()
+                                .stream()
+                                .filter(f -> f.height <= 1080)
+                                .max(Comparator.comparing(f -> f.height));
+
+                        if(USE_ADAPTIVE_FORMATS && video.isPresent() && audio.isPresent()) {
+                            options.setExternalAudioTrack(Uri.parse(audio.get().url));
+                            pathResolverListener.onPathResolved(Uri.parse(video.get().url), MediaType.VIDEO_MP4, uri, options);
+                        } else if(mixed.isPresent()) {
+                            pathResolverListener.onPathResolved(Uri.parse(mixed.get().url), MediaType.VIDEO_MP4, uri, options);
                         } else {
                             pathResolverListener.onPathError(uri, "Could not find a suitable video stream");
                         }
@@ -127,8 +147,6 @@ public class YouTubeService extends MediaServiceSolver  {
 
         RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
     }
-
-
 
     @Override
     public boolean isServicePath(Uri uri) {
