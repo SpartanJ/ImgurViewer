@@ -39,7 +39,7 @@ public class YouTubeService extends MediaServiceSolver  {
 
     @Override
     public void getPath(Uri uri, PathResolverListener pathResolverListener) {
-        VideoType info = parseUri(uri);
+        YouTubeUtils.VideoType info = YouTubeUtils.parseUri(uri);
         if(info == null) {
             pathResolverListener.onPathError(uri, "Could not extract the video id");
             return;
@@ -150,60 +150,12 @@ public class YouTubeService extends MediaServiceSolver  {
 
     @Override
     public boolean isServicePath(Uri uri) {
-        return parseUri(uri) != null;
+        return YouTubeUtils.parseUri(uri) != null;
     }
 
     @Override
     public boolean isGallery(Uri uri) {
         return false;
-    }
-
-    private VideoType parseUri(Uri uri) {
-        String host = uri.getHost();
-        if(host == null)
-            return null;
-
-        int start = 0;
-        {
-            String timestamp = uri.getQueryParameter("t");
-            try {
-                if (timestamp != null)
-                    start = Integer.parseInt(timestamp);
-            } catch (NumberFormatException ignored) {}
-        }
-
-        if(host.endsWith("youtu.be")) {
-            List<String> path = uri.getPathSegments();
-            if(path == null || path.isEmpty())
-                return null;
-            return new VideoType(path.get(0), start, false);
-        } else if(host.endsWith("youtube.com")) {
-            String id = uri.getQueryParameter("v");
-            if(id != null)
-                return new VideoType(id, start, false);
-            List<String> path = uri.getPathSegments();
-            if(path == null || path.size() < 2)
-                return null;
-            if(path.get(0).equals("clip"))
-                return new VideoType(path.get(1), start, true);
-            if(!path.get(0).matches("(embed|v|shorts)"))
-                return null;
-            return new VideoType(path.get(1), start, false);
-        }
-
-        return null;
-    }
-
-    static class VideoType {
-        public String id;
-        public boolean clip;
-        public int startTime;
-
-        public VideoType(String id, int startTime, boolean clip) {
-            this.id = id;
-            this.clip = clip;
-            this.startTime = startTime;
-        }
     }
 
     static class ClipInfo {

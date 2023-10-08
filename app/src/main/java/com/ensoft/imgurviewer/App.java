@@ -2,7 +2,9 @@ package com.ensoft.imgurviewer;
 
 import android.app.Application;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.util.Log;
 
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -107,4 +109,22 @@ public class App extends Application
 			return "";
 		}
 	}
+
+	public boolean isPlayStore() {
+		String installer = null;
+		PackageManager packageManager = getPackageManager();
+
+		try {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)  {
+				installer = packageManager.getInstallSourceInfo(getPackageName()).getInstallingPackageName();
+			} else {
+				installer = packageManager.getInstallerPackageName(getPackageName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return installer != null && installer.equalsIgnoreCase("com.android.vending");
+	}
+
 }

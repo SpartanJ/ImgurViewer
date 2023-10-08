@@ -2,6 +2,7 @@ package com.ensoft.imgurviewer.service;
 
 import android.net.Uri;
 
+import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
 import com.ensoft.imgurviewer.service.listener.VideoOptions;
 import com.ensoft.imgurviewer.service.resource.ArazuService;
@@ -44,9 +45,9 @@ import com.ensoft.imgurviewer.service.resource.XHamsterService;
 import com.ensoft.imgurviewer.service.resource.XVideosService;
 import com.ensoft.imgurviewer.service.resource.XnxxService;
 import com.ensoft.imgurviewer.service.resource.YouPornService;
+import com.ensoft.imgurviewer.service.resource.YouTubePlayStoreService;
 import com.ensoft.imgurviewer.service.resource.YouTubeService;
 import com.ensoft.imgurviewer.view.activity.ImgurAlbumGalleryViewer;
-import com.imgurviewer.BuildConfig;
 
 import java.util.ArrayList;
 
@@ -116,8 +117,7 @@ public class ResourceSolver
 		addSolver( new StreamffService() );
 		addSolver( new ArazuService() );
 		addSolver( new KickService() );
-		if(!BuildConfig.FLAVOR.endsWith("playstore"))
-			addSolver( new YouTubeService() );
+		addSolver( !App.getInstance().isPlayStore() ? new YouTubeService() : new YouTubePlayStoreService());
 		addSolver( new GenericServiceSolver() );
 	}
 	

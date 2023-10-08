@@ -24,20 +24,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    flavorDimensions "platform"
-    productFlavors {
-        playstore {
-            dimension "platform"
-            applicationIdSuffix ".playstore"
-            versionNameSuffix "-playstore"
-        }
-        fdroid {
-            dimension "platform"
-            applicationIdSuffix ".fdroid"
-            versionNameSuffix "-fdroid"
-        }
-
-    }
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
