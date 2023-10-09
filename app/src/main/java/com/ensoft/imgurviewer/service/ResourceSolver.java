@@ -2,7 +2,9 @@ package com.ensoft.imgurviewer.service;
 
 import android.net.Uri;
 
+import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
+import com.ensoft.imgurviewer.service.listener.VideoOptions;
 import com.ensoft.imgurviewer.service.resource.ArazuService;
 import com.ensoft.imgurviewer.service.resource.ClippitUserService;
 import com.ensoft.imgurviewer.service.resource.DeviantArtService;
@@ -43,6 +45,8 @@ import com.ensoft.imgurviewer.service.resource.XHamsterService;
 import com.ensoft.imgurviewer.service.resource.XVideosService;
 import com.ensoft.imgurviewer.service.resource.XnxxService;
 import com.ensoft.imgurviewer.service.resource.YouPornService;
+import com.ensoft.imgurviewer.service.resource.YouTubePlayStoreService;
+import com.ensoft.imgurviewer.service.resource.YouTubeService;
 import com.ensoft.imgurviewer.view.activity.ImgurAlbumGalleryViewer;
 
 import java.util.ArrayList;
@@ -113,6 +117,7 @@ public class ResourceSolver
 		addSolver( new StreamffService() );
 		addSolver( new ArazuService() );
 		addSolver( new KickService() );
+		addSolver( !App.getInstance().isPlayStore() ? new YouTubeService() : new YouTubePlayStoreService());
 		addSolver( new GenericServiceSolver() );
 	}
 	
@@ -143,7 +148,7 @@ public class ResourceSolver
 		{
 			if ( UriUtils.isVideoUrl( uri ) || UriUtils.isAudioUrl( uri ) )
 			{
-				resourceLoadListener.loadVideo( uri, UriUtils.guessMediaTypeFromUri( uri ), uri );
+				resourceLoadListener.loadVideo( uri, UriUtils.guessMediaTypeFromUri( uri ), uri, new VideoOptions());
 			}
 			else
 			{

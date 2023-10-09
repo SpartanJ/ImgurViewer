@@ -43,7 +43,7 @@ public class GyazoService extends MediaServiceSolver
 					new GyazoVideoService().getPath( playerUri, new PathResolverListener( GyazoService.this )
 					{
 						@Override
-						public void onPathResolved( Uri url, MediaType mediaType, Uri thumbnailOrReferer )
+						public void onPathResolved( Uri url, MediaType mediaType, Uri thumbnailOrReferer, Object additionalData )
 						{
 							pathResolverListener.onPathResolved( url, mediaType, thumbnailOrReferer );
 						}

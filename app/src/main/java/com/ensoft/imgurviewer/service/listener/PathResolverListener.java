@@ -19,7 +19,11 @@ public abstract class PathResolverListener
 		return serviceSolver;
 	}
 	
-	public abstract void onPathResolved( Uri url, MediaType mediaType, Uri thumbnailOrReferer );
-	
+	public void onPathResolved( Uri url, MediaType mediaType, Uri thumbnailOrReferer ) {
+		this.onPathResolved(url, mediaType, thumbnailOrReferer, null);
+	}
+
+	public abstract void onPathResolved ( Uri url, MediaType mediaType, Uri thumbnailOrReferer, Object additionalData);
+
 	public abstract void onPathError( Uri url, String error );
 }
