@@ -40,6 +40,7 @@ import com.ensoft.imgurviewer.service.event.OnViewLockStateChange;
 import com.ensoft.imgurviewer.service.listener.AlbumPagerProvider;
 import com.ensoft.imgurviewer.service.listener.ControllerImageInfoListener;
 import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
+import com.ensoft.imgurviewer.service.listener.VideoOptions;
 import com.ensoft.imgurviewer.view.activity.AppActivity;
 import com.ensoft.imgurviewer.view.activity.SettingsActivity;
 import com.ensoft.imgurviewer.view.helper.MetricsHelper;
@@ -60,6 +61,7 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.MergingMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
@@ -274,9 +276,9 @@ public class ImageViewerFragment extends Fragment
 		new ResourceSolver( new ResourceLoadListener()
 		{
 			@Override
-			public void loadVideo( Uri uri, MediaType mediaType, Uri referer )
+			public void loadVideo(Uri uri, MediaType mediaType, Uri referer, VideoOptions options)
 			{
-				ImageViewerFragment.this.loadVideo( uri, mediaType );
+				ImageViewerFragment.this.loadVideo( uri, mediaType, options );
 				
 				if ( App.getInstance().getPreferencesService().getDisableWindowTransparency() )
 					TransparencyUtils.convertActivityFromTranslucent( getActivity() );
@@ -510,7 +512,7 @@ public class ImageViewerFragment extends Fragment
 		delayedHide();
 	}
 	
-	public void loadVideo( Uri uri, MediaType mediaType )
+	public void loadVideo( Uri uri, MediaType mediaType, VideoOptions options )
 	{
 		currentResource = uri;
 		
@@ -587,12 +589,42 @@ public class ImageViewerFragment extends Fragment
 		{
 			dataSourceFactory = new FileDataSource.Factory();
 		}
-		
+
+		MediaItem.ClippingConfiguration clippingConfig = null;
+		if(options.isClipped()) {
+			clippingConfig = new MediaItem.ClippingConfiguration.Builder()
+					.setStartPositionMs(options.getClipStartPosition())
+					.setEndPositionMs(options.getClipEndPosition())
+					.build();
+		}
+
+		MediaItem.Builder itemBuilder = new MediaItem.Builder()
+				.setUri(uri);
+
+		if(clippingConfig != null) {
+			itemBuilder.setClippingConfiguration(clippingConfig);
+		}
+
 		MediaSource mediaSource = new DefaultMediaSourceFactory( dataSourceFactory )
-			.createMediaSource( MediaItem.fromUri( uri ) );
-		
+			.createMediaSource( itemBuilder.build() );
+
+		if(options.hasExternalAudioTrack()) {
+			MediaItem.Builder audioBuilder = new MediaItem.Builder()
+					.setUri(options.getExternalAudioTrack());
+			if(clippingConfig != null) {
+				audioBuilder.setClippingConfiguration(clippingConfig);
+			}
+			MediaSource audioTrack = new DefaultMediaSourceFactory( dataSourceFactory )
+					.createMediaSource( audioBuilder.build() );
+			mediaSource = new MergingMediaSource(false, mediaSource, audioTrack);
+		}
+
 		player.setMediaSource( mediaSource );
 		player.setTrackSelectionParameters(player.getTrackSelectionParameters().buildUpon().setMaxVideoSizeSd().build());
+
+		if(options.getStartTime() > 0)
+			player.seekTo(options.getStartTime());
+
 		player.prepare();
 		
 		delayedHide();

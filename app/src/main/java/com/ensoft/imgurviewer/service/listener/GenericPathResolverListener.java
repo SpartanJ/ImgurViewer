@@ -3,6 +3,7 @@ package com.ensoft.imgurviewer.service.listener;
 import android.net.Uri;
 
 import com.ensoft.imgurviewer.model.MediaType;
+import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.imgurviewer.service.resource.MediaServiceSolver;
 
 public class GenericPathResolverListener extends PathResolverListener
@@ -17,11 +18,17 @@ public class GenericPathResolverListener extends PathResolverListener
 	}
 
 	@Override
-	public void onPathResolved( Uri url, MediaType mediaType, Uri thumbnailOrReferer )
+	public void onPathResolved( Uri url, MediaType mediaType, Uri thumbnailOrReferer, Object additionalData )
 	{
-		if ( serviceSolver.isVideo( url ) )
+		if ( mediaType != MediaType.IMAGE )
 		{
-			resourceLoadListener.loadVideo( url, mediaType, thumbnailOrReferer );
+			VideoOptions options = null;
+			if(additionalData instanceof VideoOptions) {
+				options = (VideoOptions) additionalData;
+			} else {
+				options = new VideoOptions();
+			}
+			resourceLoadListener.loadVideo( url, mediaType, thumbnailOrReferer, options);
 		}
 		else
 		{
