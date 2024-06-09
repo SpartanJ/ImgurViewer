@@ -21,7 +21,7 @@ public class ResourceSolverTest
 	private static final String TAG = ResourceSolverTest.class.getCanonicalName();
 	private static final AlbumProvider[] ALBUM_PROVIDERS = AlbumProvider.getProviders();
 	private boolean waitResponse;
-	
+
 	@Test
 	public void resourceSolverTest() throws InterruptedException
 	{
@@ -34,7 +34,7 @@ public class ResourceSolverTest
 				Assert.assertNotNull(uri);
 				Log.v(TAG, uri.toString());
 			}
-			
+
 			@Override
 			public void loadImage( Uri uri, Uri thumbnail )
 			{
@@ -42,26 +42,26 @@ public class ResourceSolverTest
 				Assert.assertNotNull(uri);
 				Log.v(TAG, uri.toString());
 			}
-			
+
 			@Override
 			public void loadAlbum( Uri uri, Class<?> view )
 			{
 				Assert.assertNotNull(uri);
 				boolean providerFound = false;
-				
+
 				for ( AlbumProvider albumProvider : ALBUM_PROVIDERS )
 				{
 					if ( albumProvider.isAlbum( uri ) )
 					{
 						providerFound = true;
-						
+
 						albumProvider.getAlbum( uri, new AlbumSolverListener()
 						{
 							@Override
 							public void onAlbumResolved( ImgurImage[] album )
 							{
 								waitResponse = false;
-								
+
 								for ( ImgurImage image : album )
 								{
 									if ( image.getLink() != null )
@@ -70,18 +70,18 @@ public class ResourceSolverTest
 									}
 								}
 							}
-							
+
 							@Override
 							public void onImageResolved( ImgurImage image )
 							{
 								waitResponse = false;
-								
+
 								if ( image.getLink() != null )
 								{
 									Log.v( TAG, image.getLink() );
 								}
 							}
-							
+
 							@Override
 							public void onAlbumError( String error )
 							{
@@ -90,16 +90,16 @@ public class ResourceSolverTest
 								Assert.fail();
 							}
 						} );
-						
+
 						break;
 					}
 				}
-				
+
 				Assert.assertTrue( providerFound );
-				
+
 				Log.v(TAG, uri.toString());
 			}
-			
+
 			@Override
 			public void loadFailed( Uri uri, String error )
 			{
@@ -109,17 +109,18 @@ public class ResourceSolverTest
 				Assert.fail();
 			}
 		});
-		
+
 		String[] testUris = new String[] {
+			"https://www.reddit.com/gallery/1d5jt1t",
+			"https://www.reddit.com/gallery/pc1m7t",
+			"https://www.reddit.com/gallery/huxc4s",
+			"https://www.reddit.com/gallery/100pwis",
 			"https://prnt.sc/10jpuxg",
 			"https://prnt.sc/10jpuxg/direct",
 			"https://prntscr.com/10jpuxg",
 			"https://prntscr.com/10jpuxg/direct",
-			"https://www.reddit.com/gallery/pc1m7t",
 			"https://v.redd.it/zv89llsvexdz",
 			"https://v.redd.it/ulz7g757bb581",
-			"https://www.reddit.com/gallery/huxc4s",
-			"https://www.reddit.com/gallery/100pwis",
 			"https://www.redgifs.com/watch/terrificaridbrownbutterfly",
 			"https://redgifs.com/watch/jaggedunselfishgannet",
 			"https://www.redgifs.com/watch/beautifuluncomfortableegret",
@@ -190,15 +191,15 @@ public class ResourceSolverTest
 			"https://www.reddit.com/gallery/10vxerk",
 			"https://reddit.com/gallery/10vxn7n",
 		};
-		
+
 		for ( String testUri :testUris )
 		{
 			Uri uri = Uri.parse( testUri );
-			
+
 			waitResponse = true;
 			Log.v(TAG, "Testing: " + uri.toString());
 			resourceSolver.solve( uri );
-			
+
 			while (waitResponse)
 			{
 				Thread.sleep(10);
