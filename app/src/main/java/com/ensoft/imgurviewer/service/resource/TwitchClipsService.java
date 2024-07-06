@@ -21,13 +21,13 @@ import java.util.List;
 public class TwitchClipsService extends MediaServiceSolver
 {
 	public static final String TAG = TwitchClipsService.class.getCanonicalName();
-	protected static final String TWITCH_CLIENT_ID = "jzkbprff40iqj646a697cyrvl0zt2m6";
+	protected static final String TWITCH_CLIENT_ID = "ue6666qo983tsx6so1t0vnawi233wa";
 	protected static final String TWITCH_CLIPS_DOMAIN = "clips.twitch.tv";
 	protected static final String TWITCH_DOMAIN_SHORT = "twitch.tv";
 	protected static final String TWITCH_DOMAIN_FULL = "www.twitch.tv";
 	protected static final String TWITCH_CLIPS_STATUS = "https://gql.twitch.tv/gql";
 	protected static final String[] TWITCH_CLIPS_QUALITIES = new String[] { "source", "1080", "720", "480", "360" };
-	
+
 	protected String getClipId( Uri uri )
 	{
 		if ( uri.getLastPathSegment().equals( "embed" ) )
@@ -37,7 +37,7 @@ public class TwitchClipsService extends MediaServiceSolver
 
 		return uri.getLastPathSegment();
 	}
-	
+
 	protected Uri getVideoUrlFromResponse( TwitchClipResponse twitchClips )
 	{
 		try
@@ -46,56 +46,53 @@ public class TwitchClipsService extends MediaServiceSolver
 			{
 				TwitchClip[] clips = twitchClips.data.clip.getClips();
 				Uri first = null;
-				
+
 				for ( String quality : TWITCH_CLIPS_QUALITIES )
 				{
 					for ( TwitchClip clip : clips )
 					{
 						if ( quality.equals( clip.getQuality() ) || first == null )
 						{
-							first = Uri.parse( clip.getSource() + "?" +
-								"sig=" + twitchClips.data.clip.playbackAccessToken.signature +
-								"&token=" + URLEncoder.encode( twitchClips.data.clip.playbackAccessToken.value.replace( "\\", "" ) ) );
-							
+							first = Uri.parse(
+								clip.getSource()
+								+ "?sig=" + twitchClips.data.clip.playbackAccessToken.signature
+								+ "&token=" + URLEncoder.encode( twitchClips.data.clip.playbackAccessToken.value ) );
+
 							if ( quality.equals( clip.getQuality() ) )
 								return first;
 						}
 					}
 				}
-				
+
 				return first;
 			}
 		}
 		catch ( Exception e ) {}
-		
+
 		return null;
 	}
-	
+
 	@Override
 	public void getPath( Uri uri, final PathResolverListener pathResolverListener )
 	{
 		HashMap<String, String> headers = new HashMap<>();
-		headers.put( "Client-ID", TWITCH_CLIENT_ID );
-		
+		headers.put( "client-id", TWITCH_CLIENT_ID );
+
 		RequestParameters parameters = new RequestParameters();
-		parameters.putString( "operationName", "VideoAccessToken_Clip" );
+		parameters.putString( "query",
+			"{clip(slug:\""
+			+ getClipId( uri )
+			+ "\"){playbackAccessToken(params:{platform:\"web\"playerType:\"clips-download\"}){signature value}videoQualities{sourceURL}}}"
+		);
 		RequestParameters variables = new RequestParameters();
-		variables.putString( "slug", getClipId( uri ) );
-		parameters.putObject( "variables", variables );
-		RequestParameters extensions = new RequestParameters();
-		RequestParameters persistedQuery = new RequestParameters();
-		persistedQuery.putInt( "version", 1 );
-		persistedQuery.putString( "sha256Hash", "36b89d2507fce29e5ca551df756d27c1cfe079e2609642b4390aa4c35796eb11" );
-		extensions.putObject( "persistedQuery", persistedQuery );
-		parameters.putObject( "extensions", extensions );
-		
+
 		RequestService.getInstance().makeJsonRequest( Request.Method.POST, TWITCH_CLIPS_STATUS, new ResponseListener<TwitchClipResponse>()
 		{
 			@Override
 			public void onRequestSuccess( Context context, TwitchClipResponse response )
 			{
 				Uri videoUrl = getVideoUrlFromResponse( response );
-				
+
 				if ( videoUrl != null )
 				{
 					pathResolverListener.onPathResolved( videoUrl, UriUtils.guessMediaTypeFromUri( videoUrl ), uri );
@@ -105,7 +102,7 @@ public class TwitchClipsService extends MediaServiceSolver
 					pathResolverListener.onPathError( uri, App.getInstance().getString( R.string.videoUrlNotFound ) );
 				}
 			}
-			
+
 			@Override
 			public void onRequestError( Context context, int errorCode, String errorMessage )
 			{
@@ -113,7 +110,7 @@ public class TwitchClipsService extends MediaServiceSolver
 			}
 		}, parameters, headers );
 	}
-	
+
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
@@ -131,7 +128,7 @@ public class TwitchClipsService extends MediaServiceSolver
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean isGallery( Uri uri )
 	{
