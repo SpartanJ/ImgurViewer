@@ -30,26 +30,16 @@ public class TumblrService extends MediaServiceSolver
 			@Override
 			public void onRequestSuccess( Context context, String response )
 			{
-				String jsonData = StringUtils.getLastStringMatch( response, "window['___INITIAL_STATE___'] = ", "};" );
-				TumblrImageResponse tumblrMedia = null;
+				String jsonData = StringUtils.getLastStringMatch( response, "<script type=\"application/json\" id=\"___INITIAL_STATE___\">", "</script>" );
+				TumblrMedia tumblrMedia = null;
 				
 				if ( !TextUtils.isEmpty( jsonData ) )
 				{
-					String browserRegexp = "{\"imageResponse\"";
-					int browserRegexpPos = jsonData.indexOf( browserRegexp );
-					if ( -1 != browserRegexpPos )
-					{
-						int endBrowserRegexp = jsonData.indexOf( ",\"altText" );
-						
-						if ( -1 != endBrowserRegexp )
-						{
-							jsonData = jsonData.substring( browserRegexpPos, endBrowserRegexp ) + "}";
-						}
-					}
-					
+					jsonData = jsonData.trim();
+
 					try
 					{
-						tumblrMedia = new Gson().fromJson( jsonData, TumblrImageResponse.class );
+						tumblrMedia = new Gson().fromJson( jsonData, TumblrMedia.class );
 					}
 					catch ( JsonSyntaxException e )
 					{
@@ -58,9 +48,9 @@ public class TumblrService extends MediaServiceSolver
 					}
 				}
 				
-				if ( null != tumblrMedia && null != tumblrMedia.photos && tumblrMedia.photos.length > 0 )
+				if ( null != tumblrMedia && null != tumblrMedia.imagePage.photo.photos && tumblrMedia.imagePage.photo.photos.length > 0 )
 				{
-					TumblrPhoto photo = tumblrMedia.photos[0];
+					TumblrPhoto photo = tumblrMedia.imagePage.photo.photos[0];
 					
 					sendPathResolved( pathResolverListener, photo.getUri(), photo.getType().contains( "image" ) ? MediaType.IMAGE : MediaType.VIDEO_MP4, null );
 				}

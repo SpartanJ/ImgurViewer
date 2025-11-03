@@ -156,7 +156,7 @@
 	<string name="cantShareNoPermission">Sorry, can\'t share resource/s without proper permissions.</string>
 	<string name="couldNotReproduceVideo">Sorry, video reproduction failed.</string>
 	<string name="textPaste">Paste the link here</string>
-	<string name="textPastView">You can paste any supported image/video link to visualize it</string>
+	<string name="textPastView">You can paste here or share to ImgurViewer any supported image/video link to visualize it</string>
 	<string name="resourceInvalid">Loaded resource is not a valid image.</string>
 	<string name="invalidUrl">Invalid URL</string>
 	<string name="proxy_restart_app">Restart the application after setting the proxy</string>
