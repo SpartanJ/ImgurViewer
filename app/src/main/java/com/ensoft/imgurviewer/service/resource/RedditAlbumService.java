@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.Html;
 
 import com.android.volley.Request;
 import com.ensoft.imgurviewer.model.ImgurImage;
@@ -27,7 +26,7 @@ public class RedditAlbumService  extends MediaServiceSolver implements AlbumProv
 	@Override
 	public void getAlbum( Uri uri, AlbumSolverListener albumSolverListener )
 	{
-		String url = "https://www.reddit.com/" + uri.getPathSegments().get( 1 ) + ".json";
+		String url = "https://www.reddit.com/comments/" + uri.getPathSegments().get( 1 ) + ".json?raw_json=1";
 		
 		RequestService.getInstance().makeStringRequest( Request.Method.GET, url, new ResponseListener<String>()
 		{
@@ -40,53 +39,65 @@ public class RedditAlbumService  extends MediaServiceSolver implements AlbumProv
 					JSONObject data = response.getJSONObject( 0 ).getJSONObject( "data" ).getJSONArray( "children" ).getJSONObject( 0 ).getJSONObject( "data" );
 					String title = data.getString( "title" );
 					
-					JSONArray items = data.getJSONObject( "gallery_data" ).getJSONArray( "items" );
-					ArrayList<String> mediaIds = new ArrayList<>(  );
-					
-					for ( int i = 0; i < items.length(); i++ )
-					{
-						JSONObject item = items.getJSONObject( i );
-						mediaIds.add( item.getString( "media_id" ) );
-					}
-					
+					JSONArray galleryItems = data.getJSONObject( "gallery_data" ).getJSONArray( "items" );
 					JSONObject mediaMetadata = data.getJSONObject( "media_metadata" );
-					ImgurImage[] images = new ImgurImage[ mediaIds.size() ];
-					int i = 0;
-					for ( String mediaId : mediaIds )
+					ImgurImage[] images = new ImgurImage[ galleryItems.length() ];
+					
+					for ( int i = 0; i < galleryItems.length(); i++ )
 					{
+					    JSONObject galleryItem = galleryItems.getJSONObject( i );
+					    String mediaId = galleryItem.getString( "media_id" );
 						JSONObject mediaObj = mediaMetadata.getJSONObject( mediaId );
 						String mediaType = mediaObj.getString( "e" );
 						
 						if ( "Image".equals( mediaType ) || "AnimatedImage".equals( mediaType ) )
 						{
 							String img;
-							String thumb;
+							String thumb = null;
 							String videoUri = null;
+							String caption = galleryItem.optString( "caption", null );
+							String outbound_url = galleryItem.optString( "outbound_url", null );
+							String description = null;
+							
+							if ( null != caption && null != outbound_url )
+							{
+								description = caption + '\n' + outbound_url;
+							}
+							else if ( null != caption )
+							{
+								description = caption;
+							}
+							else if ( null != outbound_url )
+							{
+								description = outbound_url;
+							}
 							
 							if ( "AnimatedImage".equals( mediaType ) )
 							{
 								if (  mediaObj.getJSONObject( "s" ).has( "gif" ) )
 								{
-									img = Html.fromHtml( mediaObj.getJSONObject( "s" ).getString( "gif" ) ).toString();
+									img = mediaObj.getJSONObject( "s" ).getString( "gif" ).toString();
 								}
 								else
 								{
 									JSONArray jsonArray = mediaObj.getJSONArray( "p" );
-									img = Html.fromHtml( jsonArray.getJSONObject( jsonArray.length() - 1 ).getString( "u" ) ).toString();
+									img = jsonArray.getJSONObject( jsonArray.length() - 1 ).getString( "u" ).toString();
 								}
 								
-								videoUri = Html.fromHtml( mediaObj.getJSONObject( "s" ).getString( "mp4" ) ).toString();
+								videoUri = mediaObj.getJSONObject( "s" ).getString( "mp4" ).toString();
 							}
 							else
 							{
-								img = Html.fromHtml( mediaObj.getJSONObject( "s" ).getString( "u" ) ).toString();
+								img = mediaObj.getJSONObject( "s" ).getString( "u" ).toString();
 							}
 							
-							thumb = Html.fromHtml( mediaObj.getJSONArray( "p" ).getJSONObject( 0 ).getString( "u" ) ).toString();
+							if ( 0 != mediaObj.getJSONArray( "p" ).length() )
+							{
+								thumb = mediaObj.getJSONArray( "p" ).getJSONObject( 0 ).getString( "u" ).toString();
+							}
 							
-							images[ i ] = new ImgurImage( mediaId, img, Uri.parse( thumb ), null != videoUri ? Uri.parse( videoUri ) : null, 0 == i && null != title && !title.isEmpty() ? title : "" );
+							images[ i ] = new ImgurImage( mediaId, img, null != thumb ? Uri.parse( thumb ) : Uri.EMPTY, null != videoUri ? Uri.parse( videoUri ) : null, 0 == i && null != title && !title.isEmpty() ? title : "", description );
 						}
-						i++;
 					}
 					
 					new Handler( Looper.getMainLooper() ).post( () -> albumSolverListener.onAlbumResolved( images ) );

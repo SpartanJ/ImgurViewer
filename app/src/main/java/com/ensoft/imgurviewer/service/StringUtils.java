@@ -12,7 +12,7 @@ public class StringUtils
 	
 	public static String regexString( String string )
 	{
-		return string.replaceAll( "[\\<\\(\\[\\{\\\\\\^\\-\\=\\$\\!\\|\\]\\}\\)\\?\\*\\+\\.\\>]", "\\\\$0" );
+		return string.replaceAll( "[\\<\\(\\[\\{\\\\\\^\\-\\=\\$\\!\\|\\]\\}\\)\\?\\*\\+\\.\\>\\/]", "\\\\$0" );
 	}
 	
 	public static Matcher getStringMatcher( String haystack, String needleStart, String needleEnds )
@@ -36,6 +36,16 @@ public class StringUtils
 			} while ( m.find() );
 			
 			return res.substring( needleStart.length(), res.length() - needleEnds.length() );
+		}
+
+		int startIdx = haystack.indexOf( needleStart );
+		if ( startIdx != -1 )
+		{
+			int endIdx = haystack.indexOf( needleEnds, startIdx );
+			if ( endIdx != -1 )
+			{
+				return haystack.substring( startIdx + needleStart.length(), endIdx );
+			}
 		}
 		
 		return null;

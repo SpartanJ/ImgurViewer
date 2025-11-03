@@ -20,12 +20,15 @@ public class GiphyService extends MediaServiceSolver
 	
 	protected String getId( Uri uri )
 	{
-		String url = uri.toString();
-		String[] split = url.split( "-" );
-		
-		if ( split.length > 0 )
+		String url = uri.getLastPathSegment();
+		if (url != null )
 		{
-			return split[ split.length - 1 ];
+			String[] split = url.split( "-" );
+			
+			if ( split.length > 0 )
+			{
+				return split[ split.length - 1 ];
+			}
 		}
 		
 		return null;

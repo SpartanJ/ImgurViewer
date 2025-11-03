@@ -57,7 +57,13 @@ import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource;
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
+import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
+import com.google.android.exoplayer2.upstream.FileDataSource;
 import com.imgurviewer.R;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
@@ -69,12 +75,15 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.net.Proxy;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
 
 import static com.google.android.exoplayer2.Player.REPEAT_MODE_ALL;
 
@@ -522,6 +531,11 @@ public class ImageViewerFragment extends Fragment
 			
 			videoView.setBackgroundColor( Color.TRANSPARENT );
 			
+			if ( !mediaPlayerFragment.isFirstPlaybackReady )
+			{
+				return;
+			}
+			
 			if ( albumPagerProvider != null )
 			{
 				if ( albumPagerProvider.getCurrentPage() == adapterPosition )
@@ -551,7 +565,33 @@ public class ImageViewerFragment extends Fragment
 			}
 		} );
 		
-		player.setMediaItem(MediaItem.fromUri(uri));
+		Proxy proxy = App.getInstance().getProxyUtils().getProxy();
+		DataSource.Factory dataSourceFactory;
+		
+		if ( !"file".equals( uri.getScheme() ) )
+		{
+			if ( proxy != null )
+			{
+				OkHttpClient client = new OkHttpClient.Builder().proxy( proxy ).build();
+				dataSourceFactory = new OkHttpDataSource.Factory( (Call.Factory) client )
+					.setUserAgent( UriUtils.getDefaultUserAgent() );
+			}
+			else
+			{
+				dataSourceFactory = new DefaultHttpDataSource.Factory()
+					.setUserAgent( UriUtils.getDefaultUserAgent() );
+				
+			}
+		}
+		else
+		{
+			dataSourceFactory = new FileDataSource.Factory();
+		}
+		
+		MediaSource mediaSource = new DefaultMediaSourceFactory( dataSourceFactory )
+			.createMediaSource( MediaItem.fromUri( uri ) );
+		
+		player.setMediaSource( mediaSource );
 		player.setTrackSelectionParameters(player.getTrackSelectionParameters().buildUpon().setMaxVideoSizeSd().build());
 		player.prepare();
 		

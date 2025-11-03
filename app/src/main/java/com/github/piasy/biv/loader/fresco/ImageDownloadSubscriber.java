@@ -87,7 +87,7 @@ public abstract class ImageDownloadSubscriber
     @Override
     protected void onFailureImpl(DataSource<CloseableReference<PooledByteBuffer>> dataSource) {
         mFinished = true;
-        onFail(new RuntimeException("onFailureImpl"));
+        onFail(dataSource.getFailureCause());
     }
 
     @WorkerThread

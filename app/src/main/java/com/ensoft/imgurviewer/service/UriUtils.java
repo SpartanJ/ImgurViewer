@@ -28,7 +28,7 @@ public class UriUtils
 {
 	public static String getDefaultUserAgent()
 	{
-		return "Mozilla/5.0 (X11; Linux x86_64; rv:76.0) Gecko/20100101 Firefox/96.0";
+		return "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36";
 	}
 	
 	public static Uri getUriMatch( String haystack, String needleStart, String needleEnds )
@@ -99,6 +99,25 @@ public class UriUtils
 					lastPathSegment.endsWith( ".opus" ) ||
 					lastPathSegment.endsWith( ".wma" ) ||
 					lastPathSegment.endsWith( ".flac" );
+			}
+		}
+		
+		return false;
+	}
+	
+	public static boolean isImageUrl( Uri uri )
+	{
+		if ( null != uri )
+		{
+			List<String> pathSegments = uri.getPathSegments();
+			
+			if ( null != pathSegments && pathSegments.size() > 0 )
+			{
+				String lastPathSegment = pathSegments.get( pathSegments.size() - 1 );
+				String ext = lastPathSegment.toLowerCase();
+				
+				return ext.endsWith( ".jpg" ) || ext.endsWith( ".jpeg" ) || ext.endsWith( ".webp" )
+					|| ext.endsWith( ".gif" ) || ext.endsWith( ".png" );
 			}
 		}
 		

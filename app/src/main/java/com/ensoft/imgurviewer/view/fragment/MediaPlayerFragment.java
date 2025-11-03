@@ -52,6 +52,7 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 	protected Rect margins = new Rect( 0, 0, 0, 0 );
 	protected boolean initialized = false;
 	protected boolean isMuted = false;
+	protected boolean isFirstPlaybackReady = true;
 	protected boolean fullscreenEnabled = true;
 	protected boolean screenLockEnabled = false;
 	protected boolean fullscreenStateEnabled = false;
@@ -92,7 +93,24 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 		}
 	}
 	
-	protected void updateAudioOnOffState()
+	protected void setAudioOnOffState()
+	{
+		if ( null != player )
+		{
+			if ( isMuted )
+			{
+				mute();
+				audioOnOffView.setImageResource( R.drawable.ic_volume_off_white_48dp );
+			}
+			else
+			{
+				unmute();
+				audioOnOffView.setImageResource( R.drawable.ic_volume_up_white_48dp );
+			}
+		}
+	}
+	
+	protected void toggleAudioOnOffState()
 	{
 		if ( null != player )
 		{
@@ -111,7 +129,7 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 	
 	protected View.OnClickListener playPauseOnClickListener = v -> updatePlayPauseState();
 	
-	protected View.OnClickListener audioOnOffListener = v -> updateAudioOnOffState();
+	protected View.OnClickListener audioOnOffListener = v -> toggleAudioOnOffState();
 	
 	public static MediaPlayerFragment newInstance( boolean fullscreenEnabled, boolean screenLockEnabled )
 	{
@@ -252,13 +270,13 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 		{
 			if ( enabled )
 			{
-				getActivity().setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE );
+				getActivity().setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE );
 				
 				fullscreenOnOffView.setImageResource( R.drawable.ic_fullscreen_exit_white_48dp );
 			}
 			else
 			{
-				getActivity().setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_SENSOR );
+				getActivity().setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_USER );
 				
 				fullscreenOnOffView.setImageResource( R.drawable.ic_fullscreen_white_48dp );
 			}
@@ -279,11 +297,14 @@ public class MediaPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 		{
 			init();
 			
-			isMuted = !App.getInstance().getPreferencesService().videosMuted();
+			if ( isFirstPlaybackReady )
+			{
+				isMuted = App.getInstance().getPreferencesService().videosMuted();
+				updatePlayPauseState();
+				isFirstPlaybackReady = false;
+			}
 			
-			updatePlayPauseState();
-			
-			updateAudioOnOffState();
+			setAudioOnOffState();
 			
 			userOnPreparedListener.onPrepared();
 		}

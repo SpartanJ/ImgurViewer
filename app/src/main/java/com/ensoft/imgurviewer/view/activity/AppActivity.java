@@ -24,6 +24,10 @@ public class AppActivity extends FragmentActivity
 	{
 		super.onCreate( savedInstanceState );
 		
+		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		getWindow().setDimAmount( 0.f );
+		
 		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT )
 		{
 			getWindow().setFlags( WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS );

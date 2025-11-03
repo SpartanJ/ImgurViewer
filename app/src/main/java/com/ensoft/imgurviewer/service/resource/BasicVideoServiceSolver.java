@@ -17,7 +17,6 @@ import com.imgurviewer.R;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 {
@@ -207,6 +206,6 @@ public abstract class BasicVideoServiceSolver extends MediaServiceSolver
 	@Override
 	public boolean isVideo( Uri uri )
 	{
-		return true;
+		return UriUtils.isVideoUrl( uri );
 	}
 }

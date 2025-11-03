@@ -12,6 +12,7 @@ import com.imgurviewer.R;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 public class RedditVideoService extends MediaServiceSolver
 {
@@ -19,6 +20,8 @@ public class RedditVideoService extends MediaServiceSolver
 	private static final String V_REDD_IT_DOMAIN = "v.redd.it";
 	private static final String I_REDD_IT_DOMAIN = "i.redd.it";
 	private static final String PREVIEW_REDD_IT_DOMAIN = "preview.redd.it";
+	private static final String REDDIT_DOMAIN = "reddit.com";
+	private static final String REDDIT_SUBDOMAIN = ".reddit.com";
 	private static final String V_REDD_IT_VIDEO_720p_URL = "https://v.redd.it/%s/DASH_720.mp4";
 	private static final String V_REDD_IT_VIDEO_480p_URL = "https://v.redd.it/%s/DASH_480.mp4";
 	private static final String V_REDD_IT_VIDEO_240p_URL = "https://v.redd.it/%s/DASH_240.mp4";
@@ -37,6 +40,12 @@ public class RedditVideoService extends MediaServiceSolver
 	
 	private String getId( Uri uri )
 	{
+		if ( isPlayerUrl ( uri ) )
+		{
+			return uri.getPathSegments().size() == 7
+					? uri.getPathSegments().get(5)
+					: uri.getPathSegments().get(3);
+		}
 		return uri.getPathSegments().get(0);
 	}
 	
@@ -48,7 +57,7 @@ public class RedditVideoService extends MediaServiceSolver
 		{
 			System.setProperty( "http.keepAlive", "false" );
 			URL url = new URL( video );
-			urlConnection = (HttpURLConnection) url.openConnection();
+			urlConnection = App.getInstance().getProxyUtils().openConnectionTo( url );
 			urlConnection.setRequestMethod( "HEAD" );
 			urlConnection.setRequestProperty( "User-Agent", UriUtils.getDefaultUserAgent() );
 			urlConnection.getInputStream().close();
@@ -91,10 +100,8 @@ public class RedditVideoService extends MediaServiceSolver
 						
 						if ( videoExists( video ) )
 						{
-							sendPathResolved( pathResolverListener, Uri.parse( video ),
-								video.endsWith( ".m3u8" ) ? MediaType.STREAM_HLS :
-									( video.endsWith( ".mpd" ) ? MediaType.STREAM_DASH :
-										MediaType.VIDEO_MP4 ), uri );
+							Uri videoUri = Uri.parse( video );
+							sendPathResolved( pathResolverListener, videoUri, UriUtils.guessMediaTypeFromUri( videoUri ), uri );
 							return;
 						}
 					}
@@ -122,10 +129,24 @@ public class RedditVideoService extends MediaServiceSolver
 				null != uri.getLastPathSegment() && uri.getLastPathSegment().endsWith( ".gif" ) && "mp4".equals( uri.getQueryParameter( "format" ) );
 	}
 	
+	private boolean isPlayerUrl( Uri uri )
+	{
+		final List<String> segments = uri.getPathSegments();
+		final boolean hasSubredditPrefix = segments.size() == 7 && segments.get(0).equals( "r" ) && !segments.get(1).isEmpty();
+		if ( !hasSubredditPrefix && segments.size() != 5 ) {
+			return false;
+		}
+		final int segmentOffset = hasSubredditPrefix ? 2 : 0;
+		return null != uri.getHost() && ( uri.getHost().equals( REDDIT_DOMAIN ) || uri.getHost().endsWith( REDDIT_SUBDOMAIN ) ) &&
+				segments.get( segmentOffset ).equals( "link" ) && !segments.get( 1 + segmentOffset ).isEmpty() &&
+				segments.get( 2 + segmentOffset ).equals( "video" ) && !segments.get( 3 + segmentOffset ).isEmpty() &&
+				segments.get( 4 + segmentOffset ).equals( "player" );
+	}
+	
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
-		return uri.toString().contains( V_REDD_IT_DOMAIN ) || isGifVideo( uri );
+		return uri.toString().contains( V_REDD_IT_DOMAIN ) || isGifVideo( uri ) || isPlayerUrl( uri );
 	}
 	
 	@Override

@@ -1,0 +1,2 @@
+2.4.0:
+Fixes some regression from previous version (ex: galleries not working).

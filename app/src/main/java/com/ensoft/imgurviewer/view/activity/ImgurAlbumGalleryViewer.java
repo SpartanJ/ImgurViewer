@@ -58,7 +58,8 @@ public class ImgurAlbumGalleryViewer extends AppActivity
 	public void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
-		
+
+		App.getInstance().waitForInitialization();
 		setContentView( R.layout.activity_albumviewer );
 		
 		progressBar = findViewById( R.id.albumViewer_progressBar );

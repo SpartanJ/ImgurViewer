@@ -1,0 +1,9 @@
+2.3.7:
+Fixed issues downloading and viewing files in Android 12+
+Several minor small fixes
+Added support for alternative twitch clip urls
+Added kick.com support.
+Added arazu.io support.
+Fixed some services support.
+Several fixes an improvements.
+This release is mostly a user collaboration support. Thanks to the-blank-x and sidit77 for keeping the project alive.

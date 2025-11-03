@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<PreferenceCategory android:title="@string/general">
 
@@ -97,19 +98,21 @@
 
 	</PreferenceCategory>
 
-	<PreferenceCategory android:title="@string/proxy">
+	<PreferenceCategory
+		android:title="@string/proxy"
+		app:summary="@string/proxy_restart_app">
 
 		<EditTextPreference
 			android:name="proxyHost"
-			android:title="@string/proxyHost"
-			android:key="proxyHost" />
+			android:key="proxyHost"
+			android:title="@string/proxyHost" />
 
 		<EditTextPreference
 			android:name="proxyPort"
 			android:defaultValue="8118"
-			android:title="@string/proxyPort"
 			android:key="proxyPort"
-			android:numeric="integer" />
+			android:numeric="integer"
+			android:title="@string/proxyPort" />
 
 	</PreferenceCategory>
 

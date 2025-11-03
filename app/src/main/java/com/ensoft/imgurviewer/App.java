@@ -2,17 +2,31 @@ package com.ensoft.imgurviewer;
 
 import android.app.Application;
 import android.content.pm.PackageInfo;
+import android.graphics.Bitmap;
+import android.util.Log;
 
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.ensoft.imgurviewer.service.PreferencesService;
+import com.ensoft.imgurviewer.service.ProxyUtils;
+import com.ensoft.imgurviewer.service.UriUtils;
 import com.ensoft.restafari.network.service.RequestService;
 import com.ensoft.restafari.network.service.RequestServiceOptions;
+import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.github.piasy.biv.BigImageViewer;
 import com.github.piasy.biv.loader.fresco.FrescoImageLoader;
+import okhttp3.OkHttpClient;
+
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.util.concurrent.TimeUnit;
 
 public class App extends Application
 {
 	protected static App instance;
 	protected PreferencesService preferencesService;
+	protected ProxyUtils proxyUtils;
+	protected Thread loadingThread;
 	
 	public static App getInstance()
 	{
@@ -28,6 +42,10 @@ public class App extends Application
 		
 		preferencesService = new PreferencesService( this );
 		
+		proxyUtils = new ProxyUtils();
+		
+		proxyUtils.updateProxySettings( preferencesService );
+		
 		RequestServiceOptions requestServiceOptions = new RequestServiceOptions.Builder().
 			setProxyHost( getPreferencesService().getProxyHost() ).
 			setProxyPort( getPreferencesService().getProxyPort() ).
@@ -35,12 +53,45 @@ public class App extends Application
 		
 		RequestService.init( this, requestServiceOptions );
 		
-		BigImageViewer.initialize( FrescoImageLoader.with( this ) );
+		SubsamplingScaleImageView.setPreferredBitmapConfig( Bitmap.Config.ARGB_8888 );
+		
+		loadingThread = new Thread( () -> {
+			OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder().connectTimeout( 30, TimeUnit.SECONDS )
+				.addInterceptor( chain -> chain.proceed( chain.request().newBuilder().addHeader( "User-Agent", UriUtils.getDefaultUserAgent() ).build() ) );
+			
+			if ( getPreferencesService().getProxyHost() != null && !getPreferencesService().getProxyHost().isEmpty() )
+			{
+				Proxy proxy = new Proxy( Proxy.Type.HTTP, new InetSocketAddress( getPreferencesService().getProxyHost(), getPreferencesService().getProxyPort() ) );
+				
+				proxyUtils.setProxy( proxy );
+				
+				okHttpClientBuilder.proxy( proxy );
+			}
+			
+			ImagePipelineConfig config = OkHttpImagePipelineConfigFactory.newBuilder( this, okHttpClientBuilder.build() )
+				.build();
+			
+			BigImageViewer.initialize( FrescoImageLoader.with( this, config ) );
+		} );
+		loadingThread.start();
 	}
-	
+
+	public void waitForInitialization() {
+		try {
+			loadingThread.join();
+		} catch (InterruptedException e) {
+			Log.e("Init", "waiting for the init thread failed", e);
+		}
+	}
+
 	public PreferencesService getPreferencesService()
 	{
 		return preferencesService;
+	}
+	
+	public ProxyUtils getProxyUtils()
+	{
+		return proxyUtils;
 	}
 	
 	public String getVersionName()

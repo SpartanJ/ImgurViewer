@@ -30,61 +30,68 @@ public class ImgurAlbumService implements AlbumProvider
 {
 	public static final String TAG = ImgurAlbumService.class.getCanonicalName();
 	public static final String IMGUR_ALBUM_API_URL = ImgurService.IMGUR_API_URL + "/album/";
-	
+
 	public String getAlbumId( Uri uri )
 	{
 		return getAlbumId( uri.toString() );
 	}
-	
+
 	public String getAlbumId( String uri )
 	{
 		String endPart = null;
-		
+
 		if ( uri.contains( "/a/" ) )
 		{
-			endPart = uri.substring( uri.lastIndexOf( "/a/" ) + 3 );
-		}
-		
-		if ( null != endPart )
-		{
-			int slash = endPart.indexOf( "/" );
-			
-			if ( -1 != slash )
+			String type = "/a/";
+			int idOffset = 1;
+			int start = uri.lastIndexOf( type ) + type.length();
+			String fromType = uri.substring( start );
+			String[] parts = fromType.split( "/" );
+			if ( parts.length >= idOffset )
 			{
-				endPart = endPart.substring( 0, slash );
+				endPart = parts[ idOffset - 1 ];
 			}
 		}
-		
+
+		if ( null != endPart )
+		{
+			int dash = endPart.lastIndexOf( '-' );
+			if ( -1 != dash )
+			{
+				endPart = endPart.substring( dash + 1 );
+			}
+		}
+
 		return endPart;
 	}
-	
+
 	public boolean isImgurAlbum( Uri uri )
 	{
 		return new ImgurService().isServicePath( uri ) && ( uri.toString().contains( "/a/" ) );
 	}
-	
+
 	public void getAlbum( Uri uri, final ImgurAlbumResolverListener imgurAlbumResolverListener )
 	{
 		String albumUrl = IMGUR_ALBUM_API_URL + getAlbumId( uri );
-		
+
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest( albumUrl, null, response ->
 		{
 			try
 			{
 				ImgurAlbumResource album = new Gson().fromJson( response.toString(), ImgurAlbumResource.class );
-				
+
 				imgurAlbumResolverListener.onAlbumResolved( album.data );
 			}
 			catch ( Exception e )
 			{
 				Log.v( TAG, e.getMessage() );
-				
+
 				imgurAlbumResolverListener.onAlbumError( e.toString() );
 			}
 		}, error ->
 		{
 			Log.v( TAG, error.toString() );
-			
+
 			imgurAlbumResolverListener.onAlbumError( error.toString() );
 		} )
 		{
@@ -97,63 +104,86 @@ public class ImgurAlbumService implements AlbumProvider
 				return headers;
 			}
 		};
-		
+
 		RequestService.getInstance().addToRequestQueue( jsonObjectRequest );
 	}
-	
+
 	public static final String IMGUR_GALLERY_API_URL = ImgurService.IMGUR_API_URL + "/gallery/";
-	
+
 	public String getGalleryId( Uri uri )
 	{
 		String endPart = null;
 		String uriString = uri.toString();
-		
+		String type = null;
+		int idOffset = 1;
+
 		if ( uriString.contains( "/gallery/" ) )
 		{
-			endPart = uriString.substring( uriString.lastIndexOf( "/gallery/" ) + 9 );
+			type = "/gallery/";
+			idOffset = 1;
 		}
 		else if ( uriString.contains( "/topic/" ) )
 		{
-			endPart = uri.getLastPathSegment();
+			type = "/topic/";
+			idOffset = 2;
 		}
 		else if ( uriString.contains( "/t/" ) )
 		{
-			endPart = uri.getLastPathSegment();
+			type = "/t/";
+			idOffset = 2;
 		}
 		else if ( uriString.contains( "/a/" ) )
 		{
-			endPart = uriString.substring( uriString.lastIndexOf( "/a/" ) + 3 );
+			type = "/a/";
+			idOffset = 1;
+		}
+		else if ( uriString.contains( "/r/" ) )
+		{
+			type = "/r/";
+			idOffset = 2;
 		}
 		else if ( uriString.contains( "/album/" ) )
 		{
-			endPart = uriString.substring( uriString.lastIndexOf( "/album/" ) + 7 );
+			type = "/album/";
+			idOffset = 1;
 		}
-		
-		if ( null != endPart )
+
+		if ( type != null )
 		{
-			int slash = endPart.indexOf( "/" );
-			
-			if ( -1 != slash )
+			int start = uriString.lastIndexOf( type ) + type.length();
+			String fromType = uriString.substring( start );
+			String[] parts = fromType.split( "/" );
+			if ( parts.length >= idOffset )
 			{
-				endPart = endPart.substring( 0, slash );
+				endPart = parts[ idOffset - 1 ];
 			}
 		}
-		
+
+		if ( null != endPart )
+		{
+			int dash = endPart.lastIndexOf( '-' );
+			if ( -1 != dash )
+			{
+				endPart = endPart.substring( dash + 1 );
+			}
+		}
+
 		return endPart;
 	}
-	
+
 	@Override
 	public boolean isAlbum( Uri uri )
 	{
 		return new ImgurService().isServicePath( uri ) && (
-			uri.toString().contains( "/a/" ) ||
-				uri.toString().contains( "/gallery/" ) ||
-				uri.toString().contains( "/topic/" ) ||
-				uri.toString().contains( "/t/" ) ||
-				new ImgurService().isMultiImageUri( uri )
+				uri.toString().contains( "/a/" ) ||
+						uri.toString().contains( "/r/" ) ||
+						uri.toString().contains( "/gallery/" ) ||
+						uri.toString().contains( "/topic/" ) ||
+						uri.toString().contains( "/t/" ) ||
+						new ImgurService().isMultiImageUri( uri )
 		);
 	}
-	
+
 	@Override
 	public void getAlbum( Uri uri, AlbumSolverListener albumSolverListener )
 	{
@@ -170,7 +200,7 @@ public class ImgurAlbumService implements AlbumProvider
 				{
 					albumSolverListener.onAlbumResolved( album.getImages() );
 				}
-				
+
 				@Override
 				public void onAlbumError( String error )
 				{
@@ -184,7 +214,7 @@ public class ImgurAlbumService implements AlbumProvider
 			Map<String, String> headers = new HashMap<>();
 			headers.put( "Authorization", "Client-ID " + App.getInstance().getString( R.string.imgur_client_id ) );
 			headers.put( "User-Agent", UriUtils.getDefaultUserAgent() );
-			
+
 			RequestService.getInstance().makeStringRequest( Request.Method.GET, albumUrl, new ResponseListener<String>()
 			{
 				@Override
@@ -193,33 +223,33 @@ public class ImgurAlbumService implements AlbumProvider
 					try
 					{
 						JSONObject data = new JSONObject( response ).getJSONObject( "data" );
-					
+
 						boolean isAlbum = data.getBoolean( "is_album" );
-						
+
 						if ( isAlbum )
 						{
 							ImgurAlbum album = new Gson().fromJson( data.toString(), ImgurAlbum.class );
-							
+
 							albumSolverListener.onAlbumResolved( album.getImages() );
 						}
 						else
 						{
 							ImgurImage image = new Gson().fromJson( data.toString(), ImgurImage.class );
-							
+
 							albumSolverListener.onImageResolved( image );
 						}
 					}
 					catch ( Exception e )
 					{
 						Log.v( TAG, e.getMessage() );
-						
+
 						albumSolverListener.onAlbumError( e.toString() );
 					}
 				}
-				
+
 				public void onRequestError( Context context, int errorCode, String errorMessage ) {
 					Log.v( TAG, errorMessage );
-					
+
 					albumSolverListener.onAlbumError( errorMessage );
 				}
 			},  new RequestParameters(), headers );

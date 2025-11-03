@@ -53,6 +53,16 @@ public class ImgurImage implements Parcelable
 		this.link = link;
 	}
 	
+	public ImgurImage( String id, String link, Uri thumbnailUri, Uri videoUri, String title, String description )
+	{
+		this.id = id;
+		this.link = link;
+		this.thumbnailUri = thumbnailUri;
+		this.videoUri = videoUri;
+		this.title = title;
+		this.description = description;
+	}
+	
 	public ImgurImage( String id, String link, Uri thumbnailUri, Uri videoUri, String title )
 	{
 		this.id = id;

@@ -10,3 +10,8 @@ build
 *.apk
 imgurviewer.jks
 app/release/output.json
+/app/release/**
+java_pid*
+.project
+.classpath
+org.eclipse.*

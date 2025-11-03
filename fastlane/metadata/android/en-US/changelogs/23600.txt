@@ -1,0 +1,3 @@
+2.3.6:
+Fixed some imgur video links.
+Fixed local videos.

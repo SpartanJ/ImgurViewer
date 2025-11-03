@@ -14,6 +14,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ensoft.imgurviewer.App;
+import com.ensoft.imgurviewer.model.FlickAlbumImageData;
 import com.ensoft.imgurviewer.model.FlickrAlbumImage;
 import com.ensoft.imgurviewer.model.FlickrImage;
 import com.ensoft.imgurviewer.model.ImgurImage;
@@ -53,7 +54,7 @@ public class FlickrService extends MediaServiceSolver implements AlbumProvider
 				@Override
 				protected HttpURLConnection createConnection( URL url) throws IOException
 				{
-					HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+					HttpURLConnection httpURLConnection = App.getInstance().getProxyUtils().openConnectionTo( url );
 					
 					trustAllCertsForConnection( httpURLConnection );
 					
@@ -202,9 +203,9 @@ public class FlickrService extends MediaServiceSolver implements AlbumProvider
 			{
 				try
 				{
-					String imagesList = StringUtils.getLastStringMatch( response, "\"photoPageList\":{\"_data\":", ",\"fetchedStart\":" );
+					String imagesList = StringUtils.getLastStringMatch( response, "\"photoPageList\":{\"data\":{\"_data\":", ",\"fetchedStart\":" );
 					
-					FlickrAlbumImage[] images = new Gson().fromJson( imagesList, FlickrAlbumImage[].class );
+					FlickAlbumImageData[] images = new Gson().fromJson( imagesList, FlickAlbumImageData[].class );
 					
 					if ( null != images && images.length > 0 )
 					{
@@ -212,8 +213,10 @@ public class FlickrService extends MediaServiceSolver implements AlbumProvider
 						
 						int i = 0;
 						
-						for ( FlickrAlbumImage img : images )
+						for ( FlickAlbumImageData data : images )
 						{
+							FlickrAlbumImage img = data.data;
+							
 							imgurImages[i] = new ImgurImage( img.getImage(), img.getThumbnail(), img.getTitle(), img.getDescription() );
 							
 							imgurImages[i].setFullSizeLink( img.getFullSizeImage() );

@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.ensoft.imgurviewer.App;
 import com.ensoft.imgurviewer.model.MediaType;
 import com.ensoft.imgurviewer.model.StreamableVideo;
 import com.ensoft.imgurviewer.service.listener.PathResolverListener;
@@ -46,8 +47,7 @@ public class StreamableService extends MediaServiceSolver
 					
 					try
 					{
-						URL url = new URL( video.getUri().toString() );
-						urlConnection = (HttpURLConnection) url.openConnection();
+						urlConnection = App.getInstance().getProxyUtils().openConnectionTo( video.getUri() );
 						urlConnection.setRequestMethod( "HEAD" );
 						urlConnection.getInputStream().close();
 						
