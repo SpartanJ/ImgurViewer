@@ -28,7 +28,7 @@ public class ImgFlipService extends MediaServiceSolver
 	@Override
 	public boolean isServicePath( Uri uri )
 	{
-		return uri.getHost().equals( IMGFLIP_DOMAIN ) && uri.getPathSegments().size() > 0 && uri.getPathSegments().get( 0 ).equals( "i" );
+		return uri != null && uri.getHost().equals( IMGFLIP_DOMAIN ) && uri.getPathSegments().size() > 0 && uri.getPathSegments().get( 0 ).equals( "i" );
 	}
 	
 	@Override

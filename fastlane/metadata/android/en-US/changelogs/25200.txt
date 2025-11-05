@@ -1,0 +1,2 @@
+2.5.2:
+Updated libraries dependencies and target sdk for compatibility with the Google Play Store.

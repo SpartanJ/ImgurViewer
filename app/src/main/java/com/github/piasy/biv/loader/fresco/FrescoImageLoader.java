@@ -165,8 +165,7 @@ public final class FrescoImageLoader implements ImageLoader {
 
     private File getCacheFile(final ImageRequest request) {
         FileCache mainFileCache = ImagePipelineFactory
-                .getInstance()
-                .getMainFileCache();
+                .getInstance().getDiskCachesStoreSupplier().get().getMainFileCache();
         final CacheKey cacheKey = DefaultCacheKeyFactory
                 .getInstance()
                 .getEncodedCacheKey(request, false); // we don't need context, but avoid null
