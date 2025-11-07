@@ -5,10 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
@@ -18,11 +16,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ensoft.imgurviewer.model.MediaType;
 import com.ensoft.imgurviewer.service.ResourceSolver;
-import com.ensoft.imgurviewer.service.listener.ResourceLoadListener;
 import com.ensoft.imgurviewer.service.resource.ResourceServiceSolver;
 import com.imgurviewer.R;
+import androidx.core.view.WindowCompat;
 
 public class TutorialActivity extends Activity implements View.OnClickListener
 {
@@ -114,6 +111,7 @@ public class TutorialActivity extends Activity implements View.OnClickListener
 		super.onCreate( savedInstanceState );
 		
 		setContentView( R.layout.activity_tutorial );
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 	}
 	
 	public void onPostCreate( Bundle savedInstanceState )

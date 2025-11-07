@@ -1,12 +1,19 @@
 package com.ensoft.imgurviewer.view.activity;
 
+import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.ensoft.imgurviewer.App;
@@ -30,6 +37,7 @@ public class SettingsActivity extends AppCompatActivity
 		}
 		
 		getSupportFragmentManager().beginTransaction().replace( android.R.id.content, new AppPreferenceFragment() ).commit();
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 	}
 	
 	@Override
@@ -49,6 +57,19 @@ public class SettingsActivity extends AppCompatActivity
 
 	public static class AppPreferenceFragment extends PreferenceFragmentCompat
 	{
+        @Override
+        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            View root = getListView().getParent() instanceof View ?
+                    (View) getListView().getParent() : getListView();
+            root.setFitsSystemWindows(true);
+            if (getActivity() != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    getActivity().getWindow().setNavigationBarContrastEnforced(false);
+                }
+            }
+        }
+
 		@Override
 		public void onCreatePreferences( Bundle bundle, String rootKey )
 		{
