@@ -1,0 +1,2 @@
+2.5.3:
+Android system buttons overlapping video controls in Android 15 and above.
